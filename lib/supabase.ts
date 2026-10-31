@@ -15,6 +15,6 @@ export function db(): SupabaseClient {
   if (!url || !key) {
     throw new Error("Faltan las variables SUPABASE_URL y SUPABASE_SECRET_KEY en Vercel.");
   }
-  client = createClient(url, key, { auth: { persistSession: false } });
+  client = createClient(url.trim().replace(/\/$/, ""), key.trim(), { auth: { persistSession: false } });
   return client;
 }
