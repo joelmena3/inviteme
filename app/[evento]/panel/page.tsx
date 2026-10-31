@@ -47,7 +47,7 @@ export default async function Panel({ params, searchParams }: P) {
 
   const kicker = (ev.contenido as { kicker?: string })?.kicker || "Invitación";
   const textoWa = (inv: Inv) =>
-    `¡Hola ${inv.nombre}! Te compartimos la invitación de ${ev.nombre} (${kicker.toLowerCase()}). Ábrela aquí y confírmanos tu asistencia: ${base}/${inv.codigo}`;
+    `¡Hola ${inv.nombre}! Te compartimos la invitación de ${ev.nombre} (${kicker.toLowerCase()}). Ábrela aquí y confírmanos tu asistencia:\n\n${base}/${inv.codigo}\n\n¡Te esperamos!`;
 
   const card: React.CSSProperties = { background: C.paper, borderRadius: 18, boxShadow: `0 0 0 1px ${C.line}`, padding: "16px 14px", minWidth: 0 };
   const lbl: React.CSSProperties = { fontSize: ".72rem", letterSpacing: ".14em", textTransform: "uppercase", fontWeight: 700, color: C.soft };
