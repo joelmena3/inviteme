@@ -184,3 +184,6 @@ input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-
 .seg label:has(input:checked) { background: var(--plum); color: #fff; }
 .lleva-form { display: flex; gap: 6px; align-items: center; min-width: 180px; }
 .lleva-form input { padding: 6px 10px; font-size: .88rem; }
+
+/* Vista previa de mensajes de WhatsApp */
+.wa-msg { margin: 0; white-space: pre-wrap; font-family: var(--f-body); font-size: .9rem; line-height: 1.5; background: #E7F7E3; color: #1F3A24; padding: 14px 16px; border-radius: 12px 12px 12px 2px; max-width: 520px; }

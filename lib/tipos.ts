@@ -31,6 +31,9 @@ export type Contenido = {
   regalos?: { texto: string; tiendas: { nombre: string; numero: string; url: string }[] };
   clabe?: { texto: string; titular: string; banco: string; clabe: string };
   traer?: { titulo: string; texto: string; asignaciones?: Record<string, string> };  // asignaciones: código de invitado → qué lleva
+
+  // Formulario que llena el cliente (/datos/<llave>): estado y lo que escribió
+  formulario?: { recibido?: string; cerrado?: boolean; maxFotos?: number; comentarios?: string; cancion?: string };
 };
 
 // Un renglón por persona o pareja. "Velación: Juan y Ana" muestra el rol aparte.

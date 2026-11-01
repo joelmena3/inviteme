@@ -221,16 +221,17 @@ export async function guardarEvento(id: string, d: DatosEditor): Promise<{ ok: t
   if (malSlug) return { error: malSlug };
   if (!DIA_RE.test(d.dia) || !HORA_RE.test(d.hora)) return { error: "Revisa la fecha y la hora." };
   const clabe = d.contenido?.clabe ? soloDigitos(d.contenido.clabe.clabe) : "";
-  if (d.contenido?.clabe && clabe.length !== 18) return { error: "La CLABE debe tener exactamente 18 dígitos." };
+  // Vacía está bien (el cliente la puede llenar en su formulario); si tiene número, deben ser 18 dígitos.
+  if (clabe && clabe.length !== 18) return { error: "La CLABE debe tener exactamente 18 dígitos." };
 
   const contenido = limpiarContenido(d.contenido || {}, d.dia, d.hora);
   // Lo que le toca llevar a cada invitado se edita en la lista de invitados:
   // lo conservamos tal como está en la base para no pisarlo desde el editor.
-  if (contenido.traer) {
-    const { data: actual } = await db().from("eventos").select("contenido").eq("id", id).maybeSingle();
-    const asig = (actual?.contenido as Contenido | undefined)?.traer?.asignaciones;
-    if (asig) contenido.traer.asignaciones = asig;
-  }
+  // Lo mismo con el estado del formulario del cliente (se maneja en su propia tarjeta).
+  const { data: actual } = await db().from("eventos").select("contenido").eq("id", id).maybeSingle();
+  const previo = actual?.contenido as Contenido | undefined;
+  if (contenido.traer && previo?.traer?.asignaciones) contenido.traer.asignaciones = previo.traer.asignaciones;
+  if (previo?.formulario) contenido.formulario = previo.formulario;
 
   const { error } = await db()
     .from("eventos")
@@ -462,4 +463,25 @@ export async function guardarClavePanel(fd: FormData) {
   const { error } = await db().from("eventos").update({ panel_hash: quitar ? null : huellaClave(clave) }).eq("id", id);
   if (error) falla(ruta, "No se pudo guardar. ¿Ya corriste 04_clave_panel.sql en Supabase?", "entrega");
   volver(ruta, quitar ? "Quitaste la contraseña del panel: ahora entra cualquiera con el link." : "Contraseña del panel guardada. Compártela con tu cliente.", "entrega");
+}
+
+// ---------- Formulario del cliente ----------
+
+export async function configurarFormulario(fd: FormData) {
+  await exigirAdmin();
+  const id = String(fd.get("id") || "");
+  const ruta = `/admin/evento/${id}`;
+  const sb = db();
+  const { data } = await sb.from("eventos").select("contenido").eq("id", id).maybeSingle();
+  if (!data) falla("/admin", "No encontré el evento.");
+  const c = data.contenido as Contenido;
+  const f = { ...(c.formulario || {}) };
+  const accion = String(fd.get("accion") || "");
+  if (accion === "cerrar") f.cerrado = true;
+  else if (accion === "abrir") f.cerrado = false;
+  else f.maxFotos = Math.min(Math.max(Math.floor(Number(fd.get("maxFotos")) || 0), 0), 30);
+  const { error } = await sb.from("eventos").update({ contenido: { ...c, formulario: f } }).eq("id", id);
+  const msg = accion === "cerrar" ? "Formulario cerrado: el cliente ya no puede cambiar datos." : accion === "abrir" ? "Formulario abierto de nuevo." : "Guardado.";
+  if (error) falla(ruta, "No se pudo guardar.", "formulario");
+  volver(ruta, msg, "formulario");
 }

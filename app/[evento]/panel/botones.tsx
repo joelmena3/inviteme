@@ -36,7 +36,7 @@ export function Confirmar({ children, pregunta, className = "btn danger" }: { ch
 }
 
 // Copia un texto con el botón; si el navegador no deja, selecciona el texto.
-export function Copiar({ texto }: { texto: string }) {
+export function Copiar({ texto, etiqueta = "Copiar link" }: { texto: string; etiqueta?: string }) {
   const [hecho, setHecho] = useState(false);
   return (
     <button
@@ -48,11 +48,11 @@ export function Copiar({ texto }: { texto: string }) {
           setHecho(true);
           setTimeout(() => setHecho(false), 2000);
         } catch {
-          prompt("Copia el link:", texto);
+          prompt("Copia el texto:", texto);
         }
       }}
     >
-      {hecho ? "¡Copiado!" : "Copiar link"}
+      {hecho ? "¡Copiado!" : etiqueta}
     </button>
   );
 }

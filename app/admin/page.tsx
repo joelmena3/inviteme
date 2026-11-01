@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { headers } from "next/headers";
+import { Copiar } from "@/app/[evento]/panel/botones";
 import { exigirAdmin } from "@/lib/admin";
 import { db } from "@/lib/supabase";
 import { DISENOS, estadoPago, nombreDe, PAQUETES, partesFecha, pesos, TIPOS, ZONA } from "@/lib/util";
@@ -35,6 +37,22 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
     );
   }
 
+  const h = await headers();
+  const base = `${h.get("x-forwarded-proto") || "https"}://${h.get("x-forwarded-host") || h.get("host")}`;
+  const msgInfo = `¡Hola! 👋 Gracias por escribir a InviteMe 💌
+
+Hacemos invitaciones digitales personalizadas, listas en menos de 48 horas ⏱️
+
+✨ *Express* · $500
+Posadas, reuniones y fiestas sencillas. Foto de portada, mapa, cuenta regresiva y confirmación de asistencia.
+
+🌟 *Wow* · $999
+Bodas, XV años, bautizos, primer año e infantiles. Hasta 15 fotos, música, links por invitado, mesa de regalos y más.
+
+👀 Mira ejemplos y paga aquí:
+${base}/pagos
+
+En cuanto me mandes tu comprobante 🧾, te comparto un formulario muy sencillo para los datos de tu evento 📝`;
   const filas = (data || []) as unknown as Fila[];
   const ahora = Date.now();
   const hoy = partesFecha(new Date().toISOString()).dia;
@@ -97,6 +115,14 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
         <div className="tile"><span className="lbl">Cobrado este mes</span><b className="n">{pesos(cobradoMes)}</b><small>pagos registrados</small></div>
         <div className="tile"><span className="lbl">Por cobrar</span><b className="n">{pesos(porCobrar)}</b><small>saldos pendientes</small></div>
         <div className="tile"><span className="lbl">Cobrado total</span><b className="n">{pesos(cobradoTotal)}</b><small>desde el inicio</small></div>
+      </section>
+
+      <section className="card" aria-labelledby="h-msgs">
+        <div className="card-head"><h2 id="h-msgs">Mensaje para nuevos clientes</h2><Copiar texto={msgInfo} etiqueta="Copiar mensaje" /></div>
+        <p className="soft sm" style={{ margin: 0 }}>
+          Cuando alguien te escriba, mándale este mensaje. Tip: en WhatsApp Business guárdalo como respuesta rápida “/info”.
+        </p>
+        <pre className="wa-msg">{msgInfo}</pre>
       </section>
 
       <section className="card flush" aria-labelledby="h-prox">

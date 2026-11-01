@@ -4,9 +4,9 @@ import { notFound } from "next/navigation";
 import { exigirAdmin } from "@/lib/admin";
 import { db } from "@/lib/supabase";
 import type { EventoAdmin, Pago } from "@/lib/tipos";
-import { estadoPago, METODOS, nombreDe, PAQUETES, partesFecha, pesos, TIPOS } from "@/lib/util";
+import { estadoPago, fotosPorPaquete, METODOS, nombreDe, PAQUETES, partesFecha, pesos, TIPOS, waLink } from "@/lib/util";
 import { Confirmar, Copiar, Enviar } from "@/app/[evento]/panel/botones";
-import { agregarInvitados, agregarPago, asignarLleva, eliminarInvitado, eliminarPago, guardarClavePanel, migrarArchivos } from "../../acciones";
+import { agregarInvitados, agregarPago, asignarLleva, configurarFormulario, eliminarInvitado, eliminarPago, guardarClavePanel, migrarArchivos } from "../../acciones";
 import { Aviso, Barra } from "../../barra";
 import { Editor } from "./editor";
 
@@ -54,6 +54,31 @@ export default async function EventoAdminPage({ params, searchParams }: P) {
 
   const traer = e.contenido.traer;
   const asignaciones = traer?.asignaciones || {};
+  // Formulario del cliente y mensajes de WhatsApp
+  const form = e.contenido.formulario || {};
+  const maxFotos = form.maxFotos ?? fotosPorPaquete(e.paquete);
+  const linkForm = `${base}/datos/${e.admin_key}`;
+  const saludo = e.cliente_nombre ? ` ${e.cliente_nombre.split(" ")[0]}` : "";
+  const msgForm = `¡Hola${saludo}! 🎉 Recibimos tu pago, ¡gracias por confiar en InviteMe! 💌
+
+Para armar tu invitación necesito unos datos. Llénalos aquí, te toma unos 10 minutos:
+👉 ${linkForm}
+
+📸 Ten a la mano tus fotos favoritas
+📋 Y tu lista de invitados, si ya la tienes
+
+En cuanto lo envíes, tu invitación queda lista en menos de ${e.paquete === "express" ? 24 : 48} horas ⏱️`;
+  const msgLista = `¡Tu invitación está lista! 🥳💌
+
+👉 Mírala aquí: ${base}/${e.slug}
+
+🔐 Tu panel para ver quién confirma y mandar los links a tus invitados:
+${linkPanel}${conClave ? "\n(Tu contraseña te la mando en el siguiente mensaje)" : ""}
+
+¿Algún cambio? Dime y lo ajusto 🙌`;
+  const fechaRecibido = form.recibido
+    ? new Intl.DateTimeFormat("es-MX", { day: "numeric", month: "short", hour: "numeric", minute: "2-digit", timeZone: "America/Mexico_City" }).format(new Date(form.recibido))
+    : "";
   const enGitHub = JSON.stringify(e.contenido).match(/"\/eventos\/[^"]+"/g)?.length || 0;
   const { dia, hora } = partesFecha(e.fecha);
   const oculto = <input type="hidden" name="id" value={e.id} />;
@@ -81,9 +106,51 @@ export default async function EventoAdminPage({ params, searchParams }: P) {
       </div>
 
       <nav className="toc" aria-label="Secciones">
-        <a href="#datos">Datos</a><a href="#diseno">Diseño</a><a href="#cliente">Cliente</a><a href="#textos">Textos</a><a href="#opcionales">Secciones</a>
+        <a href="#formulario">Formulario</a><a href="#datos">Datos</a><a href="#diseno">Diseño</a><a href="#cliente">Cliente</a><a href="#textos">Textos</a><a href="#opcionales">Secciones</a>
         <a href="#archivos">Fotos</a><a href="#musica">Música</a><a href="#pagos">Pagos</a><a href="#invitados">Invitados</a><a href="#entrega">Entrega</a>
       </nav>
+
+      {/* ---------- Formulario del cliente ---------- */}
+      <section className="card" id="formulario">
+        <div className="card-head">
+          <h2>Formulario del cliente</h2>
+          {form.cerrado ? <span className="chip neutral">Cerrado</span> : form.recibido ? <span className="chip ok">Recibido · {fechaRecibido}</span> : <span className="chip warn">Pendiente</span>}
+        </div>
+        <p className="soft sm" style={{ margin: 0 }}>
+          Tu cliente captura nombres, fecha, lugares, fotos e invitados, y todo cae directo en esta invitación. Solo ve las secciones que activaste
+          abajo en “Secciones opcionales”. Activa primero las que pagó y después mándale el link.
+        </p>
+        <div className="btns" style={{ justifyContent: "flex-start" }}>
+          <a className="btn" href={waLink(e.cliente_whatsapp, msgForm)} target="_blank" rel="noopener">Enviar por WhatsApp</a>
+          <Copiar texto={msgForm} etiqueta="Copiar mensaje" />
+          <Copiar texto={linkForm} />
+          <a className="btn ghost sm" href={`/datos/${e.admin_key}`} target="_blank" rel="noopener">Abrir formulario ↗</a>
+        </div>
+        {!e.cliente_whatsapp && <p className="soft sm" style={{ margin: 0 }}>Tip: guarda el WhatsApp del cliente en “Paquete y cliente” y el botón abrirá su chat directo.</p>}
+        <div className="sub">
+          <form action={configurarFormulario} className="btns" style={{ justifyContent: "flex-start" }}>
+            {oculto}
+            <label htmlFor="f-max" className="sm">Fotos que puede subir además de la portada</label>
+            <select id="f-max" name="maxFotos" defaultValue={String(maxFotos)} style={{ width: "auto" }}>
+              {[0, 1, 3, 5, 8, 10, 12, 15, 20, 25, 30].concat([maxFotos]).filter((v, i, a) => a.indexOf(v) === i).sort((a, b) => a - b).map((v) => (
+                <option key={v} value={v}>{v === 0 ? "Ninguna (solo portada)" : v}</option>
+              ))}
+            </select>
+            <Enviar className="btn ghost sm" ocupado="…">Guardar</Enviar>
+          </form>
+          <form action={configurarFormulario}>
+            {oculto}<input type="hidden" name="accion" value={form.cerrado ? "abrir" : "cerrar"} />
+            <Enviar className="btn ghost sm" ocupado="…">{form.cerrado ? "Reabrir formulario" : "Cerrar formulario"}</Enviar>
+            <span className="soft sm"> {form.cerrado ? "El cliente solo ve un mensaje de gracias." : "Ciérralo cuando la invitación esté terminada para que ya no cambie datos."}</span>
+          </form>
+          {(form.cancion || form.comentarios) && (
+            <div className="notice" style={{ background: "var(--neutral-bg)", color: "var(--ink)" }}>
+              {form.cancion && <p style={{ margin: 0 }}><b>Canción:</b> {form.cancion}</p>}
+              {form.comentarios && <p style={{ margin: form.cancion ? "6px 0 0" : 0, whiteSpace: "pre-wrap" }}><b>Comentarios del cliente:</b> {form.comentarios}</p>}
+            </div>
+          )}
+        </div>
+      </section>
 
       {enGitHub > 0 && (
         <section className="card" style={{ background: "var(--gold-bg)" }}>
@@ -251,6 +318,11 @@ export default async function EventoAdminPage({ params, searchParams }: P) {
         <div className="field">
           <span className="lbl-row">Panel privado del festejado</span>
           <div className="btns"><code className="inv-link">{linkPanel}</code><Copiar texto={linkPanel} /></div>
+        </div>
+
+        <div className="btns" style={{ justifyContent: "flex-start" }}>
+          <a className="btn" href={waLink(e.cliente_whatsapp, msgLista)} target="_blank" rel="noopener">Avisar “invitación lista” por WhatsApp</a>
+          <Copiar texto={msgLista} etiqueta="Copiar mensaje" />
         </div>
 
         <div className="sub">

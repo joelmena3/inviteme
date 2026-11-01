@@ -21,7 +21,7 @@ export function codigoDesde(nombre: string, respaldo = "invitado"): string {
 
 // Links que no pueden usarse como evento porque ya son partes del sitio.
 export const SLUGS_RESERVADOS = new Set([
-  "admin", "api", "motor", "eventos", "inicio", "inicio-html", "panel", "next", "favicon-ico", "robots-txt", "sitemap-xml",
+  "admin", "api", "motor", "eventos", "pagos", "datos", "plantillas", "inicio", "inicio-html", "panel", "next", "favicon-ico", "robots-txt", "sitemap-xml",
 ]);
 
 export function slugValido(slug: string): string | null {
@@ -120,3 +120,18 @@ export function estadoPago(precio: number, pagado: number): { t: string; c: "ok"
   if (pagado > 0) return { t: "Anticipo", c: "warn" };
   return { t: "Pendiente", c: "no" };
 }
+
+// ---------- WhatsApp ----------
+
+// "55 1234 5678" → "525512345678" (agrega lada de México si son 10 dígitos)
+export function waNumero(tel: string | null | undefined): string {
+  const d = String(tel || "").replace(/\D/g, "");
+  return d.length === 10 ? `52${d}` : d;
+}
+export const waLink = (tel: string | null | undefined, texto: string) =>
+  `https://wa.me/${waNumero(tel)}?text=${encodeURIComponent(texto)}`;
+
+export const MI_WHATSAPP = "525522678448";
+
+// Fotos que el cliente puede subir además de la portada, según su paquete
+export const fotosPorPaquete = (paquete: string) => (paquete === "express" ? 0 : 15);
