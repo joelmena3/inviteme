@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { abrirSesion, cerrarSesion, esAdmin, exigirAdmin } from "@/lib/admin";
 import { BUCKET, carpetaDe, esMime, rutaNueva, TIPOS_ARCHIVO, urlPublica, type Mime } from "@/lib/storage";
 import { db } from "@/lib/supabase";
+import { CLAVE_MIN, huellaClave } from "@/lib/panel";
 import type { Contenido, Foto, Grupo } from "@/lib/tipos";
 import { codigoDesde, DISENOS, fechaISO, METODOS, PAQUETES, slugValido, textosFecha, TIPOS } from "@/lib/util";
 
@@ -62,6 +63,8 @@ export async function crearEvento(fd: FormData) {
 
   const precioTxt = txt(fd.get("precio"), 12);
   const precio = precioTxt === "" ? PAQUETES.find((p) => p.id === paquete)!.precio : Math.max(0, Number(precioTxt) || 0);
+  const clavePanel = String(fd.get("clave_panel") || "").trim();
+  if (clavePanel && clavePanel.length < CLAVE_MIN) falla("/admin/nuevo", `La contraseña del panel debe tener al menos ${CLAVE_MIN} caracteres.`);
   const lugarNombre = txt(fd.get("lugar_nombre"), 120);
   const lugarDir = txt(fd.get("lugar_direccion"), 200);
 
@@ -94,12 +97,14 @@ export async function crearEvento(fd: FormData) {
       cliente_nombre: txt(fd.get("cliente_nombre"), 80) || null,
       cliente_whatsapp: txt(fd.get("cliente_whatsapp"), 20) || null,
       notas: txt(fd.get("notas"), 500) || null,
+      ...(clavePanel ? { panel_hash: huellaClave(clavePanel) } : {}),
     })
     .select("id")
     .single();
 
   if (error) {
     if (error.code === "23505") falla("/admin/nuevo", `Ya existe un evento con el link "${slug}". Elige otro.`);
+    if (error.code === "PGRST204" || /panel_hash/.test(error.message)) falla("/admin/nuevo", "Para usar contraseña en el panel, primero corre 04_clave_panel.sql en Supabase.");
     falla("/admin/nuevo", "No se pudo crear el evento. ¿Ya corriste el archivo 03_admin_storage.sql en Supabase?");
   }
   volver(`/admin/evento/${data!.id}`, "Evento creado. Ahora agrega fotos, textos e invitados.");
@@ -443,4 +448,18 @@ export async function asignarLleva(fd: FormData) {
   if (!codigo) falla(`/admin/evento/${id}`, "Falta el invitado.", "invitados");
   await guardarAsignaciones(id, { [codigo]: txt(fd.get("lleva"), 80) });
   volver(`/admin/evento/${id}`, `Guardado lo que le toca llevar a ${nombre || "este invitado"}.`, "invitados");
+}
+
+// ---------- Contraseña del panel del festejado ----------
+
+export async function guardarClavePanel(fd: FormData) {
+  await exigirAdmin();
+  const id = String(fd.get("id") || "");
+  const ruta = `/admin/evento/${id}`;
+  const quitar = fd.get("quitar") === "1";
+  const clave = String(fd.get("clave") || "").trim();
+  if (!quitar && clave.length < CLAVE_MIN) falla(ruta, `La contraseña debe tener al menos ${CLAVE_MIN} caracteres.`, "entrega");
+  const { error } = await db().from("eventos").update({ panel_hash: quitar ? null : huellaClave(clave) }).eq("id", id);
+  if (error) falla(ruta, "No se pudo guardar. ¿Ya corriste 04_clave_panel.sql en Supabase?", "entrega");
+  volver(ruta, quitar ? "Quitaste la contraseña del panel: ahora entra cualquiera con el link." : "Contraseña del panel guardada. Compártela con tu cliente.", "entrega");
 }

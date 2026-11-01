@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { db } from "@/lib/supabase";
 import { codigoDesde } from "@/lib/util";
+import { abrirSesionPanel, cerrarSesionPanel, claveCorrecta, puedeEntrar } from "@/lib/panel";
 
 // Acciones del panel. Cada una vuelve a comprobar la clave del evento
 // y solo toca filas que pertenecen a ese evento.
@@ -12,13 +13,33 @@ type Ev = { id: string; slug: string };
 async function autorizar(fd: FormData): Promise<{ ev: Ev; key: string }> {
   const slug = String(fd.get("evento") || "");
   const key = String(fd.get("key") || "");
-  const { data } = await db().from("eventos").select("id, slug, admin_key").eq("slug", slug).maybeSingle();
-  if (!data || !key || data.admin_key !== key) throw new Error("No autorizado");
+  const { data } = await db().from("eventos").select("*").eq("slug", slug).maybeSingle();
+  if (!data || !(await puedeEntrar(data, key))) throw new Error("No autorizado");
   return { ev: { id: data.id, slug: data.slug }, key };
 }
 
 function volver(ev: Ev, key: string, msg: string, ancla = ""): never {
-  redirect(`/${ev.slug}/panel?key=${encodeURIComponent(key)}&msg=${encodeURIComponent(msg)}${ancla ? "#" + ancla : ""}`);
+  redirect(`/${ev.slug}/panel?${key ? `key=${encodeURIComponent(key)}&` : ""}msg=${encodeURIComponent(msg)}${ancla ? "#" + ancla : ""}`);
+}
+
+// Entrada con contraseña (eventos que la tienen)
+export async function entrarPanel(fd: FormData) {
+  const slug = String(fd.get("evento") || "");
+  const { data } = await db().from("eventos").select("*").eq("slug", slug).maybeSingle();
+  if (!data?.panel_hash) redirect(`/${slug}/panel`);
+  if (!claveCorrecta(String(fd.get("password") || ""), data.panel_hash)) {
+    await new Promise((r) => setTimeout(r, 900)); // frena a quien intente adivinar
+    redirect(`/${slug}/panel?e=1`);
+  }
+  await abrirSesionPanel(data.id, data.panel_hash);
+  redirect(`/${slug}/panel`);
+}
+
+export async function salirPanel(fd: FormData) {
+  const slug = String(fd.get("evento") || "");
+  const { data } = await db().from("eventos").select("id").eq("slug", slug).maybeSingle();
+  if (data) await cerrarSesionPanel(data.id);
+  redirect(`/${slug}/panel`);
 }
 
 const leerPases = (v: FormDataEntryValue | null): number | null => {

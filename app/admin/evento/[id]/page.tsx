@@ -6,7 +6,7 @@ import { db } from "@/lib/supabase";
 import type { EventoAdmin, Pago } from "@/lib/tipos";
 import { estadoPago, METODOS, nombreDe, PAQUETES, partesFecha, pesos, TIPOS } from "@/lib/util";
 import { Confirmar, Copiar, Enviar } from "@/app/[evento]/panel/botones";
-import { agregarInvitados, agregarPago, asignarLleva, eliminarInvitado, eliminarPago, migrarArchivos } from "../../acciones";
+import { agregarInvitados, agregarPago, asignarLleva, eliminarInvitado, eliminarPago, guardarClavePanel, migrarArchivos } from "../../acciones";
 import { Aviso, Barra } from "../../barra";
 import { Editor } from "./editor";
 
@@ -25,7 +25,7 @@ export default async function EventoAdminPage({ params, searchParams }: P) {
 
   const sb = db();
   const [{ data: ev }, { data: pagos }, { data: invs }, { data: confs }] = await Promise.all([
-    sb.from("eventos").select("id, slug, nombre, tipo, fecha, diseno, contenido, folio, paquete, precio, cliente_nombre, cliente_whatsapp, notas, carpeta, admin_key").eq("id", id).maybeSingle(),
+    sb.from("eventos").select("*").eq("id", id).maybeSingle(),
     sb.from("pagos").select("id, monto, metodo, referencia, fecha, notas").eq("evento_id", id).order("fecha", { ascending: false }),
     sb.from("invitados").select("id, codigo, nombre, pases").eq("evento_id", id).order("nombre"),
     sb.from("confirmaciones").select("invitado_id, asiste, personas").eq("evento_id", id).order("creado", { ascending: false }),
@@ -36,7 +36,9 @@ export default async function EventoAdminPage({ params, searchParams }: P) {
   const h = await headers();
   const host = h.get("x-forwarded-host") || h.get("host") || "inviteme.mx";
   const base = `${h.get("x-forwarded-proto") || "https"}://${host}`;
-  const linkPanel = `${base}/${e.slug}/panel?key=${e.admin_key}`;
+  const conClave = !!e.panel_hash;
+  const rutaPanel = conClave ? `/${e.slug}/panel` : `/${e.slug}/panel?key=${e.admin_key}`;
+  const linkPanel = `${base}${rutaPanel}`;
 
   const listaPagos = (pagos || []) as Pago[];
   const pagado = listaPagos.reduce((s, p) => s + Number(p.monto), 0);
@@ -74,7 +76,7 @@ export default async function EventoAdminPage({ params, searchParams }: P) {
         </div>
         <div className="btns">
           <a className="btn ghost sm" href={`/${e.slug}`} target="_blank" rel="noopener">Ver invitación ↗</a>
-          <a className="btn ghost sm" href={`/${e.slug}/panel?key=${e.admin_key}`} target="_blank" rel="noopener">Panel del festejado ↗</a>
+          <a className="btn ghost sm" href={rutaPanel} target="_blank" rel="noopener">Panel del festejado ↗</a>
         </div>
       </div>
 
@@ -247,8 +249,28 @@ export default async function EventoAdminPage({ params, searchParams }: P) {
           <div className="btns"><code className="inv-link">{`${base}/${e.slug}`}</code><Copiar texto={`${base}/${e.slug}`} /></div>
         </div>
         <div className="field">
-          <span className="lbl-row">Panel privado del festejado (no lo publiques)</span>
+          <span className="lbl-row">Panel privado del festejado</span>
           <div className="btns"><code className="inv-link">{linkPanel}</code><Copiar texto={linkPanel} /></div>
+        </div>
+
+        <div className="sub">
+          <h3>Contraseña del panel</h3>
+          <p className="sm" style={{ margin: 0 }}>
+            {conClave
+              ? <><span className="chip ok">Protegido</span> Tu cliente necesita la contraseña para entrar. Por seguridad no se puede mostrar: si la olvida, ponle una nueva.</>
+              : <><span className="chip warn">Sin contraseña</span> Cualquiera que tenga el link puede entrar al panel.</>}
+          </p>
+          <form action={guardarClavePanel} className="btns" style={{ justifyContent: "flex-start" }}>
+            {oculto}
+            <input name="clave" type="text" minLength={6} maxLength={60} required autoComplete="off" placeholder={conClave ? "Nueva contraseña" : "Mínimo 6 caracteres"} aria-label="Contraseña del panel" style={{ maxWidth: 260 }} />
+            <Enviar ocupado="Guardando…">{conClave ? "Cambiar contraseña" : "Poner contraseña"}</Enviar>
+          </form>
+          {conClave && (
+            <form action={guardarClavePanel}>
+              {oculto}<input type="hidden" name="quitar" value="1" />
+              <Confirmar pregunta="¿Quitar la contraseña?" className="btn danger sm">Quitar contraseña</Confirmar>
+            </form>
+          )}
         </div>
       </section>
     </main>

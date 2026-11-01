@@ -1,10 +1,22 @@
-import type { Confirmacion, Evento, Grupo, Invitado } from "./tipos";
+import type { Confirmacion, Evento, Grupo, Invitado } from "@/lib/tipos";
 
-// Convierte los datos de un evento en el HTML de la invitación.
-// El HTML sale completo desde el servidor (se ve aunque el JavaScript tarde);
-// /motor/invitacion.js le agrega la interacción.
+// Piezas de HTML que todos los templates comparten, ya llenas con la
+// información del evento que capturas en el panel de administrador.
+// Cada template (plantillas/<nombre>/plantilla.ts) decide en qué orden
+// las acomoda, cuáles usa, o si escribe su propio HTML con los mismos datos.
+//
+// Los dibujos se marcan con data-art="izquierda|derecha|centro|adorno|hoja|rama"
+// y cada template los dibuja a su manera en su archivo dibujos.js.
 
-const esc = (v: unknown) =>
+
+export type DatosPlantilla = { ev: Evento; inv: Invitado; previa: Confirmacion | null };
+
+export type Secciones = {
+  musica: string; portada: string; mensaje: string; familias: string; cuenta: string; lugar: string; dresscode: string;
+  fotos: string; regalos: string; traer: string; confirmacion: string; pie: string; visor: string; datos: string;
+};
+
+export const esc = (v: unknown) =>
   String(v ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -12,7 +24,7 @@ const esc = (v: unknown) =>
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#39;");
 
-export function renderInvitacion(ev: Evento, inv: Invitado, previa: Confirmacion | null): string {
+export function secciones({ ev, inv, previa }: DatosPlantilla): Secciones {
   const c = ev.contenido;
   let idx = 0;
 
@@ -25,7 +37,7 @@ export function renderInvitacion(ev: Evento, inv: Invitado, previa: Confirmacion
         )
         .join("");
       return `<li class="tl-item">
-        <div class="tl-dot" aria-hidden="true"><span data-art="${i % 2 ? "mushroom" : "leaf"}"></span></div>
+        <div class="tl-dot" aria-hidden="true"><span data-art="${i % 2 ? "adorno" : "hoja"}"></span></div>
         <div class="tl-body">
           <div class="tl-head"><h3>${esc(m.label)}</h3><span>${esc(m.when)}</span></div>
           <figure class="polaroid"><div class="shots ${m.fotos.length > 1 ? "two" : ""}">${shots}</div><figcaption>${esc(m.cap)}</figcaption></figure>
@@ -35,14 +47,14 @@ export function renderInvitacion(ev: Evento, inv: Invitado, previa: Confirmacion
 
   const finale = c.cierre
     ? `<div class="finale">
-            <div class="critters" aria-hidden="true"><span data-art="fox"></span><span data-art="hedgehog" class="h"></span><span data-art="bunny"></span></div>
+            <div class="critters" aria-hidden="true"><span data-art="izquierda"></span><span data-art="centro" class="h"></span><span data-art="derecha"></span></div>
             <p class="big">${esc(c.cierre.titulo)}</p>
             <p>${esc(c.cierre.texto)}</p>
           </div>`
     : "";
   const cierre = c.cierre
     ? `<li class="tl-item">
-        <div class="tl-dot" aria-hidden="true"><span data-art="mushroom"></span></div>
+        <div class="tl-dot" aria-hidden="true"><span data-art="adorno"></span></div>
         <div class="tl-body">
           <div class="tl-head"><h3>${esc(c.cierre.label)}</h3><span>${esc(c.cierre.when)}</span></div>
           ${finale}
@@ -178,37 +190,36 @@ export function renderInvitacion(ev: Evento, inv: Invitado, previa: Confirmacion
   // JSON seguro para incrustar dentro de <script>
   const json = JSON.stringify(datosCliente).replace(/</g, "\\u003c");
 
-  return `
+  return {
+    musica: `
 <button class="music" id="music" type="button" aria-pressed="false" aria-label="Reproducir música">
   <span class="eq" aria-hidden="true"><i></i><i></i><i></i></span><span id="musicLabel">Música</span>
-</button>
-
-<main class="wrap">
+</button>`,
+    portada: `
   <section class="hero" aria-label="Portada">
-    <span class="sprig l" data-art="sprig" aria-hidden="true"></span>
-    <span class="sprig r" data-art="sprig" aria-hidden="true"></span>
+    <span class="rama l" data-art="rama" aria-hidden="true"></span>
+    <span class="rama r" data-art="rama" aria-hidden="true"></span>
     <p class="eyebrow">${esc(c.eyebrow)}</p>
     <div class="stage">
       <div class="arch">${c.portada?.src ? `<img src="${esc(c.portada.src)}" alt="${esc(c.portada.alt || ev.nombre)}" width="${c.portada.w}" height="${c.portada.h}">` : ""}</div>
-      <span class="critter fox" data-art="fox" aria-hidden="true"></span>
-      <span class="critter bunny" data-art="bunny" aria-hidden="true"></span>
-      <span class="critter mush1" data-art="mushroom" aria-hidden="true"></span>
-      <span class="critter mush2" data-art="mushroom" aria-hidden="true"></span>
+      <span class="critter izquierda" data-art="izquierda" aria-hidden="true"></span>
+      <span class="critter derecha" data-art="derecha" aria-hidden="true"></span>
+      <span class="critter adorno1" data-art="adorno" aria-hidden="true"></span>
+      <span class="critter adorno2" data-art="adorno" aria-hidden="true"></span>
     </div>
     <p class="kicker">${esc(c.kicker)}</p>
     <h1 class="name">${esc(ev.nombre)}</h1>
     <div class="dateline" aria-label="${esc(c.fecha.larga)}, ${esc(c.fecha.hora)}">
       <span>${esc(c.fecha.dia)}</span><span class="bar"></span><span class="big">${esc(c.fecha.numero)}</span><span class="bar"></span><span>${esc(c.fecha.mes)} · ${esc(c.fecha.hora)}</span>
     </div>
-  </section>
-
+  </section>`,
+    mensaje: `
   <section class="message" aria-label="Mensaje">
-    <div class="divider" aria-hidden="true"><span data-art="leaf"></span><span data-art="mushroom"></span><span data-art="leaf" data-flip="1"></span></div>
+    <div class="divider" aria-hidden="true"><span data-art="hoja"></span><span data-art="adorno"></span><span data-art="hoja" data-flip="1"></span></div>
     <p class="quote">${esc(c.mensaje)}</p>
-  </section>
-
-  ${seccionFamilias}
-
+  </section>`,
+    familias: seccionFamilias,
+    cuenta: `
   <section aria-labelledby="h-count">
     <p class="eyebrow">Faltan</p>
     <h2 id="h-count">Cuenta regresiva</h2>
@@ -221,8 +232,8 @@ export function renderInvitacion(ev: Evento, inv: Invitado, previa: Confirmacion
       </div>
       <p class="count-done" id="countDone" hidden>¡Hoy es el gran día!</p>
     </div>
-  </section>
-
+  </section>`,
+    lugar: `
   <section aria-labelledby="h-where">
     <p class="eyebrow">Te esperamos</p>
     <h2 id="h-where">Cuándo y dónde</h2>
@@ -241,21 +252,19 @@ export function renderInvitacion(ev: Evento, inv: Invitado, previa: Confirmacion
       </div>
       <p class="toast" id="copyToast" role="status"></p>
     </div>
-  </section>
-
-  ${dresscode}
-
-  ${hayFotos ? `<section aria-labelledby="h-time">
+  </section>`,
+    dresscode,
+    fotos: hayFotos
+      ? `<section aria-labelledby="h-time">
     <p class="eyebrow">${esc(c.lineaEyebrow ?? "Mi primer año")}</p>
     <h2 id="h-time">${esc(c.lineaTitulo || "Así he crecido")}</h2>
     <p class="intro">${esc(c.lineaIntro || "Toca cualquier foto para verla en grande.")}</p>
     ${fotos}
-  </section>` : ""}
-
-  ${seccionRegalos}
-
-  ${traer}
-
+  </section>`
+      : "",
+    regalos: seccionRegalos,
+    traer,
+    confirmacion: `
   <section aria-labelledby="h-rsvp">
     <p class="eyebrow">Confirma tu asistencia</p>
     <h2 id="h-rsvp">¿Nos acompañas?</h2>
@@ -291,26 +300,25 @@ export function renderInvitacion(ev: Evento, inv: Invitado, previa: Confirmacion
         </form>
       </div>
       <div class="thanks" id="thanks" hidden>
-        <span data-art="hedgehog" aria-hidden="true"></span>
+        <span data-art="centro" aria-hidden="true"></span>
         <h3 id="thanksTitle">¡Gracias!</h3>
         <p id="thanksText"></p>
         <button class="btn ghost" type="button" id="changeRsvp">Cambiar respuesta</button>
       </div>
     </div>
-  </section>
-
+  </section>`,
+    pie: `
   <footer>
-    <div class="divider" aria-hidden="true"><span data-art="fox"></span><span data-art="bunny"></span></div>
+    <div class="divider" aria-hidden="true"><span data-art="izquierda"></span><span data-art="derecha"></span></div>
     <span class="sig">${esc(ev.nombre)}</span>
     <span>${esc(c.pie)}</span>
-  </footer>
-</main>
-
+  </footer>`,
+    visor: `
 <div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Foto ampliada">
   <div class="top"><p id="lbTitle"></p><button class="lb-btn" type="button" id="lbClose">Cerrar</button></div>
   <div class="pic"><img id="lbImg" alt=""></div>
   <div class="nav"><button class="lb-btn" type="button" id="lbPrev">← Anterior</button><button class="lb-btn" type="button" id="lbNext">Siguiente →</button></div>
-</div>
-
-<script>window.__INVITACION__ = ${json};</script>`;
+</div>`,
+    datos: `<script>window.__INVITACION__ = ${json};</script>`,
+  };
 }

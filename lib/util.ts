@@ -1,6 +1,8 @@
 // Utilidades compartidas por el panel del festejado y el panel de administrador.
 // Sin dependencias de servidor: se pueden usar en el navegador también.
 
+import { CATALOGO } from "@/plantillas/catalogo";
+
 export const ZONA = "America/Mexico_City";
 export const OFFSET = "-06:00"; // México ya no cambia de horario
 
@@ -64,13 +66,8 @@ export function textosFecha(dia: string, hora: string) {
 
 // ---------- Catálogos ----------
 
-export const DISENOS = [
-  { id: "bosque", nombre: "Bosque", desc: "Verde salvia y rosa, animalitos del bosque" },
-  { id: "picnic", nombre: "Picnic", desc: "Colores alegres de día de campo" },
-  { id: "botanico", nombre: "Botánico", desc: "Elegante, con arcos y flores" },
-  { id: "navidad", nombre: "Navidad", desc: "Rojo, pino y dorado: reno, muñeco de nieve y esferas" },
-] as const;
-export type DisenoId = (typeof DISENOS)[number]["id"];
+// Los templates viven en plantillas/<nombre>/ y se registran en plantillas/catalogo.ts
+export const DISENOS = CATALOGO.map((p) => ({ id: p.id, nombre: p.nombre, desc: p.descripcion, muestra: p.muestra }));
 
 export const PAQUETES = [
   { id: "express", nombre: "Express", precio: 500 },

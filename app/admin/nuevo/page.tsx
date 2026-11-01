@@ -70,7 +70,7 @@ export default async function Nuevo({ searchParams }: { searchParams: Promise<{ 
             {DISENOS.map((d, i) => (
               <label key={d.id} className="pick">
                 <input type="radio" name="diseno" value={d.id} defaultChecked={i === 0} />
-                <span className={`sw ${d.id}`} aria-hidden="true" />
+                <span className="sw" aria-hidden="true" style={{ background: `linear-gradient(135deg, ${d.muestra[0]} 0 50%, ${d.muestra[1]} 50%)` }} />
                 <span><b>{d.nombre}</b><small>{d.desc}</small></span>
               </label>
             ))}
@@ -104,6 +104,11 @@ export default async function Nuevo({ searchParams }: { searchParams: Promise<{ 
               <label htmlFor="notas">Notas internas</label>
               <input id="notas" name="notas" maxLength={500} placeholder="Solo las ves tú" />
             </div>
+          </div>
+          <div className="field">
+            <label htmlFor="clave_panel">Contraseña del panel del cliente</label>
+            <input id="clave_panel" name="clave_panel" type="text" minLength={6} maxLength={60} autoComplete="off" placeholder="Mínimo 6 caracteres" />
+            <small>Tu cliente la usará para entrar a su panel de invitados. Si la dejas vacía, entra cualquiera con el link.</small>
           </div>
           <p className="soft sm">Al crear el evento se genera su folio (INV-0002, INV-0003…). Compártelo con tu cliente para identificar su pago.</p>
         </section>

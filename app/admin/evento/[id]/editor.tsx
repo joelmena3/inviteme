@@ -201,7 +201,7 @@ export function Editor({ id, host, inicial }: { id: string; host: string; inicia
           {DISENOS.map((x) => (
             <label key={x.id} className="pick">
               <input type="radio" name="e-diseno" checked={d.diseno === x.id} onChange={() => campo("diseno", x.id)} />
-              <span className={`sw ${x.id}`} aria-hidden="true" />
+              <span className="sw" aria-hidden="true" style={{ background: `linear-gradient(135deg, ${x.muestra[0]} 0 50%, ${x.muestra[1]} 50%)` }} />
               <span><b>{x.nombre}</b><small>{x.desc}</small></span>
             </label>
           ))}

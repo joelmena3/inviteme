@@ -41,7 +41,7 @@ export type Evento = {
   slug: string;
   nombre: string;
   fecha: string;              // ISO con zona horaria
-  diseno: "bosque" | "picnic" | "botanico" | "navidad";
+  diseno: string;              // carpeta del template en plantillas/
   contenido: Contenido;
 };
 
@@ -65,6 +65,7 @@ export type EventoAdmin = Evento & {
   notas: string | null;
   carpeta: string | null;
   admin_key: string;
+  panel_hash?: string | null; // huella de la contraseña del panel del festejado
 };
 
 export type Pago = { id: string; monto: number; metodo: string; referencia: string | null; fecha: string; notas: string | null };

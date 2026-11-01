@@ -1,4 +1,5 @@
 import { db } from "@/lib/supabase";
+import { puedeEntrar } from "@/lib/panel";
 
 // Descarga de respuestas en CSV (abre directo en Excel).
 export const dynamic = "force-dynamic";
@@ -12,8 +13,8 @@ export async function GET(req: Request, { params }: { params: Promise<{ evento: 
   const { evento } = await params;
   const key = new URL(req.url).searchParams.get("key") || "";
   const sb = db();
-  const { data: ev } = await sb.from("eventos").select("id, slug, admin_key").eq("slug", evento).maybeSingle();
-  if (!ev || !key || ev.admin_key !== key) return new Response("No encontrado", { status: 404 });
+  const { data: ev } = await sb.from("eventos").select("*").eq("slug", evento).maybeSingle();
+  if (!ev || !(await puedeEntrar(ev, key))) return new Response("No encontrado", { status: 404 });
 
   const [{ data: invs }, { data: confs }] = await Promise.all([
     sb.from("invitados").select("id, nombre, pases, codigo").eq("evento_id", ev.id).order("nombre"),

@@ -1,15 +1,17 @@
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/supabase";
-import { agregarInvitado, editarInvitado, eliminarInvitado, eliminarRespuesta, reiniciarRespuesta } from "./acciones";
+import { puedeEntrar } from "@/lib/panel";
+import { agregarInvitado, editarInvitado, eliminarInvitado, eliminarRespuesta, entrarPanel, reiniciarRespuesta, salirPanel } from "./acciones";
 import { Confirmar, Copiar, Enviar } from "./botones";
 
 // Panel privado del festejado: invitados, links, respuestas y mensajes.
-// Se abre con /[evento]/panel?key=<clave del evento>.
+// Si el evento tiene contraseña, se abre con /[evento]/panel y la pide.
+// Si no, funciona con el link /[evento]/panel?key=<llave del evento>.
 export const dynamic = "force-dynamic";
 export const metadata = { title: "Panel de invitados", robots: { index: false, follow: false } };
 
-type P = { params: Promise<{ evento: string }>; searchParams: Promise<{ key?: string; msg?: string }> };
+type P = { params: Promise<{ evento: string }>; searchParams: Promise<{ key?: string; msg?: string; e?: string }> };
 type Inv = { id: string; codigo: string; nombre: string; pases: number | null };
 type Conf = { id: string; invitado_id: string | null; nombre: string; asiste: boolean; personas: number; mensaje: string | null; creado: string };
 
@@ -28,10 +30,36 @@ const opcionesPases = (sel: number | null) => (
 
 export default async function Panel({ params, searchParams }: P) {
   const { evento } = await params;
-  const { key, msg } = await searchParams;
+  const { key: llave, msg, e } = await searchParams;
   const sb = db();
-  const { data: ev } = await sb.from("eventos").select("id, slug, nombre, admin_key, contenido").eq("slug", evento).maybeSingle();
-  if (!ev || !key || key !== ev.admin_key) notFound();
+  const { data: ev } = await sb.from("eventos").select("*").eq("slug", evento).maybeSingle();
+  if (!ev) notFound();
+  const conClave = !!ev.panel_hash;
+  if (!(await puedeEntrar(ev, llave))) {
+    if (!conClave) notFound();
+    return (
+      <div className="pnl">
+        <link rel="stylesheet" href="/motor/panel.css" />
+        <main className="pnl-wrap" style={{ maxWidth: 420, paddingTop: "12vh" }}>
+          <form action={entrarPanel} className="card">
+            <input type="hidden" name="evento" value={ev.slug} />
+            <div>
+              <p className="eyebrow">Panel de invitados</p>
+              <h2 style={{ marginTop: 4 }}>{ev.nombre}</h2>
+            </div>
+            {e && <p className="flash" style={{ background: "#F8E1E5", color: "#9A3A4E" }} role="alert">Contraseña incorrecta.</p>}
+            <div className="field">
+              <label htmlFor="pw">Contraseña</label>
+              <input id="pw" name="password" type="password" autoComplete="current-password" required autoFocus />
+            </div>
+            <Enviar ocupado="Entrando…">Entrar</Enviar>
+            <p className="soft sm" style={{ margin: 0 }}>¿No la tienes? Pídesela a quien te hizo la invitación.</p>
+          </form>
+        </main>
+      </div>
+    );
+  }
+  const key = conClave ? "" : llave || "";
 
   const [{ data: invs }, { data: confs }] = await Promise.all([
     sb.from("invitados").select("id, codigo, nombre, pases").eq("evento_id", ev.id).order("nombre"),
@@ -42,7 +70,7 @@ export default async function Panel({ params, searchParams }: P) {
   const host = h.get("x-forwarded-host") || h.get("host") || "";
   const proto = h.get("x-forwarded-proto") || "https";
   const base = `${proto}://${host}/${ev.slug}`;
-  const panelCsv = `/${ev.slug}/panel/csv?key=${encodeURIComponent(key)}`;
+  const panelCsv = `/${ev.slug}/panel/csv${key ? `?key=${encodeURIComponent(key)}` : ""}`;
 
   const lista = (invs || []) as Inv[];
   const nombrePorId = new Map(lista.map((i) => [i.id, i.nombre]));
@@ -79,7 +107,15 @@ export default async function Panel({ params, searchParams }: P) {
         <header className="pnl-head">
           <p className="eyebrow">Panel de invitados</p>
           <h1>{ev.nombre} · {kicker}</h1>
-          <p className="soft">Recarga la página para ver confirmaciones nuevas. No compartas este link: solo es para ti.</p>
+          <p className="soft">
+            Recarga la página para ver confirmaciones nuevas. {conClave ? "Tu panel está protegido con contraseña." : "No compartas este link: solo es para ti."}
+          </p>
+          {conClave && (
+            <form action={salirPanel} style={{ marginTop: 8 }}>
+              <input type="hidden" name="evento" value={ev.slug} />
+              <button type="submit" className="btn ghost sm">Cerrar sesión</button>
+            </form>
+          )}
         </header>
 
         {msg && <p className="flash" role="status">{msg}</p>}

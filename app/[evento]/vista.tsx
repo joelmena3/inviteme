@@ -1,21 +1,26 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { getEvento, getInvitado, getUltimaConfirmacion } from "@/lib/datos";
-import { renderInvitacion } from "@/lib/plantilla";
+import { plantillaDe } from "@/plantillas";
 
-// Página compartida por /[evento] y /[evento]/[invitado]
+// Página compartida por /[evento] y /[evento]/[invitado].
+// Cada template vive en plantillas/<nombre>/: su acomodo, estilos, letras y dibujos.
 export async function Vista({ evento, invitado }: { evento: string; invitado?: string }) {
   const ev = await getEvento(evento);
   if (!ev) notFound();
   const inv = await getInvitado(ev.id, invitado);
   const previa = await getUltimaConfirmacion(inv.id);
-  const html = renderInvitacion(ev, inv, previa);
+  const { render, info } = plantillaDe(ev.diseno);
+  const html = render({ ev, inv, previa });
+  const base = `/plantillas/${info.id}`;
   return (
     <>
-      <link rel="stylesheet" href="/motor/invitacion.css" />
-      <div data-design={ev.diseno} className="invitacion" dangerouslySetInnerHTML={{ __html: html }} />
-      <script dangerouslySetInnerHTML={{ __html: `document.body.dataset.design=${JSON.stringify(ev.diseno)};` }} />
-      <script src="/motor/invitacion.js" defer />
+      {info.fuentes && <link rel="stylesheet" href={info.fuentes} />}
+      <link rel="stylesheet" href={`${base}/estilos.css`} />
+      <div data-design={info.id} className="invitacion" dangerouslySetInnerHTML={{ __html: html }} />
+      <script dangerouslySetInnerHTML={{ __html: `document.body.dataset.design=${JSON.stringify(info.id)};` }} />
+      <script src={`${base}/dibujos.js`} defer />
+      <script src="/plantillas/_comun/motor.js" defer />
     </>
   );
 }

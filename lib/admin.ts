@@ -48,12 +48,12 @@ export async function abrirSesion(intento: string): Promise<boolean> {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
-    path: "/admin",
+    path: "/", // también abre los paneles de los festejados
     maxAge: DIAS * 24 * 60 * 60,
   });
   return true;
 }
 
 export async function cerrarSesion(): Promise<void> {
-  (await cookies()).delete({ name: COOKIE, path: "/admin" });
+  (await cookies()).delete({ name: COOKIE, path: "/" });
 }
