@@ -1,4 +1,4 @@
-import type { Confirmacion, Evento, Invitado } from "./tipos";
+import type { Confirmacion, Evento, Grupo, Invitado } from "./tipos";
 
 // Convierte los datos de un evento en el HTML de la invitación.
 // El HTML sale completo desde el servidor (se ve aunque el JavaScript tarde);
@@ -33,17 +33,134 @@ export function renderInvitacion(ev: Evento, inv: Invitado, previa: Confirmacion
     })
     .join("");
 
+  const finale = c.cierre
+    ? `<div class="finale">
+            <div class="critters" aria-hidden="true"><span data-art="fox"></span><span data-art="hedgehog" class="h"></span><span data-art="bunny"></span></div>
+            <p class="big">${esc(c.cierre.titulo)}</p>
+            <p>${esc(c.cierre.texto)}</p>
+          </div>`
+    : "";
   const cierre = c.cierre
     ? `<li class="tl-item">
         <div class="tl-dot" aria-hidden="true"><span data-art="mushroom"></span></div>
         <div class="tl-body">
           <div class="tl-head"><h3>${esc(c.cierre.label)}</h3><span>${esc(c.cierre.when)}</span></div>
-          <div class="finale">
-            <div class="critters" aria-hidden="true"><span data-art="fox"></span><span data-art="hedgehog" class="h"></span><span data-art="bunny"></span></div>
-            <p class="big">${esc(c.cierre.titulo)}</p>
-            <p>${esc(c.cierre.texto)}</p>
-          </div>
+          ${finale}
         </div></li>`
+    : "";
+
+  // ---------- Secciones opcionales ----------
+  const mapas = (q: string) =>
+    `<a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&amp;query=${encodeURIComponent(q)}">Google Maps</a>
+        <a class="btn ghost" target="_blank" rel="noopener" href="https://waze.com/ul?q=${encodeURIComponent(q)}&amp;navigate=yes">Waze</a>`;
+  const renglones = (t: string) => String(t || "").split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+
+  // Galería: las mismas fotos de la línea del tiempo, en cuadrícula
+  const enGaleria = c.vistaFotos === "galeria";
+  let g = 0;
+  const galeria = (c.linea || [])
+    .flatMap((m) =>
+      m.fotos.map(
+        (f) =>
+          `<button type="button" data-idx="${g++}" data-src="${esc(f.src)}" data-label="${esc(m.label)}" data-when="${esc(m.when)}" aria-label="Ver foto de ${esc(m.label)} en grande"><img src="${esc(f.src)}" alt="${esc(f.alt || `${ev.nombre}, ${m.label.toLowerCase()}`)}" loading="lazy" width="${f.w}" height="${f.h}"></button>`
+      )
+    )
+    .join("");
+  const hayFotos = enGaleria ? !!(galeria || finale) : !!(linea || cierre);
+  const fotos = enGaleria
+    ? `<div class="gallery" id="timeline">${galeria}</div>${finale ? `<div class="card">${finale}</div>` : ""}`
+    : `<ol class="timeline" id="timeline">${linea}${cierre}</ol>`;
+
+  // Familias: padres, padres de los novios y padrinos
+  const grupo = (gr?: Grupo) => {
+    const ls = gr ? renglones(gr.nombres) : [];
+    if (!gr || !ls.length) return "";
+    const filas = ls
+      .map((l) => {
+        const m = l.match(/^([^:]{2,40}):\s*(.+)$/);
+        return m ? `<p class="fam-n"><small>${esc(m[1])}</small>${esc(m[2])}</p>` : `<p class="fam-n">${esc(l)}</p>`;
+      })
+      .join("");
+    return `<div class="fam"><p class="lbl">${esc(gr.titulo)}</p>${filas}</div>`;
+  };
+  const familias = [c.padres, c.padresNovia, c.padresNovio, c.padrinos].map(grupo).join("");
+  const seccionFamilias = familias
+    ? `<section aria-labelledby="h-fam">
+    <p class="eyebrow">Con todo nuestro cariño</p>
+    <h2 id="h-fam">${esc(c.familiasTitulo || "Con la bendición de")}</h2>
+    <div class="card fams">${familias}</div>
+  </section>`
+    : "";
+
+  // Ceremonia religiosa (además del lugar de la fiesta)
+  const cer = c.ceremonia;
+  const ceremonia = cer && (cer.nombre || cer.direccion)
+    ? `<div class="card where">
+        <p class="where-tag">${esc(cer.titulo || "Ceremonia religiosa")}</p>
+        ${cer.hora ? `<div class="row one"><div><span class="lbl">Hora</span><span class="val">${esc(cer.hora)}</span></div></div>` : ""}
+        <p class="addr"><strong>${esc(cer.nombre)}</strong><span>${esc(cer.direccion)}</span></p>
+        <div class="btns">${mapas([cer.nombre, cer.direccion].filter(Boolean).join(", "))}</div>
+      </div>`
+    : "";
+
+  const dc = c.dresscode;
+  const dresscode = dc && (dc.titulo || dc.texto)
+    ? `<section aria-labelledby="h-dress">
+    <p class="eyebrow">Código de vestimenta</p>
+    <h2 id="h-dress">Dress code</h2>
+    <div class="card dress">${dc.titulo ? `<p class="dress-t">${esc(dc.titulo)}</p>` : ""}${dc.texto ? `<p>${esc(dc.texto)}</p>` : ""}</div>
+  </section>`
+    : "";
+
+  // Mesa de regalos y CLABE para regalo en efectivo
+  const tiendas = (c.regalos?.tiendas || []).filter((t) => t.nombre);
+  const mesa = c.regalos && (c.regalos.texto || tiendas.length)
+    ? `<div class="card gifts">
+        ${c.regalos.texto ? `<p class="gift-msg">${esc(c.regalos.texto)}</p>` : ""}
+        ${tiendas
+          .map(
+            (t) => `<div class="gift"><div><b>${esc(t.nombre)}</b>${t.numero ? `<span>No. de evento: <strong>${esc(t.numero)}</strong></span>` : ""}</div>${
+              t.url
+                ? `<a class="btn ghost" target="_blank" rel="noopener" href="${esc(t.url)}">Ver mesa</a>`
+                : t.numero
+                  ? `<button type="button" class="btn ghost" data-copy="${esc(t.numero)}" data-copied="Número copiado">Copiar número</button>`
+                  : ""
+            }</div>`
+          )
+          .join("")}
+      </div>`
+    : "";
+  const cb = c.clabe;
+  const clabe = cb && cb.clabe
+    ? `<div class="card gifts clabe">
+        <p class="lbl">Regalo en efectivo</p>
+        ${cb.texto ? `<p class="gift-msg">${esc(cb.texto)}</p>` : ""}
+        <p class="clabe-n">${esc(cb.clabe.replace(/(\d{4})(?=\d)/g, "$1 "))}</p>
+        <p class="clabe-d">${[cb.banco, cb.titular].filter(Boolean).map(esc).join(" · ")}</p>
+        <button type="button" class="btn" data-copy="${esc(cb.clabe)}" data-copied="CLABE copiada">Copiar CLABE</button>
+      </div>`
+    : "";
+  const seccionRegalos = mesa || clabe
+    ? `<section aria-labelledby="h-gift">
+    <p class="eyebrow">Regalos</p>
+    <h2 id="h-gift">Mesa de regalos</h2>
+    ${mesa}${clabe}
+    <p class="toast center" id="copyGiftToast" role="status"></p>
+  </section>`
+    : "";
+
+  // Qué te toca llevar: mensaje general y, si hay, lo asignado a este invitado
+  const tr = c.traer;
+  const asignado = tr && inv.codigo ? tr.asignaciones?.[inv.codigo] || "" : "";
+  const traer = tr && (tr.texto || asignado)
+    ? `<section aria-labelledby="h-bring">
+    <p class="eyebrow">Para compartir</p>
+    <h2 id="h-bring">${esc(tr.titulo || "¿Qué te toca llevar?")}</h2>
+    <div class="card bring">
+      ${asignado ? `<p class="lbl">A ${esc(inv.nombre)} le toca llevar</p><p class="bring-t">${esc(asignado)}</p>` : ""}
+      ${tr.texto ? `<p>${esc(tr.texto)}</p>` : ""}
+    </div>
+  </section>`
     : "";
 
   const datosCliente = {
@@ -90,6 +207,8 @@ export function renderInvitacion(ev: Evento, inv: Invitado, previa: Confirmacion
     <p class="quote">${esc(c.mensaje)}</p>
   </section>
 
+  ${seccionFamilias}
+
   <section aria-labelledby="h-count">
     <p class="eyebrow">Faltan</p>
     <h2 id="h-count">Cuenta regresiva</h2>
@@ -107,7 +226,9 @@ export function renderInvitacion(ev: Evento, inv: Invitado, previa: Confirmacion
   <section aria-labelledby="h-where">
     <p class="eyebrow">Te esperamos</p>
     <h2 id="h-where">Cuándo y dónde</h2>
+    ${ceremonia}
     <div class="card where">
+      ${ceremonia ? `<p class="where-tag">Recepción</p>` : ""}
       <div class="row">
         <div><span class="lbl">Fecha</span><span class="val">${esc(c.fecha.larga)}</span></div>
         <div><span class="lbl">Hora</span><span class="val">${esc(c.fecha.hora)}</span></div>
@@ -122,12 +243,18 @@ export function renderInvitacion(ev: Evento, inv: Invitado, previa: Confirmacion
     </div>
   </section>
 
-  ${linea || cierre ? `<section aria-labelledby="h-time">
+  ${dresscode}
+
+  ${hayFotos ? `<section aria-labelledby="h-time">
     <p class="eyebrow">${esc(c.lineaEyebrow ?? "Mi primer año")}</p>
     <h2 id="h-time">${esc(c.lineaTitulo || "Así he crecido")}</h2>
     <p class="intro">${esc(c.lineaIntro || "Toca cualquier foto para verla en grande.")}</p>
-    <ol class="timeline" id="timeline">${linea}${cierre}</ol>
+    ${fotos}
   </section>` : ""}
+
+  ${seccionRegalos}
+
+  ${traer}
 
   <section aria-labelledby="h-rsvp">
     <p class="eyebrow">Confirma tu asistencia</p>

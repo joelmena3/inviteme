@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { abrirSesion, cerrarSesion, esAdmin, exigirAdmin } from "@/lib/admin";
 import { BUCKET, carpetaDe, esMime, rutaNueva, TIPOS_ARCHIVO, urlPublica, type Mime } from "@/lib/storage";
 import { db } from "@/lib/supabase";
-import type { Contenido, Foto } from "@/lib/tipos";
+import type { Contenido, Foto, Grupo } from "@/lib/tipos";
 import { codigoDesde, DISENOS, fechaISO, METODOS, PAQUETES, slugValido, textosFecha, TIPOS } from "@/lib/util";
 
 // Todas las acciones vuelven a comprobar la sesión de administrador:
@@ -163,7 +163,44 @@ function limpiarContenido(c: Partial<Contenido>, dia: string, hora: string): Con
     ...(cierre ? { cierre } : {}),
     musica: (Array.isArray(c.musica) ? c.musica : []).slice(0, 10).map(urlValida).filter(Boolean),
     pie: txt(c.pie, 160),
+    ...limpiarOpcionales(c),
   };
+}
+
+// Secciones opcionales: solo se guardan las que están activadas (existen en el objeto).
+const soloDigitos = (v: unknown) => String(v ?? "").replace(/\D/g, "");
+const urlTienda = (v: unknown) => {
+  let u = txt(v, 400);
+  if (u && !/^https?:\/\//i.test(u)) u = "https://" + u;
+  return /^https?:\/\/[^\s"<>]+\.[^\s"<>]+$/i.test(u) ? u : "";
+};
+const limpiarGrupo = (gr: Partial<Grupo> | undefined, titulo: string): Grupo | undefined =>
+  gr ? { titulo: txt(gr.titulo, 60) || titulo, nombres: txt(gr.nombres, 1200) } : undefined;
+
+function limpiarOpcionales(c: Partial<Contenido>): Partial<Contenido> {
+  const o: Partial<Contenido> = {};
+  if (c.vistaFotos === "galeria") o.vistaFotos = "galeria";
+  if (c.familiasTitulo) o.familiasTitulo = txt(c.familiasTitulo, 80);
+  const grupos = { padres: "Mis papás", padresNovia: "Padres de la novia", padresNovio: "Padres del novio", padrinos: "Padrinos" } as const;
+  for (const [k, t] of Object.entries(grupos) as [keyof typeof grupos, string][]) {
+    const gr = limpiarGrupo(c[k], t);
+    if (gr) o[k] = gr;
+  }
+  if (c.ceremonia) {
+    o.ceremonia = { titulo: txt(c.ceremonia.titulo, 60) || "Ceremonia religiosa", nombre: txt(c.ceremonia.nombre, 120), direccion: txt(c.ceremonia.direccion, 200), hora: txt(c.ceremonia.hora, 30) };
+  }
+  if (c.dresscode) o.dresscode = { titulo: txt(c.dresscode.titulo, 60), texto: txt(c.dresscode.texto, 400) };
+  if (c.regalos) {
+    o.regalos = {
+      texto: txt(c.regalos.texto, 300),
+      tiendas: (Array.isArray(c.regalos.tiendas) ? c.regalos.tiendas : []).slice(0, 8)
+        .map((t) => ({ nombre: txt(t?.nombre, 60), numero: txt(t?.numero, 40), url: urlTienda(t?.url) }))
+        .filter((t) => t.nombre || t.numero || t.url),
+    };
+  }
+  if (c.clabe) o.clabe = { texto: txt(c.clabe.texto, 300), titular: txt(c.clabe.titular, 80), banco: txt(c.clabe.banco, 60), clabe: soloDigitos(c.clabe.clabe).slice(0, 18) };
+  if (c.traer) o.traer = { titulo: txt(c.traer.titulo, 80), texto: txt(c.traer.texto, 400) };
+  return o;
 }
 
 export async function guardarEvento(id: string, d: DatosEditor): Promise<{ ok: true; slug: string } | { error: string }> {
@@ -178,6 +215,17 @@ export async function guardarEvento(id: string, d: DatosEditor): Promise<{ ok: t
   const malSlug = slugValido(slug);
   if (malSlug) return { error: malSlug };
   if (!DIA_RE.test(d.dia) || !HORA_RE.test(d.hora)) return { error: "Revisa la fecha y la hora." };
+  const clabe = d.contenido?.clabe ? soloDigitos(d.contenido.clabe.clabe) : "";
+  if (d.contenido?.clabe && clabe.length !== 18) return { error: "La CLABE debe tener exactamente 18 dígitos." };
+
+  const contenido = limpiarContenido(d.contenido || {}, d.dia, d.hora);
+  // Lo que le toca llevar a cada invitado se edita en la lista de invitados:
+  // lo conservamos tal como está en la base para no pisarlo desde el editor.
+  if (contenido.traer) {
+    const { data: actual } = await db().from("eventos").select("contenido").eq("id", id).maybeSingle();
+    const asig = (actual?.contenido as Contenido | undefined)?.traer?.asignaciones;
+    if (asig) contenido.traer.asignaciones = asig;
+  }
 
   const { error } = await db()
     .from("eventos")
@@ -192,7 +240,7 @@ export async function guardarEvento(id: string, d: DatosEditor): Promise<{ ok: t
       cliente_nombre: txt(d.cliente_nombre, 80) || null,
       cliente_whatsapp: txt(d.cliente_whatsapp, 20) || null,
       notas: txt(d.notas, 500) || null,
-      contenido: limpiarContenido(d.contenido || {}, d.dia, d.hora),
+      contenido,
       actualizado: new Date().toISOString(),
     })
     .eq("id", id);
@@ -341,17 +389,23 @@ export async function agregarInvitados(fd: FormData) {
   const sb = db();
   const { data: usados } = await sb.from("invitados").select("codigo").eq("evento_id", id);
   const set = new Set((usados || []).map((u) => u.codigo));
+  const lleva: Record<string, string> = {};
   const filas = lineas.map((l) => {
-    const m = l.match(/^(.*?)[,;\t]\s*(\d{1,2})\s*$/);
-    const nombre = txt(m ? m[1] : l, 80);
-    const pases = m ? Math.min(Math.max(Number(m[2]), 1), 30) : null;
+    // "Nombre", "Nombre, 4" o "Nombre, 4, Postre" (o "Nombre, , Postre" sin límite de pases)
+    const partes = l.split(/[,;\t]/).map((x) => x.trim());
+    const tienePases = partes.length > 1 && /^\d{0,2}$/.test(partes[1]);
+    const nombre = txt(tienePases ? partes[0] : l, 80);
+    const pases = tienePases && partes[1] ? Math.min(Math.max(Number(partes[1]), 1), 30) : null;
+    const queLleva = tienePases ? txt(partes.slice(2).join(", "), 80) : "";
     const base = codigoDesde(nombre);
     let codigo = base;
     for (let i = 2; set.has(codigo); i++) codigo = `${base}-${i}`;
     set.add(codigo);
+    if (queLleva) lleva[codigo] = queLleva;
     return { evento_id: id, codigo, nombre, pases };
   });
   const { error } = await sb.from("invitados").insert(filas);
+  if (!error && Object.keys(lleva).length) await guardarAsignaciones(id, lleva);
   volver(ruta, error ? "No se pudieron agregar los invitados." : `Agregaste ${filas.length} ${filas.length === 1 ? "invitado" : "invitados"}.`, "invitados", !!error);
 }
 
@@ -363,4 +417,30 @@ export async function eliminarInvitado(fd: FormData) {
   const r1 = await sb.from("confirmaciones").delete().eq("evento_id", id).eq("invitado_id", inv);
   const r2 = r1.error ? r1 : await sb.from("invitados").delete().eq("evento_id", id).eq("id", inv);
   volver(`/admin/evento/${id}`, r2.error ? "No se pudo eliminar." : "Invitado eliminado.", "invitados", !!r2.error);
+}
+
+// ---------- Qué le toca llevar a cada invitado ----------
+
+async function guardarAsignaciones(id: string, cambios: Record<string, string>) {
+  const sb = db();
+  const { data } = await sb.from("eventos").select("contenido").eq("id", id).maybeSingle();
+  if (!data) return;
+  const c = data.contenido as Contenido;
+  const traer = c.traer || { titulo: "¿Qué te toca llevar?", texto: "" };
+  const asignaciones = { ...(traer.asignaciones || {}) };
+  for (const [k, v] of Object.entries(cambios)) {
+    if (v) asignaciones[k] = v;
+    else delete asignaciones[k];
+  }
+  await sb.from("eventos").update({ contenido: { ...c, traer: { ...traer, asignaciones } } }).eq("id", id);
+}
+
+export async function asignarLleva(fd: FormData) {
+  await exigirAdmin();
+  const id = String(fd.get("id") || "");
+  const codigo = String(fd.get("codigo") || "");
+  const nombre = txt(fd.get("nombre"), 80);
+  if (!codigo) falla(`/admin/evento/${id}`, "Falta el invitado.", "invitados");
+  await guardarAsignaciones(id, { [codigo]: txt(fd.get("lleva"), 80) });
+  volver(`/admin/evento/${id}`, `Guardado lo que le toca llevar a ${nombre || "este invitado"}.`, "invitados");
 }

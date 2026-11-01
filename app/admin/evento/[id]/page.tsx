@@ -6,7 +6,7 @@ import { db } from "@/lib/supabase";
 import type { EventoAdmin, Pago } from "@/lib/tipos";
 import { estadoPago, METODOS, nombreDe, PAQUETES, partesFecha, pesos, TIPOS } from "@/lib/util";
 import { Confirmar, Copiar, Enviar } from "@/app/[evento]/panel/botones";
-import { agregarInvitados, agregarPago, eliminarInvitado, eliminarPago, migrarArchivos } from "../../acciones";
+import { agregarInvitados, agregarPago, asignarLleva, eliminarInvitado, eliminarPago, migrarArchivos } from "../../acciones";
 import { Aviso, Barra } from "../../barra";
 import { Editor } from "./editor";
 
@@ -50,6 +50,8 @@ export default async function EventoAdminPage({ params, searchParams }: P) {
   for (const c of confs || []) if (c.invitado_id && !respondio.has(c.invitado_id)) respondio.set(c.invitado_id, c);
   const personas = [...respondio.values()].filter((r) => r.asiste).reduce((s, r) => s + r.personas, 0);
 
+  const traer = e.contenido.traer;
+  const asignaciones = traer?.asignaciones || {};
   const enGitHub = JSON.stringify(e.contenido).match(/"\/eventos\/[^"]+"/g)?.length || 0;
   const { dia, hora } = partesFecha(e.fecha);
   const oculto = <input type="hidden" name="id" value={e.id} />;
@@ -77,7 +79,7 @@ export default async function EventoAdminPage({ params, searchParams }: P) {
       </div>
 
       <nav className="toc" aria-label="Secciones">
-        <a href="#datos">Datos</a><a href="#diseno">Diseño</a><a href="#cliente">Cliente</a><a href="#textos">Textos</a>
+        <a href="#datos">Datos</a><a href="#diseno">Diseño</a><a href="#cliente">Cliente</a><a href="#textos">Textos</a><a href="#opcionales">Secciones</a>
         <a href="#archivos">Fotos</a><a href="#musica">Música</a><a href="#pagos">Pagos</a><a href="#invitados">Invitados</a><a href="#entrega">Entrega</a>
       </nav>
 
@@ -186,15 +188,18 @@ export default async function EventoAdminPage({ params, searchParams }: P) {
 
         <form action={agregarInvitados} className="field">
           {oculto}
-          <label htmlFor="lista">Pega la lista: un invitado por renglón. Agrega una coma y el número de pases si quieres limitarlos.</label>
-          <textarea id="lista" name="lista" placeholder={"Abuelita Lulú\nTía Ale y familia, 4\nPrimo Beto, 2"} />
+          <label htmlFor="lista">
+            Pega la lista: un invitado por renglón. Agrega una coma y el número de pases si quieres limitarlos
+            {traer ? ", y otra coma con lo que le toca llevar." : "."}
+          </label>
+          <textarea id="lista" name="lista" placeholder={traer ? "Abuelita Lulú\nTía Ale y familia, 4, Postre\nPrimo Beto, , Refrescos" : "Abuelita Lulú\nTía Ale y familia, 4\nPrimo Beto, 2"} />
           <div><Enviar ocupado="Agregando…">Agregar invitados</Enviar></div>
         </form>
 
         {invitados.length > 0 && (
           <div className="tbl-wrap">
             <table className="tbl">
-              <thead><tr><th>Invitado</th><th>Pases</th><th>Respuesta</th><th aria-label="Acciones" /></tr></thead>
+              <thead><tr><th>Invitado</th><th>Pases</th>{traer && <th>Lleva</th>}<th>Respuesta</th><th aria-label="Acciones" /></tr></thead>
               <tbody>
                 {invitados.map((i) => {
                   const r = respondio.get(i.id);
@@ -203,6 +208,15 @@ export default async function EventoAdminPage({ params, searchParams }: P) {
                     <tr key={i.id}>
                       <td><b>{i.nombre}</b><div className="inv-link">{link}</div></td>
                       <td className="mono">{i.pases ?? "∞"}</td>
+                      {traer && (
+                        <td>
+                          <form action={asignarLleva} className="lleva-form">
+                            {oculto}<input type="hidden" name="codigo" value={i.codigo} /><input type="hidden" name="nombre" value={i.nombre} />
+                            <input name="lleva" defaultValue={asignaciones[i.codigo] || ""} maxLength={80} placeholder="Ej. Postre" aria-label={`Qué lleva ${i.nombre}`} />
+                            <Enviar className="btn ghost sm" ocupado="…">OK</Enviar>
+                          </form>
+                        </td>
+                      )}
                       <td>{!r ? <span className="chip warn">Sin responder</span> : r.asiste ? <span className="chip ok">Va · {r.personas}</span> : <span className="chip no">No va</span>}</td>
                       <td className="num">
                         <span className="btns" style={{ justifyContent: "flex-end", flexWrap: "nowrap" }}>

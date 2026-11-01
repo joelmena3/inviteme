@@ -18,7 +18,23 @@ export type Contenido = {
   cierre?: { label: string; when: string; titulo: string; texto: string };
   musica: string[];           // archivos de audio en orden; se repiten en ciclo
   pie: string;
+
+  // ---- Secciones opcionales: si no existen, no aparecen en la invitación ----
+  vistaFotos?: "linea" | "galeria";          // cómo se muestran las fotos de la línea del tiempo
+  familiasTitulo?: string;                   // título de la sección de familias
+  padres?: Grupo;
+  padresNovia?: Grupo;
+  padresNovio?: Grupo;
+  padrinos?: Grupo;
+  ceremonia?: { titulo: string; nombre: string; direccion: string; hora: string };
+  dresscode?: { titulo: string; texto: string };
+  regalos?: { texto: string; tiendas: { nombre: string; numero: string; url: string }[] };
+  clabe?: { texto: string; titular: string; banco: string; clabe: string };
+  traer?: { titulo: string; texto: string; asignaciones?: Record<string, string> };  // asignaciones: código de invitado → qué lleva
 };
+
+// Un renglón por persona o pareja. "Velación: Juan y Ana" muestra el rol aparte.
+export type Grupo = { titulo: string; nombres: string };
 
 export type Evento = {
   id: string;

@@ -155,6 +155,18 @@ function setupMap() {
   });
 }
 
+/* ---- Botones de copiar (número de mesa de regalos, CLABE) ---- */
+function setupCopy() {
+  document.addEventListener("click", async e => {
+    const b = e.target.closest("[data-copy]");
+    if (!b) return;
+    const t = $("copyGiftToast");
+    const aviso = msg => { if (t) { t.textContent = msg; setTimeout(() => t.textContent = "", 2500); } };
+    try { await navigator.clipboard.writeText(b.dataset.copy); aviso(b.dataset.copied || "Copiado"); }
+    catch { prompt("Copia este dato:", b.dataset.copy); }
+  });
+}
+
 /* ---- Pases y confirmación ---- */
 const G = D.invitado;
 const unlimited = G.pases == null;
@@ -322,6 +334,7 @@ const ALL_PHOTOS = [];
 paintArt();
 startCountdown();
 setupMap();
+setupCopy();
 setupRsvp();
 setupLightbox();
 renderGuest();

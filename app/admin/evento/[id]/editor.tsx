@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { Contenido, Foto } from "@/lib/tipos";
+import type { Contenido, Foto, Grupo } from "@/lib/tipos";
 import { DISENOS, PAQUETES, TIPOS } from "@/lib/util";
 import { guardarEvento, prepararSubida, subirArchivo, type DatosEditor } from "../../acciones";
 
@@ -90,6 +90,23 @@ function Selector({
     </label>
   );
 }
+
+// Casilla que activa una sección opcional y muestra sus campos
+function Opcional({
+  titulo, desc, activo, onCambio, children,
+}: { titulo: string; desc: string; activo: boolean; onCambio: (v: boolean) => void; children?: React.ReactNode }) {
+  return (
+    <div className={`opt${activo ? " on" : ""}`}>
+      <label className="opt-head">
+        <input type="checkbox" checked={activo} onChange={(e) => onCambio(e.target.checked)} />
+        <span><b>{titulo}</b><small>{desc}</small></span>
+      </label>
+      {activo && children && <div className="opt-body">{children}</div>}
+    </div>
+  );
+}
+
+const DRESSCODES = ["Formal", "Etiqueta rigurosa", "Cóctel", "Casual elegante", "Casual", "Todos de blanco", "Vaquero", "Pijama"];
 
 // ---------- Editor ----------
 
@@ -254,6 +271,131 @@ export function Editor({ id, host, inicial }: { id: string; host: string; inicia
         </div>
       </section>
 
+      {/* ---------- Secciones opcionales ---------- */}
+      <section className="card" id="opcionales">
+        <div className="card-head">
+          <h2>Secciones opcionales</h2>
+          <span className="soft sm">Solo aparecen en la invitación las que actives</span>
+        </div>
+
+        {(c.padres || c.padresNovia || c.padresNovio || c.padrinos) && (
+          <div className="field">
+            <label htmlFor="o-famt">Título de la sección de familias</label>
+            <input id="o-famt" value={c.familiasTitulo ?? ""} maxLength={80} placeholder="Con la bendición de" onChange={(e) => texto("familiasTitulo", e.target.value)} />
+          </div>
+        )}
+        {([
+          ["padres", "Padres", "Mis papás", "Los papás del festejado.", "Juan Pérez y Ana López"],
+          ["padresNovia", "Padres de la novia", "Padres de la novia", "Para bodas.", "Roberto Díaz y Laura Gómez"],
+          ["padresNovio", "Padres del novio", "Padres del novio", "Para bodas.", "Carlos Ruiz y Marta Sánchez"],
+          ["padrinos", "Padrinos", "Padrinos", "Uno por renglón. Si escribes “Rol: nombres”, el rol se muestra aparte.", "Velación: Pedro y Sofía\nAnillos: Luis y Carmen\nLazo: Toño y Rosa"],
+        ] as const).map(([k, titulo, def, desc, ejemplo]) => {
+          const gr = c[k] as Grupo | undefined;
+          return (
+            <Opcional key={k} titulo={titulo} desc={desc} activo={!!gr} onCambio={(v) => texto(k, v ? { titulo: def, nombres: "" } : undefined)}>
+              <div className="grid">
+                <div className="field">
+                  <label htmlFor={`o-${k}-t`}>Título</label>
+                  <input id={`o-${k}-t`} value={gr?.titulo || ""} maxLength={60} onChange={(e) => texto(k, { ...gr!, titulo: e.target.value })} />
+                </div>
+                <div className="field span-all">
+                  <label htmlFor={`o-${k}-n`}>Nombres (uno por renglón)</label>
+                  <textarea id={`o-${k}-n`} value={gr?.nombres || ""} maxLength={1200} placeholder={ejemplo} style={{ minHeight: 70 }} onChange={(e) => texto(k, { ...gr!, nombres: e.target.value })} />
+                </div>
+              </div>
+            </Opcional>
+          );
+        })}
+
+        <Opcional
+          titulo="Ceremonia religiosa"
+          desc="Un segundo lugar con su mapa, además del lugar de la fiesta."
+          activo={!!c.ceremonia}
+          onCambio={(v) => texto("ceremonia", v ? { titulo: "Ceremonia religiosa", nombre: "", direccion: "", hora: "" } : undefined)}
+        >
+          <div className="grid">
+            <div className="field"><label htmlFor="o-cer-t">Título</label><input id="o-cer-t" value={c.ceremonia?.titulo || ""} maxLength={60} onChange={(e) => texto("ceremonia", { ...c.ceremonia!, titulo: e.target.value })} /></div>
+            <div className="field"><label htmlFor="o-cer-h">Hora</label><input id="o-cer-h" value={c.ceremonia?.hora || ""} maxLength={30} placeholder="5:00 pm" onChange={(e) => texto("ceremonia", { ...c.ceremonia!, hora: e.target.value })} /></div>
+            <div className="field"><label htmlFor="o-cer-n">Lugar</label><input id="o-cer-n" value={c.ceremonia?.nombre || ""} maxLength={120} placeholder="Parroquia de San José" onChange={(e) => texto("ceremonia", { ...c.ceremonia!, nombre: e.target.value })} /></div>
+            <div className="field"><label htmlFor="o-cer-d">Dirección</label><input id="o-cer-d" value={c.ceremonia?.direccion || ""} maxLength={200} onChange={(e) => texto("ceremonia", { ...c.ceremonia!, direccion: e.target.value })} /></div>
+          </div>
+        </Opcional>
+
+        <Opcional
+          titulo="Dress code"
+          desc="Cómo deben vestir los invitados."
+          activo={!!c.dresscode}
+          onCambio={(v) => texto("dresscode", v ? { titulo: "Formal", texto: "" } : undefined)}
+        >
+          <div className="grid">
+            <div className="field">
+              <label htmlFor="o-dc-t">Código</label>
+              <input id="o-dc-t" list="dresscodes" value={c.dresscode?.titulo || ""} maxLength={60} onChange={(e) => texto("dresscode", { ...c.dresscode!, titulo: e.target.value })} />
+              <datalist id="dresscodes">{DRESSCODES.map((x) => <option key={x} value={x} />)}</datalist>
+            </div>
+            <div className="field"><label htmlFor="o-dc-x">Detalle (opcional)</label><input id="o-dc-x" value={c.dresscode?.texto || ""} maxLength={400} placeholder="Evita el color blanco" onChange={(e) => texto("dresscode", { ...c.dresscode!, texto: e.target.value })} /></div>
+          </div>
+        </Opcional>
+
+        <Opcional
+          titulo="Mesa de regalos"
+          desc="Tiendas con su número de evento y link."
+          activo={!!c.regalos}
+          onCambio={(v) => texto("regalos", v ? { texto: "Tu presencia es nuestro mejor regalo, pero si deseas tener un detalle con nosotros:", tiendas: [{ nombre: "Liverpool", numero: "", url: "" }] } : undefined)}
+        >
+          <div className="field"><label htmlFor="o-mr-x">Mensaje</label><input id="o-mr-x" value={c.regalos?.texto || ""} maxLength={300} onChange={(e) => texto("regalos", { ...c.regalos!, texto: e.target.value })} /></div>
+          {(c.regalos?.tiendas || []).map((t, i) => {
+            const set = (cambio: Partial<typeof t>) => texto("regalos", { ...c.regalos!, tiendas: c.regalos!.tiendas.map((x, j) => (j === i ? { ...x, ...cambio } : x)) });
+            return (
+              <div className="grid three tienda" key={i}>
+                <div className="field"><label htmlFor={`o-t-n-${i}`}>Tienda</label><input id={`o-t-n-${i}`} list="tiendas" value={t.nombre} maxLength={60} onChange={(e) => set({ nombre: e.target.value })} /></div>
+                <div className="field"><label htmlFor={`o-t-c-${i}`}>No. de evento</label><input id={`o-t-c-${i}`} value={t.numero} maxLength={40} onChange={(e) => set({ numero: e.target.value })} /></div>
+                <div className="field">
+                  <label htmlFor={`o-t-u-${i}`}>Link (opcional)</label>
+                  <div className="prefix-row">
+                    <input id={`o-t-u-${i}`} value={t.url} maxLength={400} placeholder="https://…" onChange={(e) => set({ url: e.target.value })} />
+                    <button type="button" className="btn danger icon sm" aria-label="Quitar tienda" onClick={() => texto("regalos", { ...c.regalos!, tiendas: c.regalos!.tiendas.filter((_, j) => j !== i) })}>×</button>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+          <datalist id="tiendas">{["Liverpool", "Palacio de Hierro", "Amazon", "Sears", "Costco"].map((x) => <option key={x} value={x} />)}</datalist>
+          <div><button type="button" className="btn ghost sm" onClick={() => texto("regalos", { ...c.regalos!, tiendas: [...(c.regalos?.tiendas || []), { nombre: "", numero: "", url: "" }] })}>+ Agregar tienda</button></div>
+        </Opcional>
+
+        <Opcional
+          titulo="Regalo en efectivo (CLABE)"
+          desc="Datos para transferencia, con botón de copiar."
+          activo={!!c.clabe}
+          onCambio={(v) => texto("clabe", v ? { texto: "Si prefieres hacernos un regalo en efectivo:", titular: "", banco: "", clabe: "" } : undefined)}
+        >
+          <div className="grid">
+            <div className="field span-all"><label htmlFor="o-cb-x">Mensaje</label><input id="o-cb-x" value={c.clabe?.texto || ""} maxLength={300} onChange={(e) => texto("clabe", { ...c.clabe!, texto: e.target.value })} /></div>
+            <div className="field">
+              <label htmlFor="o-cb-n">CLABE (18 dígitos)</label>
+              <input id="o-cb-n" inputMode="numeric" value={c.clabe?.clabe || ""} maxLength={22} onChange={(e) => texto("clabe", { ...c.clabe!, clabe: e.target.value.replace(/[^\d ]/g, "") })} />
+              <small className={(c.clabe?.clabe || "").replace(/\D/g, "").length === 18 ? "" : "warn-txt"}>{(c.clabe?.clabe || "").replace(/\D/g, "").length} de 18 dígitos</small>
+            </div>
+            <div className="field"><label htmlFor="o-cb-b">Banco</label><input id="o-cb-b" value={c.clabe?.banco || ""} maxLength={60} onChange={(e) => texto("clabe", { ...c.clabe!, banco: e.target.value })} /></div>
+            <div className="field span-all"><label htmlFor="o-cb-t">Titular de la cuenta</label><input id="o-cb-t" value={c.clabe?.titular || ""} maxLength={80} onChange={(e) => texto("clabe", { ...c.clabe!, titular: e.target.value })} /></div>
+          </div>
+        </Opcional>
+
+        <Opcional
+          titulo="Qué te toca llevar"
+          desc="Un mensaje general y, si quieres, algo distinto para cada invitado."
+          activo={!!c.traer}
+          onCambio={(v) => texto("traer", v ? { titulo: "¿Qué te toca llevar?", texto: "" } : undefined)}
+        >
+          <div className="grid">
+            <div className="field"><label htmlFor="o-tr-t">Título</label><input id="o-tr-t" value={c.traer?.titulo || ""} maxLength={80} onChange={(e) => texto("traer", { ...c.traer!, titulo: e.target.value })} /></div>
+            <div className="field"><label htmlFor="o-tr-x">Mensaje para todos (opcional)</label><input id="o-tr-x" value={c.traer?.texto || ""} maxLength={400} placeholder="Cada familia trae un platillo para compartir" onChange={(e) => texto("traer", { ...c.traer!, texto: e.target.value })} /></div>
+          </div>
+          <small className="soft">Para asignar algo distinto a cada invitado, guarda los cambios y usa la columna “Lleva” en la lista de invitados.</small>
+        </Opcional>
+      </section>
+
       {/* ---------- Portada ---------- */}
       <section className="card" id="archivos">
         <h2>Foto de portada</h2>
@@ -302,6 +444,15 @@ export function Editor({ id, host, inicial }: { id: string; host: string; inicia
             <label htmlFor="l-intro">Introducción</label>
             <input id="l-intro" value={c.lineaIntro || ""} maxLength={240} onChange={(e) => texto("lineaIntro", e.target.value)} />
           </div>
+        </div>
+
+        <div className="field">
+          <span className="lbl-row">Cómo se muestran las fotos</span>
+          <div className="seg" role="radiogroup" aria-label="Cómo se muestran las fotos">
+            <label><input type="radio" name="vista" checked={c.vistaFotos !== "galeria"} onChange={() => texto("vistaFotos", undefined)} /> Línea del tiempo</label>
+            <label><input type="radio" name="vista" checked={c.vistaFotos === "galeria"} onChange={() => texto("vistaFotos", "galeria")} /> Galería</label>
+          </div>
+          <small>{c.vistaFotos === "galeria" ? "Las fotos se ven en cuadrícula, sin títulos ni textos. Los momentos solo sirven para ordenarlas." : "Cada momento se ve con su título, fecha y texto."}</small>
         </div>
 
         {linea.map((m, i) => (
