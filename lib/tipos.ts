@@ -33,7 +33,7 @@ export type Contenido = {
   traer?: { titulo: string; texto: string; asignaciones?: Record<string, string> };  // asignaciones: código de invitado → qué lleva
 
   // Formulario que llena el cliente (/datos/<llave>): estado y lo que escribió
-  formulario?: { recibido?: string; cerrado?: boolean; maxFotos?: number; comentarios?: string; cancion?: string };
+  formulario?: { recibido?: string; cerrado?: boolean; maxFotos?: number; comentarios?: string; cancion?: string; fechaPendiente?: boolean };
 };
 
 // Un renglón por persona o pareja. "Velación: Juan y Ana" muestra el rol aparte.

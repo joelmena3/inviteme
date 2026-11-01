@@ -7,7 +7,7 @@ import { BUCKET, carpetaDe, esMime, rutaNueva, TIPOS_ARCHIVO, urlPublica, type M
 import { db } from "@/lib/supabase";
 import { CLAVE_MIN, huellaClave } from "@/lib/panel";
 import type { Contenido, Foto, Grupo } from "@/lib/tipos";
-import { codigoDesde, DISENOS, fechaISO, METODOS, PAQUETES, slugValido, textosFecha, TIPOS } from "@/lib/util";
+import { codigoDesde, DISENOS, fechaISO, METODOS, PAQUETES, partesFecha, slugValido, textosFecha, TIPOS } from "@/lib/util";
 
 // Todas las acciones vuelven a comprobar la sesión de administrador:
 // aunque alguien conozca la dirección, sin la cookie no puede hacer nada.
@@ -53,8 +53,12 @@ export async function crearEvento(fd: FormData) {
   const tipo = TIPOS.find((t) => t.id === fd.get("tipo")) || TIPOS[TIPOS.length - 1];
   const diseno = DISENOS.find((d) => d.id === fd.get("diseno"))?.id || "bosque";
   const paquete = PAQUETES.find((p) => p.id === fd.get("paquete"))?.id || "wow";
-  const dia = txt(fd.get("dia"), 10);
-  const hora = txt(fd.get("hora"), 5) || "12:00";
+  // La fecha y el lugar los captura el cliente en su formulario. Mientras tanto
+  // el evento queda con una fecha provisional (en 60 días) marcada como pendiente.
+  const provisional = partesFecha(new Date(Date.now() + 60 * 24 * 3600e3).toISOString());
+  const dia = txt(fd.get("dia"), 10) || provisional.dia;
+  const hora = txt(fd.get("hora"), 5) || "14:00";
+  const fechaPendiente = !fd.get("dia");
 
   if (!nombre) falla("/admin/nuevo", "Escribe el nombre del festejado o de la pareja.");
   const malSlug = slugValido(slug);
@@ -81,6 +85,7 @@ export async function crearEvento(fd: FormData) {
     linea: [],
     musica: [],
     pie: `Con cariño, gracias por acompañarnos`,
+    ...(fechaPendiente ? { formulario: { fechaPendiente: true } } : {}),
   };
 
   const { data, error } = await db()
@@ -231,7 +236,12 @@ export async function guardarEvento(id: string, d: DatosEditor): Promise<{ ok: t
   const { data: actual } = await db().from("eventos").select("contenido").eq("id", id).maybeSingle();
   const previo = actual?.contenido as Contenido | undefined;
   if (contenido.traer && previo?.traer?.asignaciones) contenido.traer.asignaciones = previo.traer.asignaciones;
-  if (previo?.formulario) contenido.formulario = previo.formulario;
+  if (previo?.formulario) contenido.formulario = { ...previo.formulario };
+  if (contenido.formulario?.fechaPendiente) {
+    const { data: f } = await db().from("eventos").select("fecha").eq("id", id).maybeSingle();
+    const antes = f ? partesFecha(f.fecha) : null;
+    if (!antes || antes.dia !== d.dia || antes.hora !== d.hora) delete contenido.formulario.fechaPendiente;
+  }
 
   const { error } = await db()
     .from("eventos")

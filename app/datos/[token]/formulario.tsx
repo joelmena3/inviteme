@@ -50,6 +50,7 @@ export function Formulario({ token, ayuda, linkInvitacion, config, inicial }: { 
   async function enviar() {
     if (!d.nombre.trim()) return setEstado({ t: config.esBoda ? "Escribe los nombres de los novios." : "Escribe el nombre del festejado.", err: true });
     if (!d.dia || !d.hora) return setEstado({ t: "Falta la fecha o la hora del evento.", err: true });
+    if (!d.lugarNombre.trim() || !d.lugarDireccion.trim()) return setEstado({ t: "Falta el lugar o la dirección del evento.", err: true });
     setGuardando(true);
     setEstado({ t: "Guardando…" });
     const r = await guardarFormulario(token, d);
@@ -92,7 +93,7 @@ export function Formulario({ token, ayuda, linkInvitacion, config, inicial }: { 
             <p className="eyebrow">{config.folio ? `Folio ${config.folio}` : "Tu invitación"}</p>
             <h1>Cuéntanos de tu evento 🎉</h1>
             <p className="soft" style={{ margin: "6px 0 0" }}>
-              Llena lo que tengas; puedes guardar y volver a este link cuando quieras.{config.yaEnviado && " Ya nos habías mandado datos: aquí están para que los revises."}
+              Los campos con * son necesarios. Lo demás llénalo si lo tienes; puedes guardar y volver a este link cuando quieras.{config.yaEnviado && " Ya nos habías mandado datos: aquí están para que los revises."}
             </p>
           </div>
 
@@ -101,14 +102,14 @@ export function Formulario({ token, ayuda, linkInvitacion, config, inicial }: { 
             <h2>{paso()}. Tu evento</h2>
             <div className="grid">
               <div className="field span-all">
-                <label htmlFor="f-nombre">{config.esBoda ? "Nombres de los novios" : "Nombre del festejado"}</label>
+                <label htmlFor="f-nombre">{config.esBoda ? "Nombres de los novios" : "Nombre del festejado"} *</label>
                 <input id="f-nombre" value={d.nombre} maxLength={80} placeholder={config.esBoda ? "Ana y Luis" : "Majo"} onChange={(e) => set("nombre", e.target.value)} />
                 <small>Así aparecerá en grande en la invitación.</small>
               </div>
-              <div className="field"><label htmlFor="f-dia">Fecha</label><input id="f-dia" type="date" value={d.dia} onChange={(e) => set("dia", e.target.value)} /></div>
-              <div className="field"><label htmlFor="f-hora">Hora</label><input id="f-hora" type="time" value={d.hora} onChange={(e) => set("hora", e.target.value)} /></div>
-              <div className="field"><label htmlFor="f-lugar">{d.ceremonia ? "Lugar de la recepción" : "Lugar"}</label><input id="f-lugar" value={d.lugarNombre} maxLength={120} placeholder="Jardín Los Olivos" onChange={(e) => set("lugarNombre", e.target.value)} /></div>
-              <div className="field"><label htmlFor="f-dir">Dirección</label><input id="f-dir" value={d.lugarDireccion} maxLength={200} placeholder="Calle, número, colonia, ciudad" onChange={(e) => set("lugarDireccion", e.target.value)} /></div>
+              <div className="field"><label htmlFor="f-dia">Fecha *</label><input id="f-dia" type="date" value={d.dia} onChange={(e) => set("dia", e.target.value)} /></div>
+              <div className="field"><label htmlFor="f-hora">Hora *</label><input id="f-hora" type="time" value={d.hora} onChange={(e) => set("hora", e.target.value)} /></div>
+              <div className="field"><label htmlFor="f-lugar">{d.ceremonia ? "Lugar de la recepción *" : "Lugar *"}</label><input id="f-lugar" value={d.lugarNombre} maxLength={120} placeholder="Jardín Los Olivos, Casa de la abuela…" onChange={(e) => set("lugarNombre", e.target.value)} /></div>
+              <div className="field"><label htmlFor="f-dir">Dirección *</label><input id="f-dir" value={d.lugarDireccion} maxLength={200} placeholder="Calle, número, colonia, ciudad" onChange={(e) => set("lugarDireccion", e.target.value)} /></div>
             </div>
             {d.ceremonia && (
               <div className="sub">

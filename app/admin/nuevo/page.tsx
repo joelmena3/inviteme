@@ -23,7 +23,7 @@ export default async function Nuevo({ searchParams }: { searchParams: Promise<{ 
       <div>
         <p className="eyebrow">Paso 1 de 2</p>
         <h1>Nuevo evento</h1>
-        <p className="soft">Con estos datos se crea el evento y su folio. Después agregas fotos, textos, música e invitados.</p>
+        <p className="soft">Con estos datos se crea el evento y su folio. La fecha, hora, lugar y dirección los captura tu cliente en su formulario.</p>
       </div>
 
       <form action={crearEvento} style={{ display: "contents" }}>
@@ -44,22 +44,6 @@ export default async function Nuevo({ searchParams }: { searchParams: Promise<{ 
               <label htmlFor="slug">Link de la invitación</label>
               <div className="prefix"><span>{host}/</span><input id="slug" name="slug" maxLength={40} placeholder="se crea del nombre si lo dejas vacío" /></div>
               <small>Solo minúsculas, números y guiones. Ej. ana-y-luis</small>
-            </div>
-            <div className="field">
-              <label htmlFor="dia">Fecha</label>
-              <input id="dia" name="dia" type="date" required />
-            </div>
-            <div className="field">
-              <label htmlFor="hora">Hora</label>
-              <input id="hora" name="hora" type="time" required defaultValue="14:00" />
-            </div>
-            <div className="field">
-              <label htmlFor="lugar_nombre">Lugar</label>
-              <input id="lugar_nombre" name="lugar_nombre" maxLength={120} placeholder="Ej. Jardín Los Olivos" />
-            </div>
-            <div className="field">
-              <label htmlFor="lugar_direccion">Dirección</label>
-              <input id="lugar_direccion" name="lugar_direccion" maxLength={200} placeholder="Calle, colonia, ciudad" />
             </div>
           </div>
         </section>

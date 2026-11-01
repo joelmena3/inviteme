@@ -95,6 +95,7 @@ export async function guardarFormulario(token: string, d: DatosCliente): Promise
   const c = ev.contenido;
   const nombre = txt(d.nombre, 80) || ev.nombre;
   if (!/^\d{4}-\d{2}-\d{2}$/.test(d.dia) || !/^\d{2}:\d{2}$/.test(d.hora)) return { error: "Revisa la fecha y la hora del evento." };
+  if (!txt(d.lugarNombre, 120) || !txt(d.lugarDireccion, 200)) return { error: "Escribe el lugar y la dirección del evento." };
   const clabe = d.clabe ? String(d.clabe.clabe || "").replace(/\D/g, "") : "";
   if (c.clabe && d.clabe && clabe && clabe.length !== 18) return { error: "La CLABE debe tener 18 dígitos." };
 
@@ -110,6 +111,7 @@ export async function guardarFormulario(token: string, d: DatosCliente): Promise
     formulario: {
       ...(c.formulario || {}),
       recibido: new Date().toISOString(),
+      fechaPendiente: false,
       comentarios: txt(d.comentarios, 1000),
       cancion: txt(d.cancion, 200),
     },

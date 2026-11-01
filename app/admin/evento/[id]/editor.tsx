@@ -176,13 +176,16 @@ export function Editor({ id, host, inicial }: { id: string; host: string; inicia
             <small>Si ya enviaste links a invitados, no lo cambies: los links viejos dejarían de funcionar.</small>
           </div>
           <div className="field">
-            <label htmlFor="e-dia">Fecha</label>
+            <label htmlFor="e-dia">Fecha{c.formulario?.fechaPendiente && <span className="chip warn" style={{ marginLeft: 6 }}>Por definir</span>}</label>
             <input id="e-dia" type="date" value={d.dia} onChange={(e) => campo("dia", e.target.value)} />
           </div>
           <div className="field">
             <label htmlFor="e-hora">Hora</label>
             <input id="e-hora" type="time" value={d.hora} onChange={(e) => campo("hora", e.target.value)} />
           </div>
+          {c.formulario?.fechaPendiente && (
+            <p className="soft sm span-all" style={{ margin: 0 }}>La fecha, hora y lugar los captura tu cliente en su formulario. La fecha que ves es provisional.</p>
+          )}
           <div className="field">
             <label htmlFor="e-lugar">Lugar</label>
             <input id="e-lugar" value={c.lugar?.nombre || ""} maxLength={120} onChange={(e) => texto("lugar", { ...c.lugar, nombre: e.target.value, busqueda: "" })} />

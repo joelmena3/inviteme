@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 type Fila = {
   id: string; folio: string | null; slug: string; nombre: string; tipo: string; fecha: string; diseno: string;
   paquete: string; precio: number; cliente_nombre: string | null;
-  pagos: { monto: number; fecha: string }[]; invitados: { count: number }[];
+  pagos: { monto: number; fecha: string }[]; invitados: { count: number }[]; contenido: { formulario?: { fechaPendiente?: boolean } };
 };
 
 const fechaBonita = (iso: string) =>
@@ -22,7 +22,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
   const { msg, error: esError } = await searchParams;
   const { data, error } = await db()
     .from("eventos")
-    .select("id, folio, slug, nombre, tipo, fecha, diseno, paquete, precio, cliente_nombre, pagos(monto, fecha), invitados(count)")
+    .select("id, folio, slug, nombre, tipo, fecha, diseno, paquete, precio, cliente_nombre, contenido, pagos(monto, fecha), invitados(count)")
     .order("fecha", { ascending: true });
 
   if (error) {
@@ -77,7 +77,7 @@ En cuanto me mandes tu comprobante 🧾, te comparto un formulario muy sencillo 
               <span style={{ minWidth: 0 }}>
                 <span className="name">{f.nombre} · {nombreDe(TIPOS, f.tipo)}</span>
                 <span className="meta">
-                  <span>{fechaBonita(f.fecha)}</span>
+                  <span>{f.contenido?.formulario?.fechaPendiente ? "Fecha por definir" : fechaBonita(f.fecha)}</span>
                   <span>/{f.slug}</span>
                   <span>{nombreDe(DISENOS, f.diseno)}</span>
                   <span>{f.invitados?.[0]?.count ?? 0} invitados</span>

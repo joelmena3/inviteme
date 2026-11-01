@@ -38,7 +38,9 @@ export default async function Datos({ params }: { params: Promise<{ token: strin
     );
   }
 
-  const { dia, hora } = partesFecha(ev.fecha);
+  // Si la fecha todavía es la provisional, el cliente la tiene que escribir
+  const pendiente = !!c.formulario?.fechaPendiente;
+  const { dia, hora } = pendiente ? { dia: "", hora: "" } : partesFecha(ev.fecha);
   const esBoda = ev.tipo === "boda";
   return (
     <div className="adm">
