@@ -7,3 +7,6 @@ next-env.d.ts
 .vercel
 # Copia automática de plantillas/ (se genera en cada build)
 /public/plantillas
+
+# Vistas previas de templates (npm run vista)
+/.vista

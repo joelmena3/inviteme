@@ -67,7 +67,7 @@ export function textosFecha(dia: string, hora: string) {
 // ---------- Catálogos ----------
 
 // Los templates viven en plantillas/<nombre>/ y se registran en plantillas/catalogo.ts
-export const DISENOS = CATALOGO.map((p) => ({ id: p.id, nombre: p.nombre, desc: p.descripcion, muestra: p.muestra }));
+export const DISENOS = CATALOGO.map((p) => ({ id: p.id, nombre: p.nombre, desc: p.descripcion, muestra: p.muestra, oculto: !!p.oculto }));
 
 export const PAQUETES = [
   { id: "express", nombre: "Express", precio: 500 },

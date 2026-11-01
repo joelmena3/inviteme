@@ -33,7 +33,21 @@ plantillas/
    - `index.ts`: `import dinosaurios from "./dinosaurios/plantilla";` y agrégalo
      a `ACOMODOS`.
 4. Personaliza `estilos.css`, `dibujos.js` y, si quieres, el acomodo.
-5. Sube los cambios a GitHub. Vercel lo publica y aparece en el panel.
+5. Revisa con `npm run validar -- dinosaurios` y mira cómo quedó con
+   `npm run vista -- dinosaurios` (abre `.vista/dinosaurios.html`).
+6. Sube los cambios a GitHub. Vercel lo publica y aparece en el panel.
+
+## Quitar un template
+
+No borres la carpeta: los eventos que ya lo usan se quedarían sin diseño y
+caerían al de por defecto. Pon `oculto: true` en su `info.ts`; deja de
+aparecer para eventos nuevos y las invitaciones existentes siguen igual.
+
+## Con Claude
+
+Pídele a Claude cosas como "crea un template de dinosaurios" o "oculta navidad":
+usa el skill `plantillas` (`.claude/skills/plantillas/`), trabaja en una rama
+`plantillas/...` y solo toca esta carpeta. `npm run cambios` lo comprueba.
 
 ## El acomodo (plantilla.ts)
 

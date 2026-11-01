@@ -51,7 +51,7 @@ export default async function Nuevo({ searchParams }: { searchParams: Promise<{ 
         <section className="card">
           <h2>Diseño (template)</h2>
           <div className="picks">
-            {DISENOS.map((d, i) => (
+            {DISENOS.filter((d) => !d.oculto).map((d, i) => (
               <label key={d.id} className="pick">
                 <input type="radio" name="diseno" value={d.id} defaultChecked={i === 0} />
                 <span className="sw" aria-hidden="true" style={{ background: `linear-gradient(135deg, ${d.muestra[0]} 0 50%, ${d.muestra[1]} 50%)` }} />

@@ -201,7 +201,7 @@ export function Editor({ id, host, inicial }: { id: string; host: string; inicia
       <section className="card" id="diseno">
         <h2>Diseño (template)</h2>
         <div className="picks" role="radiogroup" aria-label="Diseño">
-          {DISENOS.map((x) => (
+          {DISENOS.filter((x) => !x.oculto || x.id === d.diseno).map((x) => (
             <label key={x.id} className="pick">
               <input type="radio" name="e-diseno" checked={d.diseno === x.id} onChange={() => campo("diseno", x.id)} />
               <span className="sw" aria-hidden="true" style={{ background: `linear-gradient(135deg, ${x.muestra[0]} 0 50%, ${x.muestra[1]} 50%)` }} />

@@ -1,0 +1,25 @@
+# Revisa los templates en cada cambio. En ramas plantillas/* además exige que
+# solo se hayan tocado archivos de templates.
+name: Templates
+on:
+  push:
+  pull_request:
+jobs:
+  revisar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Validar templates
+        run: npm run validar
+      - name: Revisar tipos
+        run: npx tsc --noEmit
+      - name: Solo cambios en templates (ramas plantillas/*)
+        if: startsWith(github.head_ref || github.ref_name, 'plantillas/')
+        run: npm run cambios -- origin/main

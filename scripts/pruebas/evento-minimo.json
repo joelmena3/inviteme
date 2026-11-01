@@ -1,0 +1,36 @@
+{
+  "ev": {
+    "id": "prueba-1",
+    "slug": "prueba",
+    "nombre": "Leo",
+    "fecha": "2026-11-28T12:00:00-06:00",
+    "diseno": "bosque",
+    "contenido": {
+      "eyebrow": "Fiesta",
+      "kicker": "Cumpleaños",
+      "mensaje": "Acompáñanos",
+      "fecha": {
+        "dia": "Sábado",
+        "numero": "28",
+        "mes": "Nov",
+        "hora": "12:00 pm",
+        "larga": "Sábado 28 de noviembre de 2026"
+      },
+      "lugar": {
+        "nombre": "Fraccionamiento La Toscana",
+        "direccion": "Cerrada Prato, Lerma, Estado de México, C.P. 52005",
+        "busqueda": "Cerrada Prato, Fraccionamiento La Toscana, Lerma, Estado de México, 52005"
+      },
+      "linea": [],
+      "musica": [],
+      "pie": "¡Te esperamos!"
+    }
+  },
+  "inv": {
+    "id": null,
+    "codigo": "",
+    "nombre": "",
+    "pases": null
+  },
+  "previa": null
+}

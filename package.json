@@ -4,8 +4,11 @@
   "description": "",
   "scripts": {
     "dev": "node scripts/copiar-plantillas.mjs && next dev",
-    "build": "node scripts/copiar-plantillas.mjs && next build",
-    "start": "next start"
+    "build": "node scripts/plantillas.mjs validar && node scripts/copiar-plantillas.mjs && next build",
+    "start": "next start",
+    "validar": "node scripts/plantillas.mjs validar",
+    "vista": "node scripts/plantillas.mjs vista",
+    "cambios": "node scripts/plantillas.mjs cambios"
   },
   "author": "",
   "license": "ISC",

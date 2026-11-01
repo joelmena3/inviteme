@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run validar*)",
+      "Bash(npm run vista*)",
+      "Bash(npm run cambios*)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git checkout -b plantillas/*)",
+      "Bash(git add plantillas/*)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Edit(./.env)",
+      "Edit(./.env.*)",
+      "Edit(./public/eventos/**)"
+    ]
+  }
+}
