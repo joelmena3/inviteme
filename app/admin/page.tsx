@@ -113,7 +113,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
               Cuando el cliente te mande su comprobante. Créale su evento y, en la tarjeta “Formulario del cliente”, toca <b>Enviar por WhatsApp</b>:
               el mensaje sale con su nombre y el link de su formulario.
             </p>
-            <pre className="wa-msg">{msgPagoConfirmado({ nombre: "Ana", link: "[link de su formulario]" })}</pre>
+            <pre className="wa-msg">{msgPagoConfirmado({ nombre: "NOMBRE", link: "[link de su formulario]" })}</pre>
           </section>
         </>
       ) : (
