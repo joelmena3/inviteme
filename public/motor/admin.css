@@ -71,7 +71,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-
 .prefix input { border-radius: 0 10px 10px 0; }
 
 /* Opciones visuales (diseño, paquete) */
-.picks { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.picks { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
 @media (max-width: 640px) { .picks { grid-template-columns: minmax(0, 1fr); } }
 .pick { position: relative; display: flex; gap: 10px; align-items: center; border: 1px solid var(--line-2); border-radius: 12px; padding: 12px; cursor: pointer; background: #fff; }
 .pick input { position: absolute; opacity: 0; pointer-events: none; }
@@ -83,6 +83,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-
 .sw.bosque { background: linear-gradient(135deg, #9AB591 0 50%, #F5D0D7 50%); }
 .sw.picnic { background: linear-gradient(135deg, #E8735A 0 50%, #F6D776 50%); }
 .sw.botanico { background: linear-gradient(135deg, #2F4A3A 0 50%, #E9DCC6 50%); }
+.sw.navidad { background: linear-gradient(135deg, #C0322F 0 50%, #2F6B45 50%); box-shadow: inset 0 0 0 3px #D4A64A; }
 
 /* Botones */
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font: inherit; font-weight: 500; font-size: .92rem; border-radius: 999px; padding: 9px 16px;

@@ -25,7 +25,7 @@ export type Evento = {
   slug: string;
   nombre: string;
   fecha: string;              // ISO con zona horaria
-  diseno: "bosque" | "picnic" | "botanico";
+  diseno: "bosque" | "picnic" | "botanico" | "navidad";
   contenido: Contenido;
 };
 

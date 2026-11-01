@@ -68,6 +68,7 @@ export const DISENOS = [
   { id: "bosque", nombre: "Bosque", desc: "Verde salvia y rosa, animalitos del bosque" },
   { id: "picnic", nombre: "Picnic", desc: "Colores alegres de día de campo" },
   { id: "botanico", nombre: "Botánico", desc: "Elegante, con arcos y flores" },
+  { id: "navidad", nombre: "Navidad", desc: "Rojo, pino y dorado: reno, muñeco de nieve y esferas" },
 ] as const;
 export type DisenoId = (typeof DISENOS)[number]["id"];
 

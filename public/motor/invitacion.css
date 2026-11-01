@@ -19,6 +19,24 @@ body[data-design="bosque"] {
              radial-gradient(circle at calc(100% + 40px) 520px, rgba(245,208,215,.40) 0 150px, transparent 151px);
   --pattern-size: auto;
 }
+body[data-design="navidad"] {
+  --bg: #FBF6EE; --paper: #FFFFFF; --ink: #2B3A2F; --ink-soft: #6B7A6E;
+  --leaf: #3F7A55; --leaf-deep: #1F4D36; --blush: #F6DCD8; --rose: #B3282D; --line: #EADFCF;
+  --f-name: "Pinyon Script", "Snell Roundhand", cursive;
+  --f-display: "Cormorant Garamond", Georgia, serif;
+  --f-body: "Nunito", system-ui, sans-serif;
+  --name-size: clamp(5rem, 24vw, 7.5rem); --name-weight: 400; --head-style: italic; --head-weight: 600;
+  --head-transform: none; --head-track: 0;
+  --c-fox: #B07A52; --c-fox-light: #F1DCC2; --c-bunny: #FFFFFF; --c-bunny-in: #F6DCD8; --c-hedge: #2F6B45;
+  --c-face: #FFFFFF; --c-mush: #C0322F; --c-stem: #D4A64A; --c-cheek: #F2A7A7; --c-eye: #2B2420;
+  --c-line: #2B2420; --sw: 0;
+  --arch: 50% 50% 22px 22px / 34% 34% 22px 22px; --frame: 7px solid var(--paper);
+  --card-radius: 22px; --card-shadow: 0 10px 30px -18px rgba(31, 77, 54, .35);
+  --pattern: radial-gradient(circle at -30px 140px, rgba(63,122,85,.14) 0 130px, transparent 131px),
+             radial-gradient(circle at calc(100% + 40px) 520px, rgba(192,50,47,.10) 0 150px, transparent 151px),
+             radial-gradient(circle, rgba(212,166,74,.22) 1.4px, transparent 1.9px);
+  --pattern-size: auto, auto, 34px 34px;
+}
 body[data-design="picnic"] {
   --bg: #FFF6F8; --paper: #FFFFFF; --ink: #4D3946; --ink-soft: #85707D;
   --leaf: #A9DCC2; --leaf-deep: #4E9B78; --blush: #FBC6D3; --rose: #DE6587; --line: #F6DCE3;
