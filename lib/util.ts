@@ -128,8 +128,12 @@ export function waNumero(tel: string | null | undefined): string {
   const d = String(tel || "").replace(/\D/g, "");
   return d.length === 10 ? `52${d}` : d;
 }
-export const waLink = (tel: string | null | undefined, texto: string) =>
-  `https://wa.me/${waNumero(tel)}?text=${encodeURIComponent(texto)}`;
+// Usamos api.whatsapp.com en lugar de wa.me: wa.me a veces rompe los emojis (los
+// muestra como �) al abrir WhatsApp Web o la app de escritorio.
+export function waLink(tel: string | null | undefined, texto: string) {
+  const n = waNumero(tel);
+  return `https://api.whatsapp.com/send?${n ? `phone=${n}&` : ""}text=${encodeURIComponent(texto)}`;
+}
 
 export const MI_WHATSAPP = "525522678448";
 

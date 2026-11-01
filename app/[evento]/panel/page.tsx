@@ -2,6 +2,7 @@ import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/supabase";
 import { puedeEntrar } from "@/lib/panel";
+import { waLink } from "@/lib/util";
 import { agregarInvitado, editarInvitado, eliminarInvitado, eliminarRespuesta, entrarPanel, reiniciarRespuesta, salirPanel } from "./acciones";
 import { Confirmar, Copiar, Enviar } from "./botones";
 
@@ -168,7 +169,7 @@ export default async function Panel({ params, searchParams }: P) {
                 {r?.mensaje && <p className="inv-msg">“{r.mensaje}”</p>}
                 <code className="link">{link}</code>
                 <div className="row">
-                  <a className="btn wa" href={`https://wa.me/?text=${encodeURIComponent(textoWa(inv))}`} target="_blank" rel="noopener">Enviar por WhatsApp</a>
+                  <a className="btn wa" href={waLink(null, textoWa(inv))} target="_blank" rel="noopener">Enviar por WhatsApp</a>
                   <Copiar texto={link} />
                 </div>
                 <details className="more">
