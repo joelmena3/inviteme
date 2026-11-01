@@ -94,6 +94,7 @@ ${linkPanel}${conClave ? "\n(Tu contraseña te la mando en el siguiente mensaje)
         <div className="btns">
           <a className="btn ghost sm" href={`/${e.slug}`} target="_blank" rel="noopener">Ver invitación ↗</a>
           <a className="btn ghost sm" href={rutaPanel} target="_blank" rel="noopener">Panel del festejado ↗</a>
+          <Copiar texto={linkForm} etiqueta="Copiar link formulario" />
         </div>
       </div>
 
