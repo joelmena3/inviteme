@@ -30,7 +30,7 @@ export async function metadatos(evento: string, invitado?: string): Promise<Meta
   return {
     title: titulo,
     description: desc,
-    openGraph: { title: titulo, description: desc, images: [{ url: c.portada.src }] },
+    openGraph: { title: titulo, description: desc, images: c.portada?.src ? [{ url: c.portada.src }] : [] },
     robots: { index: false, follow: false },
   };
 }

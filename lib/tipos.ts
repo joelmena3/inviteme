@@ -10,7 +10,8 @@ export type Contenido = {
   mensaje: string;            // mensaje para los invitados
   fecha: { dia: string; numero: string; mes: string; hora: string; larga: string };
   lugar: { nombre: string; direccion: string; busqueda: string };
-  portada: Foto;
+  portada?: Foto | null;     // sin portada se muestra solo el marco
+  lineaEyebrow?: string;     // texto pequeño sobre la línea del tiempo
   lineaTitulo?: string;
   lineaIntro?: string;
   linea: { label: string; when: string; cap: string; fotos: Foto[] }[];
@@ -36,3 +37,18 @@ export type Invitado = {
 };
 
 export type Confirmacion = { asiste: boolean; personas: number; mensaje: string | null };
+
+// Lo que el panel de administrador lee y guarda de cada evento.
+export type EventoAdmin = Evento & {
+  tipo: string;
+  folio: string;
+  paquete: string;
+  precio: number;
+  cliente_nombre: string | null;
+  cliente_whatsapp: string | null;
+  notas: string | null;
+  carpeta: string | null;
+  admin_key: string;
+};
+
+export type Pago = { id: string; monto: number; metodo: string; referencia: string | null; fecha: string; notas: string | null };

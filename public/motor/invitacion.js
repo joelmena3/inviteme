@@ -237,7 +237,7 @@ function openLb(i) {
 function closeLb() { $("lightbox").hidden = true; lastFocus && lastFocus.focus(); }
 function setupLightbox() {
   document.querySelectorAll("#timeline button[data-idx]").forEach(b => ALL_PHOTOS.push({ src: b.dataset.src, label: b.dataset.label, when: b.dataset.when }));
-  $("timeline").addEventListener("click", e => { const b = e.target.closest("button[data-idx]"); if (b) openLb(Number(b.dataset.idx)); });
+  $("timeline")?.addEventListener("click", e => { const b = e.target.closest("button[data-idx]"); if (b) openLb(Number(b.dataset.idx)); });
   $("lbClose").addEventListener("click", closeLb);
   $("lbPrev").addEventListener("click", () => openLb(lbIndex - 1));
   $("lbNext").addEventListener("click", () => openLb(lbIndex + 1));

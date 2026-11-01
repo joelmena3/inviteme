@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { db } from "@/lib/supabase";
+import { codigoDesde } from "@/lib/util";
 
 // Acciones del panel. Cada una vuelve a comprobar la clave del evento
 // y solo toca filas que pertenecen a ese evento.
@@ -24,18 +25,6 @@ const leerPases = (v: FormDataEntryValue | null): number | null => {
   const n = Math.floor(Number(v));
   return v === null || v === "" || v === "ilimitados" || !Number.isFinite(n) || n < 1 ? null : Math.min(n, 30);
 };
-
-function codigoDesde(nombre: string): string {
-  return (
-    nombre
-      .normalize("NFD")
-      .replace(/[̀-ͯ]/g, "")
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "")
-      .slice(0, 50) || "invitado"
-  );
-}
 
 export async function agregarInvitado(fd: FormData) {
   const { ev, key } = await autorizar(fd);

@@ -16,7 +16,7 @@ export function renderInvitacion(ev: Evento, inv: Invitado, previa: Confirmacion
   const c = ev.contenido;
   let idx = 0;
 
-  const linea = c.linea
+  const linea = (c.linea || [])
     .map((m, i) => {
       const shots = m.fotos
         .map(
@@ -54,7 +54,7 @@ export function renderInvitacion(ev: Evento, inv: Invitado, previa: Confirmacion
     hora: c.fecha.hora,
     busqueda: c.lugar.busqueda,
     direccionCompleta: `${c.lugar.nombre}, ${c.lugar.direccion}`,
-    musica: c.musica,
+    musica: c.musica || [],
     invitado: { codigo: inv.codigo, nombre: inv.nombre, pases: inv.pases },
     previa,
   };
@@ -72,7 +72,7 @@ export function renderInvitacion(ev: Evento, inv: Invitado, previa: Confirmacion
     <span class="sprig r" data-art="sprig" aria-hidden="true"></span>
     <p class="eyebrow">${esc(c.eyebrow)}</p>
     <div class="stage">
-      <div class="arch"><img src="${esc(c.portada.src)}" alt="${esc(c.portada.alt || ev.nombre)}" width="${c.portada.w}" height="${c.portada.h}"></div>
+      <div class="arch">${c.portada?.src ? `<img src="${esc(c.portada.src)}" alt="${esc(c.portada.alt || ev.nombre)}" width="${c.portada.w}" height="${c.portada.h}">` : ""}</div>
       <span class="critter fox" data-art="fox" aria-hidden="true"></span>
       <span class="critter bunny" data-art="bunny" aria-hidden="true"></span>
       <span class="critter mush1" data-art="mushroom" aria-hidden="true"></span>
@@ -122,12 +122,12 @@ export function renderInvitacion(ev: Evento, inv: Invitado, previa: Confirmacion
     </div>
   </section>
 
-  <section aria-labelledby="h-time">
-    <p class="eyebrow">Mi primer año</p>
+  ${linea || cierre ? `<section aria-labelledby="h-time">
+    <p class="eyebrow">${esc(c.lineaEyebrow ?? "Mi primer año")}</p>
     <h2 id="h-time">${esc(c.lineaTitulo || "Así he crecido")}</h2>
     <p class="intro">${esc(c.lineaIntro || "Toca cualquier foto para verla en grande.")}</p>
     <ol class="timeline" id="timeline">${linea}${cierre}</ol>
-  </section>
+  </section>` : ""}
 
   <section aria-labelledby="h-rsvp">
     <p class="eyebrow">Confirma tu asistencia</p>
