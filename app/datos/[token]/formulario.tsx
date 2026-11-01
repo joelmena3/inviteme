@@ -38,7 +38,7 @@ function ElegirFotos({ multiple, children, onFotos }: { multiple?: boolean; chil
   );
 }
 
-export function Formulario({ token, ayuda, linkInvitacion, config, inicial }: { token: string; ayuda: string; linkInvitacion: string; config: Config; inicial: DatosCliente }) {
+export function Formulario({ token, ayuda, avisar, linkInvitacion, config, inicial }: { token: string; ayuda: string; avisar: string; linkInvitacion: string; config: Config; inicial: DatosCliente }) {
   const [d, setD] = useState<DatosCliente>(inicial);
   const [estado, setEstado] = useState<{ t: string; err?: boolean } | null>(null);
   const [guardando, setGuardando] = useState(false);
@@ -79,11 +79,12 @@ export function Formulario({ token, ayuda, linkInvitacion, config, inicial }: { 
           <p style={{ fontSize: "2.4rem", margin: 0 }} aria-hidden="true">💌</p>
           <h1>¡Listo, recibimos tus datos!</h1>
           <p className="soft" style={{ margin: 0, maxWidth: "42ch" }}>
-            Ya estamos trabajando en tu invitación. Te avisamos por WhatsApp en cuanto esté lista.
+            Último paso: avísanos por WhatsApp que ya lo enviaste y empezamos con tu invitación.
             {listo.agregados > 0 && ` Agregamos ${listo.agregados} ${listo.agregados === 1 ? "invitado" : "invitados"} a tu lista.`}
           </p>
           <p className="soft sm" style={{ margin: 0 }}>Si se te olvidó algo, puedes volver a abrir este mismo link y corregirlo.</p>
           <div className="btns" style={{ justifyContent: "center" }}>
+            <a className="btn" href={avisar} target="_blank" rel="noopener">Avisar por WhatsApp 📲</a>
             <button type="button" className="btn ghost" onClick={() => setListo(null)}>Revisar mis datos</button>
           </div>
         </section>

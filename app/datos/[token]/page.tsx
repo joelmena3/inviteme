@@ -18,6 +18,7 @@ export default async function Datos({ params }: { params: Promise<{ token: strin
   const c = ev.contenido as Contenido;
   const { count } = await db().from("invitados").select("id", { count: "exact", head: true }).eq("evento_id", ev.id);
   const ayuda = waLink(MI_WHATSAPP, `Hola, tengo una duda con el formulario de mi invitación (${ev.folio || ev.slug}).`);
+  const avisar = waLink(MI_WHATSAPP, `¡Hola! Ya envié el formulario de mi invitación ✅ (${ev.folio || ev.slug})`);
 
   if (c.formulario?.cerrado) {
     return (
@@ -48,6 +49,7 @@ export default async function Datos({ params }: { params: Promise<{ token: strin
       <Formulario
         token={token}
         ayuda={ayuda}
+        avisar={avisar}
         linkInvitacion={`/${ev.slug}`}
         config={{
           esBoda,

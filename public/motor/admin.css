@@ -187,3 +187,9 @@ input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-
 
 /* Vista previa de mensajes de WhatsApp */
 .wa-msg { margin: 0; white-space: pre-wrap; font-family: var(--f-body); font-size: .9rem; line-height: 1.5; background: #E7F7E3; color: #1F3A24; padding: 14px 16px; border-radius: 12px 12px 12px 2px; max-width: 520px; }
+
+/* Pestañas de la página principal */
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); flex-wrap: wrap; }
+.tabs a { text-decoration: none; color: var(--soft) !important; font-weight: 500; padding: 10px 14px; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.tabs a:hover { color: var(--plum) !important; }
+.tabs a.on { color: var(--plum) !important; border-bottom-color: var(--gold); }

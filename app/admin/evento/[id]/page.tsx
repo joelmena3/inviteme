@@ -2,6 +2,7 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { exigirAdmin } from "@/lib/admin";
+import { msgPagoConfirmado } from "@/lib/mensajes";
 import { db } from "@/lib/supabase";
 import type { EventoAdmin, Pago } from "@/lib/tipos";
 import { estadoPago, fotosPorPaquete, METODOS, nombreDe, PAQUETES, partesFecha, pesos, TIPOS, waLink } from "@/lib/util";
@@ -58,16 +59,7 @@ export default async function EventoAdminPage({ params, searchParams }: P) {
   const form = e.contenido.formulario || {};
   const maxFotos = form.maxFotos ?? fotosPorPaquete(e.paquete);
   const linkForm = `${base}/datos/${e.admin_key}`;
-  const saludo = e.cliente_nombre ? ` ${e.cliente_nombre.split(" ")[0]}` : "";
-  const msgForm = `¡Hola${saludo}! 🎉 Recibimos tu pago, ¡gracias por confiar en InviteMe! 💌
-
-Para armar tu invitación necesito unos datos. Llénalos aquí, te toma unos 10 minutos:
-👉 ${linkForm}
-
-📸 Ten a la mano tus fotos favoritas
-📋 Y tu lista de invitados, si ya la tienes
-
-En cuanto lo envíes, tu invitación queda lista en menos de ${e.paquete === "express" ? 24 : 48} horas ⏱️`;
+  const msgForm = msgPagoConfirmado({ nombre: e.cliente_nombre, link: linkForm, paquete: e.paquete });
   const msgLista = `¡Tu invitación está lista! 🥳💌
 
 👉 Mírala aquí: ${base}/${e.slug}

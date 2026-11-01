@@ -1,7 +1,7 @@
 import Link from "next/link";
-import { headers } from "next/headers";
 import { Copiar } from "@/app/[evento]/panel/botones";
 import { exigirAdmin } from "@/lib/admin";
+import { MSG_NUEVO_CLIENTE, msgPagoConfirmado } from "@/lib/mensajes";
 import { db } from "@/lib/supabase";
 import { DISENOS, estadoPago, nombreDe, PAQUETES, partesFecha, pesos, TIPOS, ZONA } from "@/lib/util";
 import { Aviso, Barra } from "./barra";
@@ -17,9 +17,10 @@ type Fila = {
 const fechaBonita = (iso: string) =>
   new Intl.DateTimeFormat("es-MX", { weekday: "short", day: "numeric", month: "short", year: "numeric", timeZone: ZONA }).format(new Date(iso));
 
-export default async function Admin({ searchParams }: { searchParams: Promise<{ msg?: string; error?: string }> }) {
+export default async function Admin({ searchParams }: { searchParams: Promise<{ msg?: string; error?: string; tab?: string }> }) {
   await exigirAdmin();
-  const { msg, error: esError } = await searchParams;
+  const { msg, error: esError, tab } = await searchParams;
+  const enMensajes = tab === "mensajes";
   const { data, error } = await db()
     .from("eventos")
     .select("id, folio, slug, nombre, tipo, fecha, diseno, paquete, precio, cliente_nombre, contenido, pagos(monto, fecha), invitados(count)")
@@ -37,22 +38,6 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
     );
   }
 
-  const h = await headers();
-  const base = `${h.get("x-forwarded-proto") || "https"}://${h.get("x-forwarded-host") || h.get("host")}`;
-  const msgInfo = `¡Hola! 👋 Gracias por escribir a InviteMe 💌
-
-Hacemos invitaciones digitales personalizadas, listas en menos de 48 horas ⏱️
-
-✨ *Express* · $500
-Posadas, reuniones y fiestas sencillas. Foto de portada, mapa, cuenta regresiva y confirmación de asistencia.
-
-🌟 *Wow* · $999
-Bodas, XV años, bautizos, primer año e infantiles. Hasta 15 fotos, música, links por invitado, mesa de regalos y más.
-
-👀 Mira ejemplos y paga aquí:
-${base}/pagos
-
-En cuanto me mandes tu comprobante 🧾, te comparto un formulario muy sencillo para los datos de tu evento 📝`;
   const filas = (data || []) as unknown as Fila[];
   const ahora = Date.now();
   const hoy = partesFecha(new Date().toISOString()).dia;
@@ -107,22 +92,38 @@ En cuanto me mandes tu comprobante 🧾, te comparto un formulario muy sencillo 
 
       <div>
         <p className="eyebrow">Tu negocio</p>
-        <h1>Eventos</h1>
+        <h1>{enMensajes ? "Mensajes" : "Eventos"}</h1>
       </div>
+
+      <nav className="tabs" aria-label="Secciones del panel">
+        <Link href="/admin" className={enMensajes ? "" : "on"} aria-current={enMensajes ? undefined : "page"}>Próximos eventos</Link>
+        <Link href="/admin?tab=mensajes" className={enMensajes ? "on" : ""} aria-current={enMensajes ? "page" : undefined}>Mensajes de WhatsApp</Link>
+      </nav>
+
+      {enMensajes ? (
+        <>
+          <section className="card" aria-labelledby="h-m1">
+            <div className="card-head"><h2 id="h-m1">1 · Nuevo cliente</h2><Copiar texto={MSG_NUEVO_CLIENTE} etiqueta="Copiar mensaje" /></div>
+            <p className="soft sm" style={{ margin: 0 }}>Cuando alguien te escriba por primera vez. Tip: en WhatsApp Business guárdalo como respuesta rápida “/info”.</p>
+            <pre className="wa-msg">{MSG_NUEVO_CLIENTE}</pre>
+          </section>
+          <section className="card" aria-labelledby="h-m2">
+            <div className="card-head"><h2 id="h-m2">2 · Pago confirmado</h2></div>
+            <p className="soft sm" style={{ margin: 0 }}>
+              Cuando el cliente te mande su comprobante. Créale su evento y, en la tarjeta “Formulario del cliente”, toca <b>Enviar por WhatsApp</b>:
+              el mensaje sale con su nombre y el link de su formulario.
+            </p>
+            <pre className="wa-msg">{msgPagoConfirmado({ nombre: "Ana", link: "[link de su formulario]" })}</pre>
+          </section>
+        </>
+      ) : (
+        <>
 
       <section className="tiles" aria-label="Resumen">
         <div className="tile"><span className="lbl">Próximos</span><b className="n">{proximos.length}</b><small>eventos por venir</small></div>
         <div className="tile"><span className="lbl">Cobrado este mes</span><b className="n">{pesos(cobradoMes)}</b><small>pagos registrados</small></div>
         <div className="tile"><span className="lbl">Por cobrar</span><b className="n">{pesos(porCobrar)}</b><small>saldos pendientes</small></div>
         <div className="tile"><span className="lbl">Cobrado total</span><b className="n">{pesos(cobradoTotal)}</b><small>desde el inicio</small></div>
-      </section>
-
-      <section className="card" aria-labelledby="h-msgs">
-        <div className="card-head"><h2 id="h-msgs">Mensaje para nuevos clientes</h2><Copiar texto={msgInfo} etiqueta="Copiar mensaje" /></div>
-        <p className="soft sm" style={{ margin: 0 }}>
-          Cuando alguien te escriba, mándale este mensaje. Tip: en WhatsApp Business guárdalo como respuesta rápida “/info”.
-        </p>
-        <pre className="wa-msg">{msgInfo}</pre>
       </section>
 
       <section className="card flush" aria-labelledby="h-prox">
@@ -135,6 +136,8 @@ En cuanto me mandes tu comprobante 🧾, te comparto un formulario muy sencillo 
           <div className="card-head"><h2 id="h-past">Pasados ({pasados.length})</h2></div>
           {lista(pasados)}
         </section>
+      )}
+        </>
       )}
     </main>
   );
