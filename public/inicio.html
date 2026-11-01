@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>InviteMe · Invitaciones digitales</title>
+<meta name="description" content="Invitaciones digitales personalizadas para fiestas infantiles, posadas, bautizos, bodas y primer año. Listas en menos de 48 horas, desde $500 MXN.">
+<meta property="og:title" content="InviteMe · Invitaciones digitales">
+<meta property="og:description" content="Invitaciones que hacen decir wow. Listas en menos de 48 horas, desde $500 MXN.">
+<meta property="og:url" content="https://inviteme.mx/">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#3B1F4A">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='32' fill='%233B1F4A'/%3E%3Ctext x='32' y='42' text-anchor='middle' font-family='Georgia,serif' font-size='28' fill='%23E8B86D'%3EiM%3C/text%3E%3C/svg%3E">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: sobre de invitación — bandas a todo lo ancho, contenido centrado a 1080px; ciruela + dorado de la marca */
+:root{
+  --bg:#FCFAFF; --surface:#FFFFFF; --ink:#2A1535; --muted:#6E5A78; --line:#ECE4F3;
+  --plum:#3B1F4A; --plum-soft:#F4EEFB; --gold:#C9913A; --gold-bright:#E8B86D; --on-plum:#FFFAFD;
+  --c-pink:#F2A7BE; --c-lilac:#B9A2E6; --c-mint:#8FD3BF; --c-sky:#9CC7F2;
+  --wa:#1F8A4C; --wa-ink:#FFFFFF;
+  --t-kid:#DCEBFA; --t-girl:#FBE1EA; --t-posada:#FCE3E6; --t-baut:#E3F1EE; --t-boda:#EEE6F4; --t-one:#E6F0DE;
+  --display:"DM Serif Display", Georgia, "Times New Roman", serif;
+  --body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --r:18px;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#1C1023; --surface:#26162F; --ink:#F6EBF2; --muted:#BDA8C6; --line:#3D2A48;
+  --plum:#4A2A5C; --plum-soft:#2E1C38; --gold:#E8B86D; --gold-bright:#F2C886; --on-plum:#FFF6EE;
+  --wa:#25A55C; --wa-ink:#06180D;
+  --t-kid:#1F2C3D; --t-girl:#3A2130; --t-posada:#3A2B1C; --t-baut:#1C3230; --t-boda:#2F2340; --t-one:#24311E;
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#1C1023; --surface:#26162F; --ink:#F6EBF2; --muted:#BDA8C6; --line:#3D2A48;
+  --plum:#4A2A5C; --plum-soft:#2E1C38; --gold:#E8B86D; --gold-bright:#F2C886; --on-plum:#FFF6EE;
+  --wa:#25A55C; --wa-ink:#06180D;
+  --t-kid:#1F2C3D; --t-girl:#3A2130; --t-posada:#3A2B1C; --t-baut:#1C3230; --t-boda:#2F2340; --t-one:#24311E;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);font-weight:400;line-height:1.1;margin:0;text-wrap:balance}
+h2{font-size:clamp(2rem,4.5vw,2.8rem)}
+p{margin:0}
+.eyebrow{font-size:.78rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.lede{color:var(--muted);max-width:58ch;font-size:1.05rem}
+section{padding-block:clamp(56px,9vw,96px)}
+.sec-head{display:grid;gap:12px;margin-bottom:36px}
+
+/* Botones */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 22px;border-radius:999px;font:600 1rem var(--body);text-decoration:none;border:1.5px solid transparent;cursor:pointer;transition:transform .15s ease, box-shadow .15s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn:focus-visible,.copy:focus-visible,a:focus-visible{outline:3px solid var(--gold-bright);outline-offset:3px}
+.btn-wa{background:var(--wa);color:var(--wa-ink)}
+.btn-plum{background:var(--plum);color:var(--on-plum)}
+.btn-ghost{border-color:currentColor;background:transparent}
+.btn svg{width:20px;height:20px;flex:none}
+
+/* Header */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:21;background:var(--bg)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:12px}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.seal{width:38px;height:38px;border-radius:50%;background:var(--plum);display:grid;place-items:center;box-shadow:0 0 0 2px var(--bg),0 0 0 3.5px var(--plum)}
+.seal span{font-family:var(--display);color:var(--gold-bright);font-size:1.15rem;letter-spacing:-1px;margin-top:-2px}
+.brand b{font-family:var(--display);font-weight:400;font-size:1.45rem}
+.brand b i{font-style:normal;color:var(--gold)}
+nav.links{display:flex;gap:22px;font-weight:500;font-size:.95rem}
+nav.links a{text-decoration:none;color:var(--muted)}
+nav.links a:hover{color:var(--ink)}
+.top .btn{padding:10px 16px;font-size:.92rem}
+@media (max-width:760px){nav.links{display:none}}
+
+/* Hero */
+.hero{padding-block:clamp(40px,7vw,80px) clamp(48px,8vw,88px);position:relative;overflow:hidden;background:
+  radial-gradient(circle at 6% 16%, var(--c-pink) 0 5px, transparent 6px),
+  radial-gradient(circle at 20% 90%, var(--c-lilac) 0 4px, transparent 5px),
+  radial-gradient(circle at 44% 8%, var(--gold-bright) 0 4px, transparent 5px),
+  radial-gradient(circle at 56% 94%, var(--c-mint) 0 5px, transparent 6px),
+  radial-gradient(circle at 93% 12%, var(--c-sky) 0 5px, transparent 6px),
+  radial-gradient(circle at 97% 72%, var(--c-pink) 0 4px, transparent 5px),
+  radial-gradient(circle at 74% 30%, var(--c-lilac) 0 3px, transparent 4px),
+  radial-gradient(circle at 34% 52%, var(--c-mint) 0 3px, transparent 4px),
+  radial-gradient(ellipse 45% 60% at 8% 35%, var(--t-girl), transparent 70%),
+  radial-gradient(ellipse 50% 70% at 82% 50%, var(--t-boda), transparent 70%),
+  var(--bg)}
+.hero .wrap{position:relative}
+.hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center}
+.hero h1{font-size:clamp(2.6rem,6.4vw,4.6rem);letter-spacing:-.01em}
+.hero h1 em{color:var(--gold);font-style:italic}
+.hero-copy{display:grid;gap:22px;min-width:0}
+.hero-ctas{display:flex;flex-wrap:wrap;gap:12px}
+.facts{display:flex;flex-wrap:wrap;gap:10px 22px;color:var(--muted);font-size:.95rem}
+.facts span{display:inline-flex;align-items:center;gap:8px}
+.facts span::before{content:"";width:7px;height:7px;transform:rotate(45deg);background:var(--gold)}
+.envelope{position:relative;aspect-ratio:4/5;max-width:340px;width:100%;justify-self:center}
+.env-card{position:absolute;inset:0 8% 18% 8%;background:var(--surface);border:1px solid var(--line);border-radius:14px;display:grid;place-items:center;text-align:center;padding:24px;box-shadow:0 18px 40px -24px rgba(42,21,53,.45);animation:rise 1s .2s ease-out both}
+.env-card .script{font-family:var(--display);font-style:italic;font-size:1.05rem;color:var(--muted)}
+.env-card .name{font-family:var(--display);font-size:2.4rem;line-height:1;margin:6px 0}
+.env-card .date{font-size:.8rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.env-body{position:absolute;inset:auto 0 0 0;height:48%;background:var(--plum);border-radius:0 0 18px 18px;clip-path:polygon(0 0,50% 42%,100% 0,100% 100%,0 100%)}
+.env-wax{position:absolute;left:50%;bottom:30%;transform:translate(-50%,50%);width:64px;height:64px;border-radius:50%;background:var(--gold-bright);display:grid;place-items:center;box-shadow:0 0 0 5px var(--plum)}
+.env-wax span{font-family:var(--display);color:#3B1F4A;font-size:1.6rem;letter-spacing:-1px;margin-top:-3px}
+@keyframes rise{from{transform:translateY(22%)}to{transform:translateY(0)}}
+@media (max-width:820px){.hero .wrap{grid-template-columns:1fr}.envelope{max-width:260px}}
+
+/* Ejemplos */
+.examples{background:var(--surface);border-block:1px solid var(--line)}
+.grid-ex{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+@media (max-width:900px){.grid-ex{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.grid-ex{grid-template-columns:1fr}}
+.ex{display:grid;gap:14px;min-width:0}
+.phone{position:relative;aspect-ratio:9/16;max-width:100%;border-radius:28px;background:var(--tint);border:8px solid var(--plum);display:grid;place-items:center;overflow:hidden}
+.phone::before{content:"";position:absolute;top:8px;left:50%;transform:translateX(-50%);width:34%;height:14px;border-radius:999px;background:var(--plum)}
+.phone .slot{display:grid;justify-items:center;gap:10px;text-align:center;padding:20px;color:var(--ink)}
+.phone .slot svg{width:64px;height:64px}
+.phone .slot small{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+.phone iframe,.phone img{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:cover}
+.ex-meta{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.ex-meta h3{font-size:1.4rem}
+.chip{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:var(--plum-soft);color:var(--ink);white-space:nowrap}
+.chip.gold{background:var(--gold-bright);color:#3B1F4A}
+
+/* Paquetes */
+.packs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+@media (max-width:760px){.packs{grid-template-columns:1fr}}
+.pack{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:30px;display:grid;gap:18px;align-content:start;min-width:0}
+.pack.feature{background:var(--plum);color:var(--on-plum);border-color:var(--plum)}
+.pack.feature .muted{color:#D9C7E3}
+.pack-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.pack h3{font-size:2rem}
+.price{font-family:var(--display);font-size:3rem;line-height:1;font-variant-numeric:tabular-nums}
+.price small{font-family:var(--body);font-size:.95rem;font-weight:500;margin-left:6px}
+.muted{color:var(--muted)}
+.pack ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.pack li{display:grid;grid-template-columns:18px 1fr;gap:10px;align-items:start}
+.pack li::before{content:"";width:9px;height:9px;margin-top:8px;transform:rotate(45deg);background:var(--gold)}
+.pack.feature li::before{background:var(--gold-bright)}
+.pack.feature .btn-ghost{color:var(--on-plum)}
+.ai-note{margin-top:22px;padding:20px 24px;border:1.5px dashed var(--gold);border-radius:var(--r);display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between}
+.ai-note p{max-width:60ch}
+.ai-note strong{font-family:var(--display);font-weight:400;font-size:1.3rem;display:block}
+
+/* Pasos */
+.steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px;counter-reset:s;list-style:none;margin:0;padding:0}
+@media (max-width:860px){.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:460px){.steps{grid-template-columns:1fr}}
+.steps li{counter-increment:s;display:grid;gap:8px;padding-top:16px;border-top:2px solid var(--plum)}
+.steps li:nth-child(2){border-color:var(--c-pink)}.steps li:nth-child(3){border-color:var(--c-lilac)}.steps li:nth-child(4){border-color:var(--c-mint)}
+.steps li::before{content:counter(s);font-family:var(--display);font-size:2.2rem;line-height:1;color:var(--gold)}
+.steps b{font-size:1.05rem}
+.steps span{color:var(--muted);font-size:.95rem}
+
+/* Pagos */
+.pay{background:var(--plum-soft)}
+.pay-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
+@media (max-width:800px){.pay-grid{grid-template-columns:1fr}}
+.pay-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:28px;display:grid;gap:18px;align-content:start;min-width:0}
+.pay-card h3{font-size:1.7rem}
+.mp-links{display:grid;gap:10px}
+.mp-link{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 18px;border-radius:12px;border:1.5px solid var(--line);text-decoration:none;font-weight:600;transition:border-color .15s ease}
+.mp-link:hover{border-color:var(--gold)}
+.mp-link .amt{font-family:var(--display);font-weight:400;font-size:1.35rem;font-variant-numeric:tabular-nums}
+.mp-link .go{font-size:.85rem;color:var(--muted);font-weight:500}
+.methods{display:flex;flex-wrap:wrap;gap:8px}
+.bank{display:grid;gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.bank-row{display:grid;grid-template-columns:110px 1fr auto;gap:12px;align-items:center;padding:12px 16px;border-top:1px solid var(--line)}
+.bank-row:first-child{border-top:0}
+.bank-row dt{font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.bank-row dd{margin:0;font-weight:600;min-width:0;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.bank-row dd.todo{color:var(--gold);font-style:italic;font-weight:500}
+@media (max-width:420px){.bank-row{grid-template-columns:1fr auto}.bank-row dt{grid-column:1/-1}}
+.copy{font:600 .82rem var(--body);padding:7px 12px;border-radius:999px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.copy:hover{border-color:var(--gold)}
+.small{font-size:.9rem}
+.proof{margin-top:22px;display:flex;flex-wrap:wrap;gap:14px 24px;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px 24px}
+
+/* Contacto final */
+.cta-band{background:var(--plum);color:var(--on-plum);text-align:left}
+.cta-band .wrap{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center}
+@media (max-width:720px){.cta-band .wrap{grid-template-columns:1fr}}
+.cta-band h2 em{color:var(--gold-bright)}
+.phone-num{font-family:var(--display);font-size:1.5rem;user-select:all;color:var(--gold-bright)}
+footer{padding-block:28px;color:var(--muted);font-size:.88rem}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
+
+/* WhatsApp flotante */
+.wa-float{position:fixed;right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:30;width:60px;height:60px;border-radius:50%;background:var(--wa);color:var(--wa-ink);display:grid;place-items:center;box-shadow:0 10px 26px -8px rgba(0,0,0,.45);text-decoration:none}
+.wa-float svg{width:30px;height:30px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:600;font-size:.9rem;z-index:40}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-chat" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.5C6.75 2.5 2.5 6.4 2.5 11.2c0 2.6 1.25 4.95 3.25 6.55L5 21.5l4.1-2.05c.92.25 1.89.38 2.9.38 5.25 0 9.5-3.9 9.5-8.63S17.25 2.5 12 2.5Zm-3.6 7.3h7.2a.9.9 0 1 1 0 1.8H8.4a.9.9 0 1 1 0-1.8Zm0 3.2h4.6a.9.9 0 1 1 0 1.8H8.4a.9.9 0 1 1 0-1.8Z"/></symbol>
+</svg>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="#inicio" aria-label="InviteMe, inicio">
+      <span class="seal"><span>iM</span></span>
+      <b>Invite<i>Me</i></b>
+    </a>
+    <nav class="links" aria-label="Secciones">
+      <a href="#ejemplos">Ejemplos</a>
+      <a href="#paquetes">Paquetes</a>
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#pagos">Pagos</a>
+    </nav>
+    <a class="btn btn-wa wa-link" href="https://wa.me/525522678448" target="_blank" rel="noopener">
+      <svg aria-hidden="true"><use href="#i-chat"/></svg>Escríbenos
+    </a>
+  </div>
+</header>
+
+<main id="inicio">
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-copy">
+        <p class="eyebrow">Invitaciones digitales</p>
+        <h1>Invitaciones que hacen decir <em>wow</em> antes de la fiesta</h1>
+        <p class="lede">Diseñamos tu invitación a la medida, con tus fotos y tus colores. Tus invitados la abren desde WhatsApp, ven el mapa, la cuenta regresiva y te confirman su asistencia.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-wa wa-link" data-msg="Hola, quiero una invitación digital" href="https://wa.me/525522678448" target="_blank" rel="noopener">
+            <svg aria-hidden="true"><use href="#i-chat"/></svg>Cotiza por WhatsApp
+          </a>
+          <a class="btn btn-ghost" href="#ejemplos">Ver ejemplos</a>
+        </div>
+        <div class="facts"><span>Lista en menos de 48 horas</span><span>Desde $500 MXN</span><span>Confirmación de invitados</span></div>
+      </div>
+      <div class="envelope" aria-hidden="true">
+        <div class="env-card">
+          <div>
+            <p class="script">Te invitamos a celebrar</p>
+            <p class="name">Tu evento</p>
+            <p class="date">Sábado · 7:00 pm</p>
+          </div>
+        </div>
+        <div class="env-body"></div>
+        <div class="env-wax"><span>iM</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EJEMPLOS: para cada ejemplo, reemplaza el <div class="slot">…</div> por
+       <iframe src="https://inviteme.mx/ejemplo-xxx" title="…"></iframe>  o  <img src="…" alt="…">
+       y cambia el href del enlace "Ver invitación" -->
+  <section class="examples" id="ejemplos">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Ejemplos</p>
+        <h2>Una invitación para cada celebración</h2>
+        <p class="lede">Abre cada ejemplo como lo verían tus invitados en su celular.</p>
+      </div>
+      <div class="grid-ex">
+        <article class="ex">
+          <div class="phone" style="--tint:var(--t-kid)">
+            <div class="slot">
+              <svg viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="32" cy="24" rx="15" ry="18" fill="#5B8FD4"/><path d="M29 41h6l-3 4z" fill="#5B8FD4"/><path d="M32 45c-4 6 4 9 0 16" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+              <small>Ejemplo próximamente</small>
+            </div>
+          </div>
+          <div class="ex-meta"><h3>Fiesta infantil · niño</h3><span class="chip gold">Wow</span></div>
+        </article>
+        <article class="ex">
+          <div class="phone" style="--tint:var(--t-girl)">
+            <div class="slot">
+              <svg viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="32" cy="24" rx="15" ry="18" fill="#D97A9A"/><path d="M29 41h6l-3 4z" fill="#D97A9A"/><path d="M32 45c-4 6 4 9 0 16" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+              <small>Ejemplo próximamente</small>
+            </div>
+          </div>
+          <div class="ex-meta"><h3>Fiesta infantil · niña</h3><span class="chip gold">Wow</span></div>
+        </article>
+        <article class="ex">
+          <div class="phone" style="--tint:var(--t-posada)">
+            <div class="slot">
+              <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="11" fill="#E2913B"/><g fill="#C9573C"><path d="M32 4l5 18H27z"/><path d="M32 60l-5-18h10z"/><path d="M4 32l18-5v10z"/><path d="M60 32l-18 5V27z"/><path d="M12 12l16 10-6 6z"/><path d="M52 52 36 42l6-6z"/><path d="M52 12 42 28l-6-6z"/><path d="M12 52l10-16 6 6z"/></g></svg>
+              <small>Ejemplo próximamente</small>
+            </div>
+          </div>
+          <div class="ex-meta"><h3>Posada</h3><span class="chip">Express</span></div>
+        </article>
+        <article class="ex">
+          <div class="phone" style="--tint:var(--t-baut)">
+            <div class="slot">
+              <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 6C24 20 16 30 16 40a16 16 0 0 0 32 0c0-10-8-20-16-34Z" fill="#6FB3A8"/><path d="M25 42a8 8 0 0 0 7 7" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
+              <small>Ejemplo próximamente</small>
+            </div>
+          </div>
+          <div class="ex-meta"><h3>Bautizo</h3><span class="chip gold">Wow</span></div>
+        </article>
+        <article class="ex">
+          <div class="phone" style="--tint:var(--t-boda)">
+            <div class="slot">
+              <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="25" cy="36" r="13" fill="none" stroke="#C9913A" stroke-width="5"/><circle cx="39" cy="36" r="13" fill="none" stroke="#8E6BB0" stroke-width="5"/><path d="M39 17l4-6h-8z" fill="#8E6BB0"/></svg>
+              <small>Ejemplo próximamente</small>
+            </div>
+          </div>
+          <div class="ex-meta"><h3>Boda</h3><span class="chip gold">Wow</span></div>
+        </article>
+        <article class="ex">
+          <div class="phone" style="--tint:var(--t-one)">
+            <div class="slot">
+              <svg viewBox="0 0 64 64" aria-hidden="true"><text x="32" y="50" text-anchor="middle" font-family="DM Serif Display, Georgia, serif" font-size="52" fill="#6E9A5E">1</text><path d="M46 10l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#C9913A"/></svg>
+              <small>Ejemplo próximamente</small>
+            </div>
+          </div>
+          <div class="ex-meta"><h3>Primer año</h3><span class="chip gold">Wow</span></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="paquetes">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Paquetes</p>
+        <h2>Elige cómo quieres sorprender</h2>
+        <p class="lede">Precios en pesos mexicanos. Los dos paquetes incluyen un link para compartir por WhatsApp y redes sociales.</p>
+      </div>
+      <div class="packs">
+        <article class="pack">
+          <div class="pack-head">
+            <div><h3>Express</h3><p class="muted">Posadas, reuniones de amigos, cumpleaños de adultos y comidas familiares.</p></div>
+          </div>
+          <p class="price">$500<small>MXN</small></p>
+          <ul>
+            <li>Diseño de catálogo con tus colores</li>
+            <li>1 foto de portada</li>
+            <li>Mapa y cuenta regresiva</li>
+            <li>Confirmación con nombre y número de asistentes</li>
+            <li>Música de catálogo (opcional)</li>
+            <li>1 ronda de cambios · entrega en 24 horas</li>
+          </ul>
+          <a class="btn btn-ghost wa-link" data-msg="Hola, me interesa el paquete Express ($500)" href="https://wa.me/525522678448" target="_blank" rel="noopener">Quiero Express</a>
+        </article>
+        <article class="pack feature">
+          <div class="pack-head">
+            <div><h3>Wow</h3><p class="muted">Primer año, cumpleaños infantiles, bautizos, XV años y bodas.</p></div>
+            <span class="chip gold">Favorito</span>
+          </div>
+          <p class="price">$999<small>MXN</small></p>
+          <ul>
+            <li>Diseño personalizado a tu estilo</li>
+            <li>Hasta 15 fotos en galería o línea del tiempo</li>
+            <li>Links personales con pases por invitado</li>
+            <li>Panel para ver, editar y descargar tus confirmaciones</li>
+            <li>Mensaje, itinerario, mesa de regalos y código de vestimenta</li>
+            <li>La música que tú elijas</li>
+            <li>2 rondas de cambios · entrega en 48 horas</li>
+          </ul>
+          <a class="btn wa-link" style="background:var(--gold-bright);color:#3B1F4A" data-msg="Hola, me interesa el paquete Wow ($999)" href="https://wa.me/525522678448" target="_blank" rel="noopener">Quiero Wow</a>
+        </article>
+      </div>
+      <div class="ai-note">
+        <p><strong>También editamos tus fotos</strong><span class="muted">Cambiamos o limpiamos fondos, quitamos objetos y personas, y unificamos color y luz para que tus fotos luzcan en la invitación.</span></p>
+        <a class="btn btn-plum wa-link" data-msg="Hola, quiero cotizar edición de fotos para mi invitación" href="https://wa.me/525522678448" target="_blank" rel="noopener">Pide tu cotización</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="como-funciona" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Cómo funciona</p>
+        <h2>De tu idea a la invitación en cuatro pasos</h2>
+      </div>
+      <ol class="steps">
+        <li><b>Escríbenos</b><span>Cuéntanos qué celebras, la fecha y el paquete que te gusta.</span></li>
+        <li><b>Haz tu pago</b><span>Con tarjeta, saldo Mercado Pago, OXXO o transferencia.</span></li>
+        <li><b>Mándanos tus datos</b><span>Nombres, fecha, hora, lugar, fotos y tu lista de invitados.</span></li>
+        <li><b>Recibe tu link</b><span>Revisas, pides tus cambios y lo compartes con tus invitados.</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="pay" id="pagos">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Pagos</p>
+        <h2>Dos formas de pagar</h2>
+        <p class="lede">En cuanto confirmamos tu pago empezamos con tu diseño.</p>
+      </div>
+      <div class="pay-grid">
+        <article class="pay-card">
+          <div style="display:grid;gap:8px">
+            <h3>Mercado Pago</h3>
+            <p class="muted small">Paga en línea con tarjeta de crédito o débito, saldo Mercado Pago o en efectivo en OXXO.</p>
+          </div>
+          <div class="mp-links">
+            <a class="mp-link" href="https://mpago.la/1zStwZB" target="_blank" rel="noopener">
+              <span>Paquete Express<br><span class="go">Pagar en Mercado Pago</span></span><span class="amt">$500</span>
+            </a>
+            <a class="mp-link" href="https://mpago.la/1u3GxSH" target="_blank" rel="noopener">
+              <span>Paquete Wow<br><span class="go">Pagar en Mercado Pago</span></span><span class="amt">$999</span>
+            </a>
+            <a class="mp-link" href="https://link.mercadopago.com.mx/invitememx" target="_blank" rel="noopener">
+              <span>Otro monto<br><span class="go">Para cotizaciones especiales y extras</span></span><span class="amt">$ —</span>
+            </a>
+          </div>
+          <div class="methods"><span class="chip">Tarjeta</span><span class="chip">Saldo Mercado Pago</span><span class="chip">OXXO</span></div>
+        </article>
+        <article class="pay-card">
+          <div style="display:grid;gap:8px">
+            <h3>Transferencia SPEI</h3>
+            <p class="muted small">Sin comisiones. Transfiere desde la app de tu banco con estos datos.</p>
+          </div>
+          <!-- DATOS BANCARIOS: reemplaza los textos "Por definir" y quita la clase "todo" -->
+          <dl class="bank">
+            <div class="bank-row"><dt>Banco</dt><dd class="todo" id="v-banco">Por definir</dd><button class="copy" type="button" data-copy="v-banco">Copiar</button></div>
+            <div class="bank-row"><dt>Beneficiario</dt><dd class="todo" id="v-benef">Por definir</dd><button class="copy" type="button" data-copy="v-benef">Copiar</button></div>
+            <div class="bank-row"><dt>CLABE</dt><dd class="todo" id="v-clabe">Por definir · 18 dígitos</dd><button class="copy" type="button" data-copy="v-clabe">Copiar</button></div>
+            <div class="bank-row"><dt>Concepto</dt><dd id="v-conc">Tu nombre + tipo de evento</dd><button class="copy" type="button" data-copy="v-conc">Copiar</button></div>
+          </dl>
+          <div style="display:grid;gap:4px">
+            <p class="small"><b>Express</b> <span class="muted">$500 MXN</span> &nbsp;·&nbsp; <b>Wow</b> <span class="muted">$999 MXN</span></p>
+          </div>
+        </article>
+      </div>
+      <div class="proof">
+        <p><b>¿Ya pagaste?</b> <span class="muted">Mándanos tu comprobante por WhatsApp y te confirmamos.</span></p>
+        <a class="btn btn-wa wa-link" data-msg="Hola, ya hice mi pago, te envío mi comprobante" href="https://wa.me/525522678448" target="_blank" rel="noopener">
+          <svg aria-hidden="true"><use href="#i-chat"/></svg>Enviar comprobante
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="wrap">
+      <div style="display:grid;gap:12px">
+        <h2>¿Tienes una fecha en puerta? <em>Escríbenos.</em></h2>
+        <p style="color:#D9C7E3">WhatsApp: <span class="phone-num">+52 55 2267 8448</span></p>
+      </div>
+      <a class="btn btn-wa wa-link" data-msg="Hola, quiero una invitación digital" href="https://wa.me/525522678448" target="_blank" rel="noopener">
+        <svg aria-hidden="true"><use href="#i-chat"/></svg>Abrir WhatsApp
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 InviteMe · Invitaciones digitales</span>
+    <span>inviteme.mx</span>
+  </div>
+</footer>
+
+<a class="wa-float wa-link" data-msg="Hola, quiero una invitación digital" href="https://wa.me/525522678448" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
+  <svg aria-hidden="true"><use href="#i-chat"/></svg>
+</a>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script>
+(function(){
+  var PHONE = "525522678448";
+  document.querySelectorAll(".wa-link").forEach(function(a){
+    var msg = a.getAttribute("data-msg") || "Hola, quiero una invitación digital";
+    a.href = "https://wa.me/" + PHONE + "?text=" + encodeURIComponent(msg);
+  });
+  var toast = document.getElementById("toast"), t;
+  function show(m){ toast.textContent = m; toast.hidden = false; clearTimeout(t); t = setTimeout(function(){ toast.hidden = true; }, 1800); }
+  document.querySelectorAll(".copy").forEach(function(b){
+    b.addEventListener("click", function(){
+      var el = document.getElementById(b.getAttribute("data-copy"));
+      var text = el.textContent.trim();
+      function fallback(){
+        var r = document.createRange(); r.selectNodeContents(el);
+        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+        show("Texto seleccionado, cópialo");
+      }
+      try {
+        navigator.clipboard.writeText(text).then(function(){ show("Copiado"); }, fallback);
+      } catch(e){ fallback(); }
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
