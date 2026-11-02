@@ -3,6 +3,11 @@
 
 import { CATALOGO } from "@/plantillas/catalogo";
 
+// Dirección pública del sitio. Todos los links que se comparten (invitaciones, panel,
+// formulario, mensajes de WhatsApp) salen de aquí, sin importar desde dónde se abra el admin.
+export const SITIO = (process.env.NEXT_PUBLIC_SITE_URL || "https://inviteme.mx").replace(/\/+$/, "");
+export const DOMINIO = SITIO.replace(/^https?:\/\//, "");
+
 export const ZONA = "America/Mexico_City";
 export const OFFSET = "-06:00"; // México ya no cambia de horario
 
@@ -78,8 +83,8 @@ export const PAQUETES = [
 ] as const;
 
 export const METODOS = [
-  { id: "transferencia", nombre: "Transferencia" },
   { id: "mercadopago", nombre: "Mercado Pago" },
+  { id: "transferencia", nombre: "Transferencia" },
   { id: "efectivo", nombre: "Efectivo" },
   { id: "otro", nombre: "Otro" },
 ] as const;

@@ -4,7 +4,17 @@ const nextConfig = {
   experimental: { serverActions: { bodySizeLimit: "4mb" } },
   // inviteme.mx/pagos lleva directo a la sección de pagos de la portada
   async redirects() {
-    return [{ source: "/pagos", destination: "/#pagos", permanent: false }];
+    return [
+      // Todo lo que se abra en la dirección vieja de Vercel se manda a inviteme.mx,
+      // con la misma ruta (los links que ya se compartieron siguen funcionando).
+      {
+        source: "/:ruta*",
+        has: [{ type: "host", value: "inviteme-pi.vercel.app" }],
+        destination: "https://inviteme.mx/:ruta*",
+        permanent: true,
+      },
+      { source: "/pagos", destination: "/#pagos", permanent: false },
+    ];
   },
   async rewrites() {
     return {

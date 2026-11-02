@@ -1,8 +1,7 @@
-import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { db } from "@/lib/supabase";
 import { puedeEntrar } from "@/lib/panel";
-import { waLink } from "@/lib/util";
+import { SITIO, waLink } from "@/lib/util";
 import { agregarInvitado, editarInvitado, eliminarInvitado, eliminarRespuesta, entrarPanel, reiniciarRespuesta, salirPanel } from "./acciones";
 import { Confirmar, Copiar, Enviar } from "./botones";
 
@@ -67,10 +66,7 @@ export default async function Panel({ params, searchParams }: P) {
     sb.from("confirmaciones").select("id, invitado_id, nombre, asiste, personas, mensaje, creado").eq("evento_id", ev.id).order("creado", { ascending: false }),
   ]);
 
-  const h = await headers();
-  const host = h.get("x-forwarded-host") || h.get("host") || "";
-  const proto = h.get("x-forwarded-proto") || "https";
-  const base = `${proto}://${host}/${ev.slug}`;
+  const base = `${SITIO}/${ev.slug}`;
   const panelCsv = `/${ev.slug}/panel/csv${key ? `?key=${encodeURIComponent(key)}` : ""}`;
 
   const lista = (invs || []) as Inv[];

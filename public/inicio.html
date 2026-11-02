@@ -63,7 +63,7 @@ section{padding-block:clamp(56px,9vw,96px)}
 /* Botones */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 22px;border-radius:999px;font:600 1rem var(--body);text-decoration:none;border:1.5px solid transparent;cursor:pointer;transition:transform .15s ease, box-shadow .15s ease}
 .btn:hover{transform:translateY(-1px)}
-.btn:focus-visible,.copy:focus-visible,a:focus-visible{outline:3px solid var(--gold-bright);outline-offset:3px}
+.btn:focus-visible,a:focus-visible{outline:3px solid var(--gold-bright);outline-offset:3px}
 .btn-wa{background:var(--wa);color:var(--wa-ink)}
 .btn-plum{background:var(--plum);color:var(--on-plum)}
 .btn-ghost{border-color:currentColor;background:transparent}
@@ -166,8 +166,7 @@ nav.links a:hover{color:var(--ink)}
 
 /* Pagos */
 .pay{background:var(--plum-soft)}
-.pay-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}
-@media (max-width:800px){.pay-grid{grid-template-columns:1fr}}
+.pay-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:22px;max-width:640px;margin:0 auto}
 .pay-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:28px;display:grid;gap:18px;align-content:start;min-width:0}
 .pay-card h3{font-size:1.7rem}
 .mp-links{display:grid;gap:10px}
@@ -176,15 +175,6 @@ nav.links a:hover{color:var(--ink)}
 .mp-link .amt{font-family:var(--display);font-weight:400;font-size:1.35rem;font-variant-numeric:tabular-nums}
 .mp-link .go{font-size:.85rem;color:var(--muted);font-weight:500}
 .methods{display:flex;flex-wrap:wrap;gap:8px}
-.bank{display:grid;gap:0;border:1px solid var(--line);border-radius:12px;overflow:hidden}
-.bank-row{display:grid;grid-template-columns:110px 1fr auto;gap:12px;align-items:center;padding:12px 16px;border-top:1px solid var(--line)}
-.bank-row:first-child{border-top:0}
-.bank-row dt{font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
-.bank-row dd{margin:0;font-weight:600;min-width:0;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
-.bank-row dd.todo{color:var(--gold);font-style:italic;font-weight:500}
-@media (max-width:420px){.bank-row{grid-template-columns:1fr auto}.bank-row dt{grid-column:1/-1}}
-.copy{font:600 .82rem var(--body);padding:7px 12px;border-radius:999px;border:1.5px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
-.copy:hover{border-color:var(--gold)}
 .small{font-size:.9rem}
 .proof{margin-top:22px;display:flex;flex-wrap:wrap;gap:14px 24px;align-items:center;justify-content:space-between;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:20px 24px}
 
@@ -200,7 +190,6 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
 /* WhatsApp flotante */
 .wa-float{position:fixed;right:calc(18px + env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:30;width:60px;height:60px;border-radius:50%;background:var(--wa);color:var(--wa-ink);display:grid;place-items:center;box-shadow:0 10px 26px -8px rgba(0,0,0,.45);text-decoration:none}
 .wa-float svg{width:30px;height:30px}
-.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:600;font-size:.9rem;z-index:40}
 </style>
 </head>
 <body>
@@ -381,7 +370,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
       </div>
       <ol class="steps">
         <li><b>Escríbenos</b><span>Cuéntanos qué celebras, la fecha y el paquete que te gusta.</span></li>
-        <li><b>Haz tu pago</b><span>Con tarjeta, saldo Mercado Pago, OXXO o transferencia.</span></li>
+        <li><b>Haz tu pago</b><span>En línea con Mercado Pago: tarjeta, saldo o efectivo en OXXO.</span></li>
         <li><b>Mándanos tus datos</b><span>Nombres, fecha, hora, lugar, fotos y tu lista de invitados.</span></li>
         <li><b>Recibe tu link</b><span>Revisas, pides tus cambios y lo compartes con tus invitados.</span></li>
       </ol>
@@ -392,7 +381,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
     <div class="wrap">
       <div class="sec-head">
         <p class="eyebrow">Pagos</p>
-        <h2>Dos formas de pagar</h2>
+        <h2>Paga con Mercado Pago</h2>
         <p class="lede">En cuanto confirmamos tu pago empezamos con tu diseño.</p>
       </div>
       <div class="pay-grid">
@@ -413,22 +402,6 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
             </a>
           </div>
           <div class="methods"><span class="chip">Tarjeta</span><span class="chip">Saldo Mercado Pago</span><span class="chip">OXXO</span></div>
-        </article>
-        <article class="pay-card">
-          <div style="display:grid;gap:8px">
-            <h3>Transferencia SPEI</h3>
-            <p class="muted small">Sin comisiones. Transfiere desde la app de tu banco con estos datos.</p>
-          </div>
-          <!-- DATOS BANCARIOS: reemplaza los textos "Por definir" y quita la clase "todo" -->
-          <dl class="bank">
-            <div class="bank-row"><dt>Banco</dt><dd id="v-banco">Mercado Pago W</dd><button class="copy" type="button" data-copy="v-banco">Copiar</button></div>
-            <div class="bank-row"><dt>Beneficiario</dt><dd id="v-benef">Joel Mena Torres</dd><button class="copy" type="button" data-copy="v-benef">Copiar</button></div>
-            <div class="bank-row"><dt>CLABE</dt><dd  id="v-clabe">722969010104016354</dd><button class="copy" type="button" data-copy="v-clabe">Copiar</button></div>
-            <div class="bank-row"><dt>Concepto</dt><dd id="v-conc">Tu nombre + tipo de evento</dd><button class="copy" type="button" data-copy="v-conc">Copiar</button></div>
-          </dl>
-          <div style="display:grid;gap:4px">
-            <p class="small"><b>Express</b> <span class="muted">$500 MXN</span> &nbsp;·&nbsp; <b>Wow</b> <span class="muted">$999 MXN</span></p>
-          </div>
         </article>
       </div>
       <div class="proof">
@@ -463,7 +436,6 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
 <a class="wa-float wa-link" data-msg="Hola, quiero una invitación digital" href="https://wa.me/525522678448" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
   <svg aria-hidden="true"><use href="#i-chat"/></svg>
 </a>
-<div class="toast" id="toast" role="status" hidden></div>
 
 <script>
 (function(){
@@ -471,22 +443,6 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
   document.querySelectorAll(".wa-link").forEach(function(a){
     var msg = a.getAttribute("data-msg") || "Hola, quiero una invitación digital";
     a.href = "https://wa.me/" + PHONE + "?text=" + encodeURIComponent(msg);
-  });
-  var toast = document.getElementById("toast"), t;
-  function show(m){ toast.textContent = m; toast.hidden = false; clearTimeout(t); t = setTimeout(function(){ toast.hidden = true; }, 1800); }
-  document.querySelectorAll(".copy").forEach(function(b){
-    b.addEventListener("click", function(){
-      var el = document.getElementById(b.getAttribute("data-copy"));
-      var text = el.textContent.trim();
-      function fallback(){
-        var r = document.createRange(); r.selectNodeContents(el);
-        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
-        show("Texto seleccionado, cópialo");
-      }
-      try {
-        navigator.clipboard.writeText(text).then(function(){ show("Copiado"); }, fallback);
-      } catch(e){ fallback(); }
-    });
   });
 })();
 </script>

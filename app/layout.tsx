@@ -1,11 +1,8 @@
 import type { Metadata, Viewport } from "next";
-
-const sitio =
-  process.env.NEXT_PUBLIC_SITE_URL ||
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000");
+import { SITIO } from "@/lib/util";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(sitio),
+  metadataBase: new URL(SITIO),
   title: "InviteMe · Invitaciones digitales",
   description: "Invitaciones digitales personalizadas con confirmación de asistencia.",
 };

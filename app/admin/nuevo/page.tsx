@@ -1,8 +1,7 @@
 import Link from "next/link";
-import { headers } from "next/headers";
 import { exigirAdmin } from "@/lib/admin";
 import { Enviar } from "@/app/[evento]/panel/botones";
-import { DISENOS, PAQUETES, pesos, TIPOS } from "@/lib/util";
+import { DISENOS, DOMINIO, PAQUETES, pesos, TIPOS } from "@/lib/util";
 import { crearEvento } from "../acciones";
 import { Aviso, Barra } from "../barra";
 
@@ -11,7 +10,7 @@ export const dynamic = "force-dynamic";
 export default async function Nuevo({ searchParams }: { searchParams: Promise<{ msg?: string; error?: string }> }) {
   await exigirAdmin();
   const { msg, error } = await searchParams;
-  const host = (await headers()).get("host") || "inviteme.mx";
+  const host = DOMINIO;
 
   return (
     <main className="adm-wrap">

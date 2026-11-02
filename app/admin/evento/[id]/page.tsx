@@ -1,11 +1,10 @@
 import Link from "next/link";
-import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { exigirAdmin } from "@/lib/admin";
 import { msgPagoConfirmado } from "@/lib/mensajes";
 import { db } from "@/lib/supabase";
 import type { EventoAdmin, Pago } from "@/lib/tipos";
-import { estadoPago, fotosPorPaquete, METODOS, nombreDe, PAQUETES, partesFecha, pesos, TIPOS, waLink } from "@/lib/util";
+import { DOMINIO, estadoPago, fotosPorPaquete, METODOS, nombreDe, PAQUETES, partesFecha, pesos, SITIO, TIPOS, waLink } from "@/lib/util";
 import { Confirmar, Copiar, Enviar } from "@/app/[evento]/panel/botones";
 import { agregarInvitados, agregarPago, asignarLleva, configurarFormulario, eliminarInvitado, eliminarPago, guardarClavePanel, migrarArchivos } from "../../acciones";
 import { Aviso, Barra } from "../../barra";
@@ -34,9 +33,8 @@ export default async function EventoAdminPage({ params, searchParams }: P) {
   if (!ev) notFound();
   const e = ev as EventoAdmin;
 
-  const h = await headers();
-  const host = h.get("x-forwarded-host") || h.get("host") || "inviteme.mx";
-  const base = `${h.get("x-forwarded-proto") || "https"}://${host}`;
+  const host = DOMINIO;
+  const base = SITIO;
   const conClave = !!e.panel_hash;
   const rutaPanel = conClave ? `/${e.slug}/panel` : `/${e.slug}/panel?key=${e.admin_key}`;
   const linkPanel = `${base}${rutaPanel}`;
@@ -220,7 +218,7 @@ ${linkPanel}${conClave ? "\n(Tu contraseña te la mando en el siguiente mensaje)
             </div>
             <div className="field">
               <label htmlFor="p-metodo">Método</label>
-              <select id="p-metodo" name="metodo" defaultValue="transferencia">
+              <select id="p-metodo" name="metodo" defaultValue="mercadopago">
                 {METODOS.map((m) => <option key={m.id} value={m.id}>{m.nombre}</option>)}
               </select>
             </div>

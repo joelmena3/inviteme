@@ -11,7 +11,7 @@ Posadas, reuniones y fiestas sencillas. Foto de portada, mapa, cuenta regresiva 
 Bodas, XV años, bautizos, primer año e infantiles. Hasta 15 fotos, música, links por invitado, mesa de regalos y más.
 
 👀 Mira ejemplos y paga aquí:
-https://inviteme-pi.vercel.app/pagos
+https://inviteme.mx/pagos
 
 En cuanto me mandes tu comprobante 🧾, te comparto un formulario muy sencillo para los datos de tu evento 📝`;
 
