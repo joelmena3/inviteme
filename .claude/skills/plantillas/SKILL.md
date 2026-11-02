@@ -63,7 +63,7 @@ el motor de confirmación) ya existen y no se tocan.
 
 1. `npm run validar -- <id>` — corrige hasta que salga ✓. Si un error no tiene que ver con tu cambio, avísalo.
 2. `npm run cambios` — debe decir que todo está dentro de `plantillas/`. Si no, deshaz lo que esté fuera.
-3. `npm run vista -- <id>` y revisa `.vista/<id>.html` (con los datos de prueba de Majo). Si tienes la
+3. `npm run vista -- <id>` y revisa `.vista/<id>.html` (con los datos de ejemplo: fotos y nombres ficticios). Si tienes la
    herramienta de Artifacts, publícalo para que Joel lo vea desde el celular.
 4. `git add plantillas/ && git commit -m "Template <id>: <qué cambió>"` y `git push -u origin <rama>`.
 5. Cuéntale a Joel en 2–3 líneas qué hiciste, el nombre de la rama y que puede verlo en la vista previa

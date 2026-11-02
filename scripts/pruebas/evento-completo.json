@@ -2,13 +2,13 @@
   "ev": {
     "id": "prueba-1",
     "slug": "prueba",
-    "nombre": "Majo",
+    "nombre": "Sofi",
     "fecha": "2026-11-28T12:00:00-06:00",
     "diseno": "bosque",
     "contenido": {
       "eyebrow": "Una fiesta en el bosque",
       "kicker": "Mi primer añito",
-      "mensaje": "Te invitamos a compartir con nosotros este momento tan especial en el que Majo está cumpliendo su primer año",
+      "mensaje": "Te invitamos a compartir con nosotros este momento tan especial en el que Sofi está cumpliendo su primer año",
       "fecha": {
         "dia": "Sábado",
         "numero": "28",
@@ -17,15 +17,15 @@
         "larga": "Sábado 28 de noviembre de 2026"
       },
       "lugar": {
-        "nombre": "Fraccionamiento La Toscana",
-        "direccion": "Cerrada Prato, Lerma, Estado de México, C.P. 52005",
-        "busqueda": "Cerrada Prato, Fraccionamiento La Toscana, Lerma, Estado de México, 52005"
+        "nombre": "Jardín de eventos Los Encinos",
+        "direccion": "Av. de los Pinos 123, Col. Centro, Toluca, Estado de México, C.P. 50000",
+        "busqueda": "Toluca, Estado de México"
       },
       "portada": {
-        "src": "/eventos/majo/fotos/09.jpg",
+        "src": "/ejemplo/fotos/02.webp",
         "w": 675,
         "h": 900,
-        "alt": "Majo con vestido rosa de lunares"
+        "alt": "Pastel de cumpleaños con una vela"
       },
       "lineaTitulo": "Así he crecido",
       "lineaIntro": "Doce meses de abrazos, siestas y primeras veces. Toca cualquier foto para verla en grande.",
@@ -36,7 +36,7 @@
           "cap": "El día que llegaste a llenarlo todo de amor.",
           "fotos": [
             {
-              "src": "/eventos/majo/fotos/01.jpg",
+              "src": "/ejemplo/fotos/01.webp",
               "w": 675,
               "h": 900
             }
@@ -48,7 +48,7 @@
           "cap": "Corona, suéter y mi primer pastelito.",
           "fotos": [
             {
-              "src": "/eventos/majo/fotos/03.jpg",
+              "src": "/ejemplo/fotos/02.webp",
               "w": 675,
               "h": 900
             }
@@ -60,7 +60,7 @@
           "cap": "Con mamá y papá.",
           "fotos": [
             {
-              "src": "/eventos/majo/fotos/04.jpg",
+              "src": "/ejemplo/fotos/03.webp",
               "w": 675,
               "h": 900
             }
@@ -72,7 +72,7 @@
           "cap": "Lista para jugar.",
           "fotos": [
             {
-              "src": "/eventos/majo/fotos/05.jpg",
+              "src": "/ejemplo/fotos/04.webp",
               "w": 675,
               "h": 900
             }
@@ -84,7 +84,7 @@
           "cap": "Entre pollitos y huevitos.",
           "fotos": [
             {
-              "src": "/eventos/majo/fotos/06.jpg",
+              "src": "/ejemplo/fotos/05.webp",
               "w": 900,
               "h": 675
             }
@@ -96,7 +96,7 @@
           "cap": "Mi primer día de alberca.",
           "fotos": [
             {
-              "src": "/eventos/majo/fotos/07.jpg",
+              "src": "/ejemplo/fotos/06.webp",
               "w": 675,
               "h": 900
             }
@@ -108,12 +108,12 @@
           "cap": "Medio añito y un montón de peluches.",
           "fotos": [
             {
-              "src": "/eventos/majo/fotos/08.jpg",
+              "src": "/ejemplo/fotos/07.webp",
               "w": 675,
               "h": 900
             },
             {
-              "src": "/eventos/majo/fotos/09.jpg",
+              "src": "/ejemplo/fotos/08.webp",
               "w": 675,
               "h": 900
             }
@@ -125,7 +125,7 @@
           "cap": "Chef por un día.",
           "fotos": [
             {
-              "src": "/eventos/majo/fotos/10.jpg",
+              "src": "/ejemplo/fotos/09.webp",
               "w": 675,
               "h": 900
             }
@@ -137,7 +137,7 @@
           "cap": "Descubriendo nuevos sabores.",
           "fotos": [
             {
-              "src": "/eventos/majo/fotos/11.jpg",
+              "src": "/ejemplo/fotos/10.webp",
               "w": 675,
               "h": 900
             }
@@ -149,9 +149,9 @@
           "cap": "Princesa de cuento.",
           "fotos": [
             {
-              "src": "/eventos/majo/fotos/12.jpg",
-              "w": 675,
-              "h": 900
+              "src": "/ejemplo/fotos/11.webp",
+              "w": 900,
+              "h": 675
             }
           ]
         },
@@ -161,9 +161,9 @@
           "cap": "¡Viva México!",
           "fotos": [
             {
-              "src": "/eventos/majo/fotos/13.jpg",
-              "w": 900,
-              "h": 675
+              "src": "/ejemplo/fotos/12.webp",
+              "w": 675,
+              "h": 900
             }
           ]
         },
@@ -173,7 +173,7 @@
           "cap": "Mi primer Halloween de calabacita.",
           "fotos": [
             {
-              "src": "/eventos/majo/fotos/14.jpg",
+              "src": "/ejemplo/fotos/13.webp",
               "w": 675,
               "h": 900
             }
@@ -187,7 +187,7 @@
         "texto": "Este capítulo lo escribimos juntos."
       },
       "musica": [
-        "/eventos/majo/musica/mariposita.mp3"
+        "/ejemplo/musica/estrellita.mp3"
       ],
       "pie": "Mi primer añito · 28 · 11 · 2026",
       "vistaFotos": "linea",
@@ -203,7 +203,7 @@
       "ceremonia": {
         "titulo": "Misa de acción de gracias",
         "nombre": "Parroquia de San Juan",
-        "direccion": "Centro, Lerma, Edo. Méx.",
+        "direccion": "Centro, Toluca, Edo. Méx.",
         "hora": "11:00 am"
       },
       "dresscode": {
