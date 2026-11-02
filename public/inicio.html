@@ -122,13 +122,15 @@ nav.links a:hover{color:var(--ink)}
 .grid-ex{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
 @media (max-width:900px){.grid-ex{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media (max-width:520px){.grid-ex{grid-template-columns:1fr}}
-.ex{display:grid;gap:14px;min-width:0}
+.ex{display:grid;gap:14px;min-width:0;align-content:start}
 .phone{position:relative;aspect-ratio:9/16;max-width:100%;border-radius:28px;background:var(--tint);border:8px solid var(--plum);display:grid;place-items:center;overflow:hidden}
-.phone::before{content:"";position:absolute;top:8px;left:50%;transform:translateX(-50%);width:34%;height:14px;border-radius:999px;background:var(--plum)}
+.phone::before{content:"";position:absolute;top:8px;left:50%;transform:translateX(-50%);width:34%;height:14px;border-radius:999px;background:var(--plum);z-index:2;pointer-events:none}
 .phone .slot{display:grid;justify-items:center;gap:10px;text-align:center;padding:20px;color:var(--ink)}
 .phone .slot svg{width:64px;height:64px}
 .phone .slot small{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--muted)}
-.phone iframe,.phone img{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:cover}
+.phone iframe,.phone img{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:cover;background:#fff}
+.ex-link{justify-self:start;font-weight:700;font-size:.95rem;color:var(--ink);text-decoration:none;border-bottom:2px solid var(--gold);padding-bottom:2px}
+.ex-link:hover{color:var(--gold)}
 .ex-meta{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
 .ex-meta h3{font-size:1.4rem}
 .chip{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:var(--plum-soft);color:var(--ink);white-space:nowrap}
@@ -245,9 +247,10 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
     </div>
   </section>
 
-  <!-- EJEMPLOS: para cada ejemplo, reemplaza el <div class="slot">…</div> por
-       <iframe src="https://inviteme.mx/ejemplo-xxx" title="…"></iframe>  o  <img src="…" alt="…">
-       y cambia el href del enlace "Ver invitación" -->
+  <!-- EJEMPLOS: los que ya están listos muestran la invitación real en vivo desde
+       /ejemplo/<template> (ver app/ejemplo/[id]/route.ts). Para activar otro, reemplaza su
+       <div class="slot">…</div> por <iframe src="/ejemplo/<template>" title="…" loading="lazy"></iframe>
+       y agrega su enlace "Ver invitación completa". -->
   <section class="examples" id="ejemplos">
     <div class="wrap">
       <div class="sec-head">
@@ -257,6 +260,20 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
       </div>
       <div class="grid-ex">
         <article class="ex">
+          <div class="phone" style="--tint:var(--t-girl)">
+            <iframe src="/ejemplo/confeti" title="Ejemplo de invitación con el diseño Confeti" loading="lazy"></iframe>
+          </div>
+          <div class="ex-meta"><h3>Fiesta infantil · niña</h3><span class="chip gold">Wow</span></div>
+          <a class="ex-link" href="/ejemplo/confeti" target="_blank" rel="noopener">Ver invitación completa ↗</a>
+        </article>
+        <article class="ex">
+          <div class="phone" style="--tint:var(--t-one)">
+            <iframe src="/ejemplo/bosque" title="Ejemplo de invitación con el diseño Bosque" loading="lazy"></iframe>
+          </div>
+          <div class="ex-meta"><h3>Primer año</h3><span class="chip gold">Wow</span></div>
+          <a class="ex-link" href="/ejemplo/bosque" target="_blank" rel="noopener">Ver invitación completa ↗</a>
+        </article>
+        <article class="ex">
           <div class="phone" style="--tint:var(--t-kid)">
             <div class="slot">
               <svg viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="32" cy="24" rx="15" ry="18" fill="#5B8FD4"/><path d="M29 41h6l-3 4z" fill="#5B8FD4"/><path d="M32 45c-4 6 4 9 0 16" stroke="currentColor" stroke-width="2" fill="none"/></svg>
@@ -264,15 +281,6 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
             </div>
           </div>
           <div class="ex-meta"><h3>Fiesta infantil · niño</h3><span class="chip gold">Wow</span></div>
-        </article>
-        <article class="ex">
-          <div class="phone" style="--tint:var(--t-girl)">
-            <div class="slot">
-              <svg viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="32" cy="24" rx="15" ry="18" fill="#D97A9A"/><path d="M29 41h6l-3 4z" fill="#D97A9A"/><path d="M32 45c-4 6 4 9 0 16" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-              <small>Ejemplo próximamente</small>
-            </div>
-          </div>
-          <div class="ex-meta"><h3>Fiesta infantil · niña</h3><span class="chip gold">Wow</span></div>
         </article>
         <article class="ex">
           <div class="phone" style="--tint:var(--t-posada)">
@@ -300,15 +308,6 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
             </div>
           </div>
           <div class="ex-meta"><h3>Boda</h3><span class="chip gold">Wow</span></div>
-        </article>
-        <article class="ex">
-          <div class="phone" style="--tint:var(--t-one)">
-            <div class="slot">
-              <svg viewBox="0 0 64 64" aria-hidden="true"><text x="32" y="50" text-anchor="middle" font-family="DM Serif Display, Georgia, serif" font-size="52" fill="#6E9A5E">1</text><path d="M46 10l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#C9913A"/></svg>
-              <small>Ejemplo próximamente</small>
-            </div>
-          </div>
-          <div class="ex-meta"><h3>Primer año</h3><span class="chip gold">Wow</span></div>
         </article>
       </div>
     </div>

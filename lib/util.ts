@@ -26,7 +26,7 @@ export function codigoDesde(nombre: string, respaldo = "invitado"): string {
 
 // Links que no pueden usarse como evento porque ya son partes del sitio.
 export const SLUGS_RESERVADOS = new Set([
-  "admin", "api", "motor", "eventos", "pagos", "datos", "plantillas", "inicio", "inicio-html", "panel", "next", "favicon-ico", "robots-txt", "sitemap-xml",
+  "admin", "api", "motor", "ejemplo", "eventos", "pagos", "datos", "plantillas", "inicio", "inicio-html", "panel", "next", "favicon-ico", "robots-txt", "sitemap-xml",
 ]);
 
 export function slugValido(slug: string): string | null {
