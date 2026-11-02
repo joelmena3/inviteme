@@ -21,7 +21,10 @@ el motor de confirmación) ya existen y no se tocan.
 
 1. Lee `plantillas/README.md` y el template más parecido a lo que piden (`info.ts`, `plantilla.ts`,
    `estilos.css`, `dibujos.js`).
-2. Crea una rama: `git checkout -b plantillas/<id>-<cambio>` (ej. `plantillas/dinosaurios-nuevo`).
+2. Revisa si trabajas en el repo de Joel o en un **fork** (`git remote get-url origin`: si no es
+   `joelmena3/inviteme`, es un fork). En un fork, primero trae lo último del repo de Joel:
+   `git remote add upstream https://github.com/joelmena3/inviteme 2>/dev/null; git fetch upstream main && git checkout -B main upstream/main`.
+3. Crea una rama: `git checkout -b plantillas/<id>-<cambio>` (ej. `plantillas/dinosaurios-nuevo`).
    Vercel publica cada rama en una URL de vista previa, así Joel lo ve antes de que salga a clientes.
 
 ## Crear un template
@@ -68,3 +71,11 @@ el motor de confirmación) ya existen y no se tocan.
 4. `git add plantillas/ && git commit -m "Template <id>: <qué cambió>"` y `git push -u origin <rama>`.
 5. Cuéntale a Joel en 2–3 líneas qué hiciste, el nombre de la rama y que puede verlo en la vista previa
    de Vercel. Solo cuando él diga que se publique, haz merge a `main` (o abre el PR y dile).
+
+**Si trabajas en un fork** (diseñadora externa), los pasos 4–5 cambian:
+
+- `git push -u origin <rama>` sube a su copia, nunca al repo de Joel.
+- Abre un Pull Request de esa rama hacia `joelmena3/inviteme` → `main`
+  (`gh pr create --repo joelmena3/inviteme --base main`, o en GitHub con el botón **Contribute → Open pull request**).
+  En la descripción: qué template es, para qué paquete (Express/Wow) y una captura o el HTML de `.vista/<id>.html`.
+- Dile a la persona que mande el link del PR a Joel. Nunca hagas merge: eso solo lo hace Joel.
