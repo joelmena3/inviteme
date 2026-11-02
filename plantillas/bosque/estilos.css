@@ -44,10 +44,12 @@ section { display: flex; flex-direction: column; gap: 20px; }
 .svg-fill { stroke: var(--c-line); stroke-width: var(--sw); stroke-linejoin: round; stroke-linecap: round; }
 
 /* ---------- HERO ---------- */
-.hero { overflow-x: clip; padding-top: 56px; align-items: center; text-align: center; gap: 6px; position: relative; }
-.hero .rama { position: absolute; width: 130px; top: 30px; opacity: .9; }
-.hero .rama.l { left: -14px; transform: rotate(-12deg); }
-.hero .rama.r { right: -14px; transform: scaleX(-1) rotate(-12deg); }
+.hero { overflow-x: clip; padding-top: 84px; align-items: center; text-align: center; gap: 6px; position: relative; }
+/* Las ramas van pegadas a las esquinas de arriba; la leyenda queda debajo de ellas y del botón de música */
+.hero .rama { position: absolute; width: 104px; top: 6px; opacity: .9; z-index: 0; pointer-events: none; }
+.hero .rama.l { left: -16px; transform: rotate(-6deg); }
+.hero .rama.r { right: -16px; transform: scaleX(-1) rotate(-6deg); }
+.hero .eyebrow { position: relative; z-index: 1; max-width: 100%; line-height: 1.5; }
 .stage { position: relative; width: min(74vw, 300px); margin: 18px auto 8px; }
 .arch {
   width: 100%; aspect-ratio: 4 / 5; border-radius: var(--arch); overflow: hidden;
