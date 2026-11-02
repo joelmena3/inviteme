@@ -5,6 +5,7 @@ import { MSG_NUEVO_CLIENTE, msgPagoConfirmado } from "@/lib/mensajes";
 import { db } from "@/lib/supabase";
 import { DISENOS, estadoPago, nombreDe, PAQUETES, partesFecha, pesos, TIPOS, ZONA } from "@/lib/util";
 import { Aviso, Barra } from "./barra";
+import { Plantillas } from "./plantillas";
 
 export const dynamic = "force-dynamic";
 
@@ -17,10 +18,12 @@ type Fila = {
 const fechaBonita = (iso: string) =>
   new Intl.DateTimeFormat("es-MX", { weekday: "short", day: "numeric", month: "short", year: "numeric", timeZone: ZONA }).format(new Date(iso));
 
-export default async function Admin({ searchParams }: { searchParams: Promise<{ msg?: string; error?: string; tab?: string }> }) {
+export default async function Admin({ searchParams }: { searchParams: Promise<{ msg?: string; error?: string; tab?: string; p?: string; datos?: string }> }) {
   await exigirAdmin();
-  const { msg, error: esError, tab } = await searchParams;
+  const { msg, error: esError, tab, p: plantilla, datos } = await searchParams;
   const enMensajes = tab === "mensajes";
+  const enPlantillas = tab === "plantillas";
+  const enEventos = !enMensajes && !enPlantillas;
   const { data, error } = await db()
     .from("eventos")
     .select("id, folio, slug, nombre, tipo, fecha, diseno, paquete, precio, cliente_nombre, contenido, pagos(monto, fecha), invitados(count)")
@@ -92,15 +95,18 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
 
       <div>
         <p className="eyebrow">Tu negocio</p>
-        <h1>{enMensajes ? "Mensajes" : "Eventos"}</h1>
+        <h1>{enMensajes ? "Mensajes" : enPlantillas ? "Templates" : "Eventos"}</h1>
       </div>
 
       <nav className="tabs" aria-label="Secciones del panel">
-        <Link href="/admin" className={enMensajes ? "" : "on"} aria-current={enMensajes ? undefined : "page"}>Próximos eventos</Link>
+        <Link href="/admin" className={enEventos ? "on" : ""} aria-current={enEventos ? "page" : undefined}>Próximos eventos</Link>
         <Link href="/admin?tab=mensajes" className={enMensajes ? "on" : ""} aria-current={enMensajes ? "page" : undefined}>Mensajes de WhatsApp</Link>
+        <Link href="/admin?tab=plantillas" className={enPlantillas ? "on" : ""} aria-current={enPlantillas ? "page" : undefined}>Templates</Link>
       </nav>
 
-      {enMensajes ? (
+      {enPlantillas ? (
+        <Plantillas eventos={filas} elegido={plantilla} datos={datos} />
+      ) : enMensajes ? (
         <>
           <section className="card" aria-labelledby="h-m1">
             <div className="card-head"><h2 id="h-m1">1 · Nuevo cliente</h2><Copiar texto={MSG_NUEVO_CLIENTE} etiqueta="Copiar mensaje" /></div>

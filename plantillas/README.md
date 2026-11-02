@@ -104,3 +104,11 @@ Cada template define seis dibujos, y cada uno tiene un lugar fijo:
 
 Los archivos de cada carpeta se copian solos a `public/plantillas/` cada vez que
 el sitio se construye; no edites esa copia.
+
+
+## En el panel
+
+La pestaña **Templates** del administrador (`/admin?tab=plantillas`) lista todos los templates de
+`catalogo.ts`, dice en qué eventos se usa cada uno y muestra una vista previa con datos de ejemplo
+(Wow o Express). También trae los pedidos listos para copiarle a Claude: crear, editar, ocultar o borrar.
+Un template nuevo aparece ahí solo en cuanto se publica en `main`.

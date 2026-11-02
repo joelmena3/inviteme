@@ -50,7 +50,8 @@ el motor de confirmación) ya existen y no se tocan.
 - **Nunca borres la carpeta** ni lo saques de `index.ts`: los eventos que lo usan caerían al diseño por
   defecto sin aviso. Pon `oculto: true` en su `info.ts`. Deja de aparecer para eventos nuevos y las
   invitaciones existentes siguen igual.
-- Borrar de verdad solo si Joel confirma que ningún evento lo usa (él lo revisa en el panel o en Supabase:
+- Borrar de verdad solo si Joel confirma que ningún evento lo usa (él lo revisa en el panel → pestaña **Templates**,
+  que muestra en qué eventos se usa cada uno, o en Supabase:
   `select slug from eventos where diseno = '<id>'`). Entonces: carpeta + `catalogo.ts` + `index.ts`.
 - No ocultes ni borres el que está en `PLANTILLA_DEFAULT`.
 
