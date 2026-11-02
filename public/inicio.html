@@ -117,22 +117,40 @@ nav.links a:hover{color:var(--ink)}
 @keyframes rise{from{transform:translateY(22%)}to{transform:translateY(0)}}
 @media (max-width:820px){.hero .wrap{grid-template-columns:1fr}.envelope{max-width:260px}}
 
-/* Ejemplos */
+/* Diseños: selector de templates (lista a la izquierda, celular con la invitación en vivo a la derecha) */
 .examples{background:var(--surface);border-block:1px solid var(--line)}
-.grid-ex{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
-@media (max-width:900px){.grid-ex{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media (max-width:520px){.grid-ex{grid-template-columns:1fr}}
-.ex{display:grid;gap:14px;min-width:0;align-content:start}
-.phone{position:relative;aspect-ratio:9/16;max-width:100%;border-radius:28px;background:var(--tint);border:8px solid var(--plum);display:grid;place-items:center;overflow:hidden}
+.picker{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,380px);gap:clamp(24px,5vw,56px);align-items:start}
+@media (max-width:820px){.picker{grid-template-columns:minmax(0,1fr)}}
+.tpl-list{list-style:none;margin:0;padding:0;display:grid;gap:10px;align-content:start}
+.tpl-btn{width:100%;display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:14px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-weight:600;font-size:1.05rem;text-align:left;cursor:pointer;transition:border-color .15s ease,background .15s ease}
+.tpl-btn:hover{border-color:var(--gold)}
+.tpl-btn:focus-visible{outline:3px solid var(--gold-bright);outline-offset:2px}
+.tpl-btn[aria-pressed="true"]{border-color:var(--plum);background:var(--plum-soft);box-shadow:inset 4px 0 0 var(--gold)}
+.tpl-sw{flex:none;width:36px;height:36px;border-radius:50%;border:2px solid var(--surface);box-shadow:0 0 0 1px var(--line)}
+.tpl-name{flex:1;min-width:0;font-family:var(--display);font-weight:400;font-size:1.35rem}
+.tpl-check{flex:none;font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);visibility:hidden}
+.tpl-btn[aria-pressed="true"] .tpl-check{visibility:visible}
+.tpl-hint{color:var(--muted);font-size:.92rem;margin-top:6px}
+@media (max-width:820px){
+  .tpl-list{display:flex;overflow-x:auto;gap:8px;padding:2px 2px 10px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch}
+  .tpl-list li{flex:none;scroll-snap-align:start}
+  .tpl-btn{width:auto;padding:8px 14px 8px 8px;border-radius:999px;gap:10px}
+  .tpl-btn[aria-pressed="true"]{box-shadow:none}
+  .tpl-sw{width:28px;height:28px}
+  .tpl-name{font-size:1.1rem;white-space:nowrap}
+  .tpl-check{display:none}
+  .tpl-hint{display:none}
+}
+.preview{display:grid;gap:16px;justify-items:center;min-width:0}
+.phone{position:relative;aspect-ratio:9/16;width:100%;max-width:340px;border-radius:30px;background:var(--plum-soft);border:8px solid var(--plum);overflow:hidden}
 .phone::before{content:"";position:absolute;top:8px;left:50%;transform:translateX(-50%);width:34%;height:14px;border-radius:999px;background:var(--plum);z-index:2;pointer-events:none}
-.phone .slot{display:grid;justify-items:center;gap:10px;text-align:center;padding:20px;color:var(--ink)}
-.phone .slot svg{width:64px;height:64px}
-.phone .slot small{font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--muted)}
-.phone iframe,.phone img{position:absolute;inset:0;width:100%;height:100%;border:0;object-fit:cover;background:#fff}
-.ex-link{justify-self:start;font-weight:700;font-size:.95rem;color:var(--ink);text-decoration:none;border-bottom:2px solid var(--gold);padding-bottom:2px}
+.phone iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff;transition:opacity .25s ease}
+.phone.cargando iframe{opacity:0}
+.phone .spin{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:.8rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;opacity:0;transition:opacity .2s ease;pointer-events:none}
+.phone.cargando .spin{opacity:1}
+.preview-actions{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center;justify-content:center;width:100%;max-width:340px}
+.ex-link{font-weight:700;font-size:.95rem;color:var(--ink);text-decoration:none;border-bottom:2px solid var(--gold);padding-bottom:2px}
 .ex-link:hover{color:var(--gold)}
-.ex-meta{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
-.ex-meta h3{font-size:1.4rem}
 .chip{font-size:.75rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:var(--plum-soft);color:var(--ink);white-space:nowrap}
 .chip.gold{background:var(--gold-bright);color:#3B1F4A}
 
@@ -207,7 +225,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
       <b>Invite<i>Me</i></b>
     </a>
     <nav class="links" aria-label="Secciones">
-      <a href="#ejemplos">Ejemplos</a>
+      <a href="#ejemplos">Diseños</a>
       <a href="#paquetes">Paquetes</a>
       <a href="#como-funciona">Cómo funciona</a>
       <a href="#pagos">Pagos</a>
@@ -229,7 +247,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
           <a class="btn btn-wa wa-link" data-msg="Hola, quiero una invitación digital" href="https://wa.me/525522678448" target="_blank" rel="noopener">
             <svg aria-hidden="true"><use href="#i-chat"/></svg>Cotiza por WhatsApp
           </a>
-          <a class="btn btn-ghost" href="#ejemplos">Ver ejemplos</a>
+          <a class="btn btn-ghost" href="#ejemplos">Ver diseños</a>
         </div>
         <div class="facts"><span>Lista en menos de 48 horas</span><span>Desde $500 MXN</span><span>Confirmación de invitados</span></div>
       </div>
@@ -247,68 +265,39 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
     </div>
   </section>
 
-  <!-- EJEMPLOS: los que ya están listos muestran la invitación real en vivo desde
-       /ejemplo/<template> (ver app/ejemplo/[id]/route.ts). Para activar otro, reemplaza su
-       <div class="slot">…</div> por <iframe src="/ejemplo/<template>" title="…" loading="lazy"></iframe>
-       y agrega su enlace "Ver invitación completa". -->
+  <!-- DISEÑOS: la lista sale sola de plantillas/catalogo.ts vía /api/plantillas (ver lib/portada.ts).
+       Los templates ocultos no aparecen y uno nuevo aparece en cuanto se publica en main.
+       Cada diseño se ve en vivo desde /ejemplo/<template> (app/ejemplo/[id]/route.ts).
+       Lo que está escrito aquí abajo es solo lo que se ve mientras carga la lista. -->
   <section class="examples" id="ejemplos">
     <div class="wrap">
       <div class="sec-head">
-        <p class="eyebrow">Ejemplos</p>
-        <h2>Una invitación para cada celebración</h2>
-        <p class="lede">Abre cada ejemplo como lo verían tus invitados en su celular.</p>
+        <p class="eyebrow">Diseños</p>
+        <h2>Elige el diseño de tu invitación</h2>
+        <p class="lede">Toca un diseño para verlo como lo verían tus invitados en su celular. Tú nos cuentas de qué es tu evento y lo adaptamos.</p>
       </div>
-      <div class="grid-ex">
-        <article class="ex">
-          <div class="phone" style="--tint:var(--t-girl)">
-            <iframe src="/ejemplo/confeti" title="Ejemplo de invitación con el diseño Confeti" loading="lazy"></iframe>
+      <div class="picker">
+        <div>
+          <ul class="tpl-list" id="tpl-list" aria-label="Diseños disponibles">
+            <li><button type="button" class="tpl-btn" data-id="confeti" data-nombre="Confeti" aria-pressed="true">
+              <span class="tpl-sw" aria-hidden="true" style="background:linear-gradient(135deg,#FF4F8B 0 50%,#FFC93C 50% 100%)"></span>
+              <span class="tpl-name">Confeti</span><span class="tpl-check">Viendo</span>
+            </button></li>
+          </ul>
+          <p class="tpl-hint">¿Te gustó uno? Escríbenos con el nombre del diseño y lo adaptamos a tu evento.</p>
+        </div>
+        <div class="preview">
+          <div class="phone" id="tpl-phone">
+            <span class="spin" aria-hidden="true">Cargando…</span>
+            <iframe id="tpl-frame" src="/ejemplo/confeti" title="Ejemplo de invitación con el diseño Confeti" loading="lazy"></iframe>
           </div>
-          <div class="ex-meta"><h3>Fiesta infantil · niña</h3><span class="chip gold">Wow</span></div>
-          <a class="ex-link" href="/ejemplo/confeti" target="_blank" rel="noopener">Ver invitación completa ↗</a>
-        </article>
-        <article class="ex">
-          <div class="phone" style="--tint:var(--t-one)">
-            <iframe src="/ejemplo/bosque" title="Ejemplo de invitación con el diseño Bosque" loading="lazy"></iframe>
+          <div class="preview-actions">
+            <a class="ex-link" id="tpl-abrir" href="/ejemplo/confeti" target="_blank" rel="noopener">Ver invitación completa ↗</a>
+            <a class="btn btn-wa wa-link" id="tpl-quiero" data-msg="Hola, quiero una invitación con el diseño Confeti" href="https://wa.me/525522678448" target="_blank" rel="noopener">
+              <svg aria-hidden="true"><use href="#i-chat"/></svg>Quiero este diseño
+            </a>
           </div>
-          <div class="ex-meta"><h3>Primer año</h3><span class="chip gold">Wow</span></div>
-          <a class="ex-link" href="/ejemplo/bosque" target="_blank" rel="noopener">Ver invitación completa ↗</a>
-        </article>
-        <article class="ex">
-          <div class="phone" style="--tint:var(--t-kid)">
-            <div class="slot">
-              <svg viewBox="0 0 64 64" aria-hidden="true"><ellipse cx="32" cy="24" rx="15" ry="18" fill="#5B8FD4"/><path d="M29 41h6l-3 4z" fill="#5B8FD4"/><path d="M32 45c-4 6 4 9 0 16" stroke="currentColor" stroke-width="2" fill="none"/></svg>
-              <small>Ejemplo próximamente</small>
-            </div>
-          </div>
-          <div class="ex-meta"><h3>Fiesta infantil · niño</h3><span class="chip gold">Wow</span></div>
-        </article>
-        <article class="ex">
-          <div class="phone" style="--tint:var(--t-posada)">
-            <div class="slot">
-              <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="11" fill="#E2913B"/><g fill="#C9573C"><path d="M32 4l5 18H27z"/><path d="M32 60l-5-18h10z"/><path d="M4 32l18-5v10z"/><path d="M60 32l-18 5V27z"/><path d="M12 12l16 10-6 6z"/><path d="M52 52 36 42l6-6z"/><path d="M52 12 42 28l-6-6z"/><path d="M12 52l10-16 6 6z"/></g></svg>
-              <small>Ejemplo próximamente</small>
-            </div>
-          </div>
-          <div class="ex-meta"><h3>Posada</h3><span class="chip">Express</span></div>
-        </article>
-        <article class="ex">
-          <div class="phone" style="--tint:var(--t-baut)">
-            <div class="slot">
-              <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 6C24 20 16 30 16 40a16 16 0 0 0 32 0c0-10-8-20-16-34Z" fill="#6FB3A8"/><path d="M25 42a8 8 0 0 0 7 7" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round"/></svg>
-              <small>Ejemplo próximamente</small>
-            </div>
-          </div>
-          <div class="ex-meta"><h3>Bautizo</h3><span class="chip gold">Wow</span></div>
-        </article>
-        <article class="ex">
-          <div class="phone" style="--tint:var(--t-boda)">
-            <div class="slot">
-              <svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="25" cy="36" r="13" fill="none" stroke="#C9913A" stroke-width="5"/><circle cx="39" cy="36" r="13" fill="none" stroke="#8E6BB0" stroke-width="5"/><path d="M39 17l4-6h-8z" fill="#8E6BB0"/></svg>
-              <small>Ejemplo próximamente</small>
-            </div>
-          </div>
-          <div class="ex-meta"><h3>Boda</h3><span class="chip gold">Wow</span></div>
-        </article>
+        </div>
       </div>
     </div>
   </section>
@@ -435,6 +424,64 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px}
 <a class="wa-float wa-link" data-msg="Hola, quiero una invitación digital" href="https://wa.me/525522678448" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
   <svg aria-hidden="true"><use href="#i-chat"/></svg>
 </a>
+
+<script>
+// Selector de diseños: arma la lista con /api/plantillas y cambia la invitación del celular.
+// inviteme.mx/?diseno=bosque#ejemplos abre directo ese diseño.
+(function(){
+  var lista = document.getElementById("tpl-list");
+  var phone = document.getElementById("tpl-phone");
+  var frame = document.getElementById("tpl-frame");
+  var abrir = document.getElementById("tpl-abrir");
+  var quiero = document.getElementById("tpl-quiero");
+  var PHONE = "525522678448";
+  var actual = "confeti";
+
+  frame.addEventListener("load", function(){ phone.classList.remove("cargando"); });
+
+  function elegir(id, nombre){
+    lista.querySelectorAll(".tpl-btn").forEach(function(b){
+      b.setAttribute("aria-pressed", b.getAttribute("data-id") === id ? "true" : "false");
+    });
+    var url = "/ejemplo/" + encodeURIComponent(id);
+    if (id !== actual){ phone.classList.add("cargando"); frame.src = url; actual = id; }
+    frame.title = "Ejemplo de invitación con el diseño " + nombre;
+    abrir.href = url;
+    var msg = "Hola, quiero una invitación con el diseño " + nombre;
+    quiero.setAttribute("data-msg", msg);
+    quiero.href = "https://wa.me/" + PHONE + "?text=" + encodeURIComponent(msg);
+  }
+
+  lista.addEventListener("click", function(e){
+    var b = e.target.closest(".tpl-btn");
+    if (b) elegir(b.getAttribute("data-id"), b.getAttribute("data-nombre"));
+  });
+
+  function boton(p){
+    var li = document.createElement("li");
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "tpl-btn";
+    b.setAttribute("data-id", p.id); b.setAttribute("data-nombre", p.nombre);
+    b.setAttribute("aria-pressed", "false");
+    var sw = document.createElement("span");
+    sw.className = "tpl-sw"; sw.setAttribute("aria-hidden", "true");
+    sw.style.background = "linear-gradient(135deg," + p.muestra[0] + " 0 50%," + p.muestra[1] + " 50% 100%)";
+    var n = document.createElement("span"); n.className = "tpl-name"; n.textContent = p.nombre;
+    var c = document.createElement("span"); c.className = "tpl-check"; c.textContent = "Viendo";
+    b.appendChild(sw); b.appendChild(n); b.appendChild(c); li.appendChild(b);
+    return li;
+  }
+
+  fetch("/api/plantillas").then(function(r){ return r.ok ? r.json() : []; }).then(function(ps){
+    if (!Array.isArray(ps) || !ps.length) return;
+    lista.innerHTML = "";
+    ps.forEach(function(p){ lista.appendChild(boton(p)); });
+    var pedido = new URLSearchParams(location.search).get("diseno");
+    var inicial = ps.filter(function(p){ return p.id === pedido; })[0] || ps[0];
+    elegir(inicial.id, inicial.nombre);
+  }).catch(function(){});
+})();
+</script>
 
 <script>
 (function(){
