@@ -5,6 +5,7 @@ import { info as bosque } from "./bosque/info";
 import { info as picnic } from "./picnic/info";
 import { info as botanico } from "./botanico/info";
 import { info as navidad } from "./navidad/info";
+import { info as confeti } from "./confeti/info";
 
-export const CATALOGO = [bosque, picnic, botanico, navidad];
+export const CATALOGO = [bosque, picnic, botanico, navidad, confeti];
 export const PLANTILLA_DEFAULT = "bosque";
