@@ -117,14 +117,36 @@ const AJUSTES: Record<string, Partial<Contenido>> = {
     clabe: { texto: "Si prefieres, puedes hacer una transferencia.", titular: "Laura Martínez", banco: "BBVA", clabe: "012180000000000000" },
     traer: undefined,
   },
+  bautizo: {
+    eyebrow: "Con la bendición de Dios y el amor de nuestra familia, tenemos el honor de invitarte al",
+    kicker: "Bautizo",
+    mensaje: "Con mucha alegría queremos compartir contigo el día en que nuestro hijo recibirá el sacramento del bautismo. Será un honor que nos acompañes.",
+    saludo: { activo: true, texto: "Será una bendición compartir este día contigo." },
+    portada: { src: "/ejemplo/fotos/bautizo-portada.webp", w: 900, h: 900, alt: "Bebé recibiendo el agua del bautismo" },
+    familiasTitulo: "Con la bendición de",
+    padres: { titulo: "Papás", nombres: "Rodrigo Hernández\nCristina López" },
+    padrinos: { titulo: "Padrinos", nombres: "Pablo Martínez\nValeria Ruiz" },
+    ceremonia: { titulo: "Ceremonia religiosa", nombre: "Parroquia de San Juan Bautista", direccion: "Centro, Toluca, Edo. Méx.", hora: "12:00 pm" },
+    lugar: { nombre: "Jardín Las Palmas", direccion: "Calle Abedul 100, Col. Centro, Toluca, Estado de México", busqueda: "Toluca, Estado de México" },
+    dresscode: { titulo: "Formal de día", texto: "Tonos claros, beige o verde." },
+    lineaEyebrow: "Mi bautizo",
+    lineaTitulo: "Un día bendecido",
+    lineaIntro: "Gracias por ser parte de este momento.",
+    vistaFotos: "galeria",
+    linea: [],
+    cierre: { label: "Bautizo", when: "", titulo: "¡Bienvenido a la familia de Dios!", texto: "Gracias por acompañarnos en este día tan especial." },
+    regalos: { texto: "Tu presencia es nuestro mejor regalo. Si deseas tener un detalle:", tiendas: [{ nombre: "Liverpool", numero: "51234567", url: "https://www.liverpool.com.mx" }] },
+    traer: undefined,
+    pie: "Mi bautizo",
+  },
 };
 
 // Canción de todos los ejemplos del catálogo (suena al tocar el botón de Música).
 const MUSICA_EJEMPLOS = ["/ejemplo/musica/feels-so-good.mp3"];
 
 // Nombre del festejado y hora de la fiesta en el ejemplo, si el template necesita otros.
-const NOMBRES: Record<string, string> = { "xv-elegante": "Fernanda", "confeti-azul": "Mateo", superheroes: "Santiago", posada: "Posada Navideña" };
-const HORAS: Record<string, string> = { "xv-elegante": "20:30", superheroes: "16:00", posada: "20:00" };
+const NOMBRES: Record<string, string> = { "xv-elegante": "Fernanda", "confeti-azul": "Mateo", superheroes: "Santiago", posada: "Posada Navideña", bautizo: "Emiliano" };
+const HORAS: Record<string, string> = { "xv-elegante": "20:30", superheroes: "16:00", posada: "20:00", bautizo: "14:00" };
 
 // La fecha del ejemplo siempre cae en un sábado a unas semanas de hoy,
 // para que la cuenta regresiva nunca llegue a cero.
