@@ -35,13 +35,17 @@ el motor de confirmación) ya existen y no se tocan.
 3. Regístralo en `catalogo.ts` (import + lista `CATALOGO`) y en `index.ts` (import + `ACOMODOS`).
 4. Diseña:
    - `estilos.css`: define la paleta en variables al inicio y úsalas en todo el archivo; conserva los
-     selectores de clases que usan las secciones (revisa las clases en `_comun/secciones.ts`).
+     selectores de clases que usan las secciones (revisa las clases en `_comun/secciones.ts`). Incluye
+     el saludo al invitado de la portada: `.saludo`, `.saludo-hola` (con el nombre en `b`) y `.saludo-txt`.
    - `dibujos.js`: los seis dibujos (`izquierda`, `derecha`, `centro`, `adorno`, `hoja`, `rama`) como SVG
      inline que tomen colores de las variables CSS.
    - `plantilla.ts`: orden de secciones. Mantén siempre `s.confirmacion`, `s.cuenta`, `s.visor` y `s.datos` (al final).
      Si escribes HTML propio, conserva todos los `id` de la sección que reemplazas.
    - Imágenes propias en `imagenes/` (ligeras: webp/png optimizados, < 300 KB cada una).
 5. Debe verse bien en celular (360–430 px de ancho) antes que en escritorio.
+6. Llega como **privado**: no sale en la página web hasta que Joel lo publique en el panel → Templates.
+   Eso no se configura en el código (vive en Supabase); no agregues nada a `info.ts` para eso. Si es un
+   diseño a la medida de un cliente, díselo a Joel para que lo deje privado.
 
 ## Editar un template
 
@@ -60,7 +64,8 @@ el motor de confirmación) ya existen y no se tocan.
 
 ## Listar
 
-- Lee `catalogo.ts` y cada `info.ts`; reporta id, nombre, descripción y si está oculto.
+- Lee `catalogo.ts` y cada `info.ts`; reporta id, nombre, descripción y si está oculto. Si es público o
+  privado no está en el código: se ve en el panel → Templates.
 
 ## Revisar y entregar (siempre, en este orden)
 

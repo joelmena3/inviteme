@@ -4,6 +4,7 @@ import { exigirAdmin } from "@/lib/admin";
 import { MSG_NUEVO_CLIENTE, msgPagoConfirmado } from "@/lib/mensajes";
 import { db } from "@/lib/supabase";
 import { DISENOS, estadoPago, nombreDe, PAQUETES, partesFecha, pesos, TIPOS, ZONA } from "@/lib/util";
+import { leerVisibilidad } from "@/lib/visibilidad";
 import { Aviso, Barra } from "./barra";
 import { Plantillas } from "./plantillas";
 
@@ -42,6 +43,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
   }
 
   const filas = (data || []) as unknown as Fila[];
+  const vis = enPlantillas ? await leerVisibilidad() : null;
   const ahora = Date.now();
   const hoy = partesFecha(new Date().toISOString()).dia;
   const mesActual = hoy.slice(0, 7);
@@ -105,7 +107,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
       </nav>
 
       {enPlantillas ? (
-        <Plantillas eventos={filas} elegido={plantilla} datos={datos} />
+        <Plantillas eventos={filas} elegido={plantilla} datos={datos} publicas={[...(vis?.publicas || [])]} configurada={!!vis?.configurada} />
       ) : enMensajes ? (
         <>
           <section className="card" aria-labelledby="h-m1">

@@ -9,6 +9,8 @@ import { Confirmar, Copiar, Enviar } from "@/app/[evento]/panel/botones";
 import { agregarInvitados, agregarPago, asignarLleva, configurarFormulario, eliminarInvitado, eliminarPago, guardarClavePanel, migrarArchivos } from "../../acciones";
 import { Aviso, Barra } from "../../barra";
 import { Editor } from "./editor";
+import { leerVisibilidad } from "@/lib/visibilidad";
+import { CATALOGO } from "@/plantillas/catalogo";
 
 export const dynamic = "force-dynamic";
 
@@ -71,6 +73,9 @@ ${linkPanel}${conClave ? "\n(Tu contraseña te la mando en el siguiente mensaje)
     : "";
   const enGitHub = JSON.stringify(e.contenido).match(/"\/eventos\/[^"]+"/g)?.length || 0;
   const { dia, hora } = partesFecha(e.fecha);
+  // Templates privados: se pueden usar aquí, solo no salen en la página web
+  const vis = await leerVisibilidad().catch(() => null);
+  const privados = vis ? CATALOGO.filter((p) => !p.oculto && !vis.publicas.has(p.id)).map((p) => p.id) : [];
   const oculto = <input type="hidden" name="id" value={e.id} />;
 
   return (
@@ -157,6 +162,7 @@ ${linkPanel}${conClave ? "\n(Tu contraseña te la mando en el siguiente mensaje)
       <Editor
         id={e.id}
         host={host}
+        privados={privados}
         inicial={{
           nombre: e.nombre,
           slug: e.slug,

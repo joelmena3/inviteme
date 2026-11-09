@@ -12,9 +12,12 @@ import type { Confirmacion, Evento, Grupo, Invitado } from "@/lib/tipos";
 export type DatosPlantilla = { ev: Evento; inv: Invitado; previa: Confirmacion | null };
 
 export type Secciones = {
-  musica: string; portada: string; mensaje: string; familias: string; cuenta: string; lugar: string; dresscode: string;
+  musica: string; portada: string; saludo: string; mensaje: string; familias: string; cuenta: string; lugar: string; dresscode: string;
   fotos: string; regalos: string; traer: string; confirmacion: string; pie: string; visor: string; datos: string;
 };
+
+// Texto que va después de "¡Hola, <invitado>!" cuando el evento no tiene uno propio.
+export const SALUDO_TEXTO = "Te invitamos a celebrar con nosotros";
 
 export const esc = (v: unknown) =>
   String(v ?? "")
@@ -175,6 +178,17 @@ export function secciones({ ev, inv, previa }: DatosPlantilla): Secciones {
   </section>`
     : "";
 
+  // Saludo personal en la portada: solo en links de invitado (el link general no tiene nombre)
+  const invitadoNombre = inv.id ? String(inv.nombre || "").trim() : "";
+  const saludoTexto = String(c.saludo?.texto ?? SALUDO_TEXTO).trim();
+  const saludo = invitadoNombre && c.saludo?.activo !== false
+    ? `
+    <div class="saludo">
+      <p class="saludo-hola">¡Hola, <b>${esc(invitadoNombre)}</b>!</p>
+      ${saludoTexto ? `<p class="saludo-txt">${esc(saludoTexto)}</p>` : ""}
+    </div>`
+    : "";
+
   const datosCliente = {
     evento: ev.slug,
     nombre: ev.nombre,
@@ -208,11 +222,13 @@ export function secciones({ ev, inv, previa }: DatosPlantilla): Secciones {
       <span class="critter adorno2" data-art="adorno" aria-hidden="true"></span>
     </div>
     <p class="kicker">${esc(c.kicker)}</p>
-    <h1 class="name">${esc(ev.nombre)}</h1>
+    <h1 class="name">${esc(ev.nombre)}</h1>${saludo}
     <div class="dateline" aria-label="${esc(c.fecha.larga)}, ${esc(c.fecha.hora)}">
       <span>${esc(c.fecha.dia)}</span><span class="bar"></span><span class="big">${esc(c.fecha.numero)}</span><span class="bar"></span><span>${esc(c.fecha.mes)} · ${esc(c.fecha.hora)}</span>
     </div>
   </section>`,
+    // Ya viene dentro de `portada`. Úsalo solo si un template escribe su propia portada.
+    saludo,
     mensaje: `
   <section class="message" aria-label="Mensaje">
     <div class="divider" aria-hidden="true"><span data-art="hoja"></span><span data-art="adorno"></span><span data-art="hoja" data-flip="1"></span></div>

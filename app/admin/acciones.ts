@@ -6,6 +6,8 @@ import { abrirSesion, cerrarSesion, esAdmin, exigirAdmin } from "@/lib/admin";
 import { BUCKET, carpetaDe, esMime, rutaNueva, TIPOS_ARCHIVO, urlPublica, type Mime } from "@/lib/storage";
 import { db } from "@/lib/supabase";
 import { CLAVE_MIN, huellaClave } from "@/lib/panel";
+import { cambiarPublica } from "@/lib/visibilidad";
+import { CATALOGO } from "@/plantillas/catalogo";
 import type { Contenido, Foto, Grupo } from "@/lib/tipos";
 import { codigoDesde, DISENOS, fechaISO, METODOS, PAQUETES, partesFecha, slugValido, textosFecha, TIPOS } from "@/lib/util";
 
@@ -85,6 +87,7 @@ export async function crearEvento(fd: FormData) {
     linea: [],
     musica: [],
     pie: `Con cariño, gracias por acompañarnos`,
+    saludo: { activo: true, texto: tipo.saludo },
     ...(fechaPendiente ? { formulario: { fechaPendiente: true } } : {}),
   };
 
@@ -210,6 +213,7 @@ function limpiarOpcionales(c: Partial<Contenido>): Partial<Contenido> {
   }
   if (c.clabe) o.clabe = { texto: txt(c.clabe.texto, 300), titular: txt(c.clabe.titular, 80), banco: txt(c.clabe.banco, 60), clabe: soloDigitos(c.clabe.clabe).slice(0, 18) };
   if (c.traer) o.traer = { titulo: txt(c.traer.titulo, 80), texto: txt(c.traer.texto, 400) };
+  if (c.saludo) o.saludo = { activo: c.saludo.activo !== false, texto: txt(c.saludo.texto, 120) };
   return o;
 }
 
@@ -473,6 +477,24 @@ export async function guardarClavePanel(fd: FormData) {
   const { error } = await db().from("eventos").update({ panel_hash: quitar ? null : huellaClave(clave) }).eq("id", id);
   if (error) falla(ruta, "No se pudo guardar. ¿Ya corriste 04_clave_panel.sql en Supabase?", "entrega");
   volver(ruta, quitar ? "Quitaste la contraseña del panel: ahora entra cualquiera con el link." : "Contraseña del panel guardada. Compártela con tu cliente.", "entrega");
+}
+
+// ---------- Templates públicos o privados ----------
+
+// Público = sale en la página web; privado = solo en el panel (se puede usar en eventos igual).
+export async function cambiarVisibilidad(fd: FormData) {
+  await exigirAdmin();
+  const id = String(fd.get("plantilla") || "");
+  const publica = fd.get("publica") === "1";
+  const nombre = CATALOGO.find((p) => p.id === id)?.nombre || id;
+  const ruta = `/admin?tab=plantillas&p=${encodeURIComponent(id)}`;
+  const r = await cambiarPublica(id, publica);
+  const msg = "error" in r
+    ? r.error
+    : publica
+      ? `«${nombre}» ya es público: aparece en la página web en menos de un minuto.`
+      : `«${nombre}» ahora es privado: ya no sale en la página web, pero lo puedes usar en tus eventos.`;
+  redirect(`${ruta}&msg=${encodeURIComponent(msg)}${"error" in r ? "&error=1" : ""}`);
 }
 
 // ---------- Formulario del cliente ----------

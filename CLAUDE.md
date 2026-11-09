@@ -11,6 +11,12 @@ Invitaciones digitales personalizadas (inviteme.mx). Next.js 15 + Supabase, publ
   nunca qué datos existen.
 - **Partes comunes**: `plantillas/_comun/secciones.ts` (cada sección ya llena con los datos) y
   `plantillas/_comun/motor.js` (cuenta regresiva, confirmación, música, visor). Los usan todos los templates.
+- **Saludo al invitado**: en los links personalizados (`/evento/invitado`) la portada muestra
+  "¡Hola, <invitado>!" y un texto debajo del nombre del festejado (`contenido.saludo`, se edita en el panel).
+- **Públicos y privados**: si un template sale en la página web (portada y `/ejemplo/<id>`) vive en Supabase
+  (tabla `plantillas`, `supabase/05_plantillas_publicas.sql`) y se cambia con un botón en el panel → Templates.
+  Lo lee `lib/visibilidad.ts`. Sin renglón en la tabla = privado: un template nuevo nunca sale solo en la web.
+  Los privados se usan en eventos igual que los públicos. No es lo mismo que `oculto` (retirado).
 
 ## Trabajo con templates (crear, editar, quitar diseños)
 

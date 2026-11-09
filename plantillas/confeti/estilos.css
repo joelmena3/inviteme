@@ -106,6 +106,15 @@ section { display: flex; flex-direction: column; gap: 20px; }
 }
 .dateline .bar { width: 3px; align-self: stretch; border-radius: 3px; background: var(--c1); }
 
+/* Saludo al invitado (solo en links personalizados): etiqueta tipo sticker debajo del nombre */
+.saludo {
+  margin: 22px 5px 0 0; max-width: min(100%, 23rem); padding: 12px 22px 13px; background: var(--paper); border-radius: 20px; text-wrap: balance;
+  box-shadow: 0 0 0 3px var(--c-line), 5px 5px 0 0 var(--c3), 5px 5px 0 3px var(--c-line);
+}
+.saludo-hola { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: 1.4rem; line-height: 1.2; color: var(--deep); }
+.saludo-hola b { font-weight: inherit; color: var(--hot); }
+.saludo-txt { margin: 2px 0 0; font-weight: 700; font-size: .98rem; line-height: 1.4; color: var(--ink-soft); }
+
 /* ---------- MENSAJE ---------- */
 .message { --pop: var(--c1); }
 .message p.quote {

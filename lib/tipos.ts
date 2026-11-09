@@ -32,6 +32,11 @@ export type Contenido = {
   clabe?: { texto: string; titular: string; banco: string; clabe: string };
   traer?: { titulo: string; texto: string; asignaciones?: Record<string, string> };  // asignaciones: código de invitado → qué lleva
 
+  // Saludo con el nombre del invitado ("¡Hola, Familia Pérez!") debajo del nombre del festejado.
+  // Solo sale en los links personalizados (/evento/invitado), nunca en el link general.
+  // Si el evento no tiene este campo, se muestra con el texto de siempre; activo: false lo quita.
+  saludo?: { activo: boolean; texto: string };
+
   // Formulario que llena el cliente (/datos/<llave>): estado y lo que escribió
   formulario?: { recibido?: string; cerrado?: boolean; maxFotos?: number; comentarios?: string; cancion?: string; fechaPendiente?: boolean };
 };

@@ -1,17 +1,22 @@
 import Link from "next/link";
-import { Copiar } from "@/app/[evento]/panel/botones";
+import { Copiar, Enviar } from "@/app/[evento]/panel/botones";
 import { CATALOGO, PLANTILLA_DEFAULT } from "@/plantillas/catalogo";
+import { cambiarVisibilidad } from "./acciones";
 
 // Pestaña "Templates" del panel: lista los diseños registrados en plantillas/catalogo.ts,
 // muestra en qué eventos se usa cada uno y una vista previa con datos de ejemplo.
-// Crear, editar, ocultar o borrar se hace con Claude (skill "plantillas"); aquí solo se
-// copian las instrucciones. Un template nuevo aparece aquí en cuanto Vercel publica main.
+// Aquí mismo decides si cada uno es público (sale en la página web) o privado (solo tú lo
+// ves y lo usas en eventos). Crear, editar, ocultar o borrar se hace con Claude (skill
+// "plantillas"); aquí solo se copian las instrucciones. Un template nuevo aparece aquí en
+// cuanto Vercel publica main, y llega como privado.
 
 type EventoUso = { id: string; nombre: string; slug: string; fecha: string; diseno: string };
 
 const REPO = "joelmena3/inviteme";
 
-export function Plantillas({ eventos, elegido, datos }: { eventos: EventoUso[]; elegido?: string; datos?: string }) {
+export function Plantillas({
+  eventos, elegido, datos, publicas, configurada,
+}: { eventos: EventoUso[]; elegido?: string; datos?: string; publicas: string[]; configurada: boolean }) {
   const ahora = Date.now();
   const usos = (id: string) => eventos.filter((e) => e.diseno === id);
   const conocidos = new Set(CATALOGO.map((p) => p.id));
@@ -24,8 +29,11 @@ export function Plantillas({ eventos, elegido, datos }: { eventos: EventoUso[]; 
   const minimo = datos === "minimo";
   const href = (id: string, d = datos) => `/admin?tab=plantillas&p=${id}${d === "minimo" ? "&datos=minimo" : ""}`;
 
-  const visibles = CATALOGO.filter((p) => !p.oculto).length;
-  const ocultos = CATALOGO.length - visibles;
+  const esPublica = (id: string) => publicas.includes(id);
+  const nPublicos = CATALOGO.filter((p) => !p.oculto && esPublica(p.id)).length;
+  const ocultos = CATALOGO.filter((p) => p.oculto).length;
+  const nPrivados = CATALOGO.length - nPublicos - ocultos;
+  const publica = !actual.oculto && esPublica(actual.id);
 
   const enUso = usos(actual.id);
   const vivos = enUso.filter((e) => new Date(e.fecha).getTime() >= ahora - 12 * 3600e3);
@@ -36,7 +44,7 @@ export function Plantillas({ eventos, elegido, datos }: { eventos: EventoUso[]; 
   const pedidoNuevo =
     `Usa el skill plantillas en ${REPO}: crea un template nuevo llamado «[nombre]» para [tipo de evento]. ` +
     `Estilo: [colores, ambiente, dibujos]. Trabaja en una rama plantillas/…, pásame el link de vista previa ` +
-    `y cuando te diga que está bien, súbelo a main para que aparezca en el panel.`;
+    `y cuando te diga que está bien, súbelo a main para que aparezca en el panel. Llega como privado: yo lo publico en la web desde el panel.`;
   const pedidoEditar =
     `Usa el skill plantillas en ${REPO}: en el template ${nombreYId} cambia [describe el cambio]. ` +
     (enUso.length ? `Ojo: lo usan ${enUso.length} evento(s), así que el cambio también les llega. ` : "") +
@@ -54,11 +62,18 @@ export function Plantillas({ eventos, elegido, datos }: { eventos: EventoUso[]; 
   return (
     <>
       <section className="tiles" aria-label="Resumen de templates">
-        <div className="tile"><span className="lbl">Disponibles</span><b className="n">{visibles}</b><small>para eventos nuevos</small></div>
+        <div className="tile"><span className="lbl">Públicos</span><b className="n">{nPublicos}</b><small>salen en la página web</small></div>
+        <div className="tile"><span className="lbl">Privados</span><b className="n">{nPrivados}</b><small>solo tú, para tus eventos</small></div>
         <div className="tile"><span className="lbl">Ocultos</span><b className="n">{ocultos}</b><small>solo eventos viejos</small></div>
         <div className="tile"><span className="lbl">Sin usar</span><b className="n">{CATALOGO.filter((p) => !usos(p.id).length).length}</b><small>se pueden borrar</small></div>
-        <div className="tile"><span className="lbl">Por defecto</span><b className="n tile-txt">{CATALOGO.find((p) => p.id === PLANTILLA_DEFAULT)?.nombre}</b><small>si algo falla</small></div>
       </section>
+
+      {!configurada && (
+        <p className="notice">
+          Para elegir qué templates salen en la página web, corre el archivo <code>supabase/05_plantillas_publicas.sql</code> en
+          Supabase → SQL Editor y recarga esta página. Mientras tanto, todos los que no están ocultos salen en la web.
+        </p>
+      )}
 
       {huerfanos.length > 0 && (
         <p className="notice">
@@ -88,7 +103,13 @@ export function Plantillas({ eventos, elegido, datos }: { eventos: EventoUso[]; 
                       <small>{p.descripcion}</small>
                       <span className="tpl-chips">
                         {p.id === PLANTILLA_DEFAULT && <span className="chip gold">Por defecto</span>}
-                        {p.oculto && <span className="chip neutral">Oculto</span>}
+                        {p.oculto ? (
+                          <span className="chip neutral">Oculto</span>
+                        ) : esPublica(p.id) ? (
+                          <span className="chip ok">En la web</span>
+                        ) : (
+                          <span className="chip plum">Privado</span>
+                        )}
                         <span className={`chip ${n ? "ok" : "no"}`}>{n ? `${n} evento${n === 1 ? "" : "s"}` : "Sin usar"}</span>
                       </span>
                     </span>
@@ -104,12 +125,44 @@ export function Plantillas({ eventos, elegido, datos }: { eventos: EventoUso[]; 
             </div>
             <p className="soft sm">
               Pégalo en Claude (Claude Code con tu repo) y llena los corchetes. Cuando lo suba a <code>main</code> y Vercel lo publique,
-              aparece solo en esta lista.
+              aparece solo en esta lista como <b>privado</b>: no sale en la web hasta que tú lo publiques.
             </p>
           </div>
         </section>
 
         <div className="tpl-detalle">
+          <section className="card tpl-web" aria-labelledby="h-web">
+            <div className="tpl-row">
+              <h2 id="h-web">En la página web</h2>
+              {actual.oculto ? (
+                <span className="chip neutral">Oculto</span>
+              ) : publica ? (
+                <span className="chip ok">Público</span>
+              ) : (
+                <span className="chip plum">Privado</span>
+              )}
+            </div>
+            <p className="soft sm">
+              {actual.oculto
+                ? "Está oculto: no sale en la web ni se ofrece para eventos nuevos. Las invitaciones que ya lo usan siguen igual."
+                : publica
+                  ? "Aparece en inviteme.mx, en la sección Diseños, y lo puedes usar en tus eventos."
+                  : "Solo lo ves tú: lo puedes elegir para cualquier evento, pero no aparece en inviteme.mx. Ideal para un diseño a la medida de un cliente o uno que todavía estás terminando."}
+            </p>
+            {!actual.oculto && configurada && (
+              <div className="btns">
+                <form action={cambiarVisibilidad}>
+                  <input type="hidden" name="plantilla" value={actual.id} />
+                  <input type="hidden" name="publica" value={publica ? "0" : "1"} />
+                  <Enviar className={publica ? "btn ghost sm" : "btn sm"} ocupado="Guardando…">
+                    {publica ? "Hacer privado" : "Publicar en la web"}
+                  </Enviar>
+                </form>
+                {publica && <a className="btn ghost sm" href={`/ejemplo/${actual.id}`} target="_blank" rel="noopener">Ver como lo ven tus clientes ↗</a>}
+              </div>
+            )}
+          </section>
+
           <section className="card" aria-labelledby="h-vista">
             <div className="card-head">
               <div>

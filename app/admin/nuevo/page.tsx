@@ -2,6 +2,7 @@ import Link from "next/link";
 import { exigirAdmin } from "@/lib/admin";
 import { Enviar } from "@/app/[evento]/panel/botones";
 import { DISENOS, DOMINIO, PAQUETES, pesos, TIPOS } from "@/lib/util";
+import { leerVisibilidad } from "@/lib/visibilidad";
 import { crearEvento } from "../acciones";
 import { Aviso, Barra } from "../barra";
 
@@ -11,6 +12,9 @@ export default async function Nuevo({ searchParams }: { searchParams: Promise<{ 
   await exigirAdmin();
   const { msg, error } = await searchParams;
   const host = DOMINIO;
+  // Los privados también se pueden elegir: solo no salen en la página web
+  const vis = await leerVisibilidad().catch(() => null);
+  const privado = (id: string) => !!vis && !vis.publicas.has(id);
 
   return (
     <main className="adm-wrap">
@@ -54,10 +58,16 @@ export default async function Nuevo({ searchParams }: { searchParams: Promise<{ 
               <label key={d.id} className="pick">
                 <input type="radio" name="diseno" value={d.id} defaultChecked={i === 0} />
                 <span className="sw" aria-hidden="true" style={{ background: `linear-gradient(135deg, ${d.muestra[0]} 0 50%, ${d.muestra[1]} 50%)` }} />
-                <span><b>{d.nombre}</b><small>{d.desc}</small></span>
+                <span>
+                  <b>{d.nombre}{privado(d.id) && <span className="chip plum" style={{ marginLeft: 6 }}>Privado</span>}</b>
+                  <small>{d.desc}</small>
+                </span>
               </label>
             ))}
           </div>
+          {DISENOS.some((d) => !d.oculto && privado(d.id)) && (
+            <p className="soft sm" style={{ margin: 0 }}>Los privados solo los ves tú (no salen en la página web), pero los puedes usar en cualquier evento.</p>
+          )}
         </section>
 
         <section className="card">

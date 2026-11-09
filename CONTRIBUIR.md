@@ -26,3 +26,4 @@ nada de lo que hagas llega a la app hasta que Joel lo revise y lo apruebe.
 - Si el diseño necesita un dato que la invitación no tiene (por ejemplo "nombre de la mascota"),
   no lo inventes: avísale a Joel.
 - Para cambiar un template existente, mejor propón uno nuevo: los cambios afectan invitaciones ya enviadas.
+- Tu template entra como **privado**: Joel decide cuándo publicarlo en la página web.

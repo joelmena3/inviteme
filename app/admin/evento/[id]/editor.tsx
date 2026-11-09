@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Contenido, Foto, Grupo } from "@/lib/tipos";
 import { DISENOS, PAQUETES, TIPOS } from "@/lib/util";
+import { SALUDO_TEXTO } from "@/plantillas/_comun/secciones";
 import { guardarEvento, prepararSubida, subirArchivo, type DatosEditor } from "../../acciones";
 
 type Momento = Contenido["linea"][number];
@@ -110,7 +111,7 @@ const DRESSCODES = ["Formal", "Etiqueta rigurosa", "Cóctel", "Casual elegante",
 
 // ---------- Editor ----------
 
-export function Editor({ id, host, inicial }: { id: string; host: string; inicial: DatosEditor }) {
+export function Editor({ id, host, inicial, privados = [] }: { id: string; host: string; inicial: DatosEditor; privados?: string[] }) {
   const router = useRouter();
   const [d, setD] = useState<DatosEditor>(inicial);
   const [sucio, setSucio] = useState(false);
@@ -205,10 +206,14 @@ export function Editor({ id, host, inicial }: { id: string; host: string; inicia
             <label key={x.id} className="pick">
               <input type="radio" name="e-diseno" checked={d.diseno === x.id} onChange={() => campo("diseno", x.id)} />
               <span className="sw" aria-hidden="true" style={{ background: `linear-gradient(135deg, ${x.muestra[0]} 0 50%, ${x.muestra[1]} 50%)` }} />
-              <span><b>{x.nombre}</b><small>{x.desc}</small></span>
+              <span>
+                <b>{x.nombre}{privados.includes(x.id) && <span className="chip plum" style={{ marginLeft: 6 }}>Privado</span>}</b>
+                <small>{x.desc}</small>
+              </span>
             </label>
           ))}
         </div>
+        {privados.length > 0 && <p className="soft sm" style={{ margin: 0 }}>Los privados solo los ves tú (no salen en la página web), pero funcionan igual en la invitación.</p>}
       </section>
 
       {/* ---------- Paquete y cliente ---------- */}
@@ -272,6 +277,19 @@ export function Editor({ id, host, inicial }: { id: string; host: string; inicia
             <input id="t-pie" value={c.pie || ""} maxLength={160} onChange={(e) => texto("pie", e.target.value)} />
           </div>
         </div>
+        <Opcional
+          titulo="Saludo con el nombre del invitado"
+          desc="En cada link personalizado aparece debajo del nombre del festejado. El link general no lo muestra."
+          activo={c.saludo?.activo !== false}
+          onCambio={(v) => texto("saludo", { activo: v, texto: c.saludo?.texto ?? SALUDO_TEXTO })}
+        >
+          <div className="field">
+            <label htmlFor="t-saludo">Texto después de “¡Hola, [invitado]!”</label>
+            <input id="t-saludo" value={c.saludo?.texto ?? SALUDO_TEXTO} maxLength={120} placeholder={SALUDO_TEXTO}
+              onChange={(e) => texto("saludo", { activo: true, texto: e.target.value })} />
+            <small>Así se ve: <b>¡Hola, Familia Pérez!</b> {(c.saludo?.texto ?? SALUDO_TEXTO).trim()}</small>
+          </div>
+        </Opcional>
       </section>
 
       {/* ---------- Secciones opcionales ---------- */}

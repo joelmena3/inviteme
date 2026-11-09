@@ -90,25 +90,26 @@ export const METODOS = [
 ] as const;
 
 // Textos de arranque según el tipo de evento. Se pueden cambiar en el editor.
+// `saludo` es lo que sigue a "¡Hola, <invitado>!" en los links personalizados.
 export const TIPOS = [
   { id: "primer-ano", nombre: "Primer año", kicker: "Mi primer añito", eyebrow: "Una fiesta muy especial", linea: "Mi primer año", lineaTitulo: "Así he crecido",
-    mensaje: "Te invitamos a compartir con nosotros este momento tan especial." },
+    mensaje: "Te invitamos a compartir con nosotros este momento tan especial.", saludo: "Te invito a celebrar conmigo" },
   { id: "cumpleanos-nino", nombre: "Cumpleaños de niño", kicker: "Mi cumpleaños", eyebrow: "¡Vamos a celebrar!", linea: "Mis momentos", lineaTitulo: "Así he crecido",
-    mensaje: "¡Ven a celebrar conmigo! Habrá juegos, pastel y mucha diversión." },
+    mensaje: "¡Ven a celebrar conmigo! Habrá juegos, pastel y mucha diversión.", saludo: "¡Mi fiesta no sería igual sin ti!" },
   { id: "cumpleanos-nina", nombre: "Cumpleaños de niña", kicker: "Mi cumpleaños", eyebrow: "¡Vamos a celebrar!", linea: "Mis momentos", lineaTitulo: "Así he crecido",
-    mensaje: "¡Ven a celebrar conmigo! Habrá juegos, pastel y mucha diversión." },
+    mensaje: "¡Ven a celebrar conmigo! Habrá juegos, pastel y mucha diversión.", saludo: "¡Mi fiesta no sería igual sin ti!" },
   { id: "bautizo", nombre: "Bautizo", kicker: "Mi bautizo", eyebrow: "Con la bendición de Dios", linea: "Nuestra alegría", lineaTitulo: "Momentos de luz",
-    mensaje: "Con mucha alegría te invitamos a acompañarnos en el bautizo de nuestro hijo." },
+    mensaje: "Con mucha alegría te invitamos a acompañarnos en el bautizo de nuestro hijo.", saludo: "Te invitamos a acompañarnos en este día tan especial" },
   { id: "boda", nombre: "Boda", kicker: "Nos casamos", eyebrow: "Juntos para siempre", linea: "Nuestra historia", lineaTitulo: "Cómo empezó todo",
-    mensaje: "Queremos compartir contigo el día más importante de nuestras vidas." },
+    mensaje: "Queremos compartir contigo el día más importante de nuestras vidas.", saludo: "Te invitamos a celebrar con nosotros" },
   { id: "xv", nombre: "XV años", kicker: "Mis XV años", eyebrow: "Una noche inolvidable", linea: "Mi historia", lineaTitulo: "Así he crecido",
-    mensaje: "Te invito a celebrar conmigo una noche muy especial." },
+    mensaje: "Te invito a celebrar conmigo una noche muy especial.", saludo: "Quiero que seas parte de esta noche" },
   { id: "posada", nombre: "Posada", kicker: "Posada navideña", eyebrow: "Ven a pedir posada", linea: "Recuerdos", lineaTitulo: "Navidades juntos",
-    mensaje: "Te esperamos para celebrar juntos estas fiestas con piñata, ponche y mucha alegría." },
+    mensaje: "Te esperamos para celebrar juntos estas fiestas con piñata, ponche y mucha alegría.", saludo: "Te invitamos a celebrar con nosotros" },
   { id: "baby-shower", nombre: "Baby shower", kicker: "Baby shower", eyebrow: "Muy pronto llegará", linea: "La espera", lineaTitulo: "Contando los días",
-    mensaje: "Acompáñanos a celebrar la llegada de nuestro bebé." },
+    mensaje: "Acompáñanos a celebrar la llegada de nuestro bebé.", saludo: "Te invitamos a celebrar con nosotros" },
   { id: "otro", nombre: "Otro", kicker: "Te invitamos", eyebrow: "Una celebración especial", linea: "Momentos", lineaTitulo: "Nuestros recuerdos",
-    mensaje: "Nos encantaría que nos acompañes." },
+    mensaje: "Nos encantaría que nos acompañes.", saludo: "Te invitamos a celebrar con nosotros" },
 ] as const;
 
 export const nombreDe = <T extends { id: string; nombre: string }>(lista: readonly T[], id: string | null | undefined) =>

@@ -37,6 +37,14 @@ plantillas/
    `npm run vista -- dinosaurios` (abre `.vista/dinosaurios.html`).
 6. Sube los cambios a GitHub. Vercel lo publica y aparece en el panel.
 
+## Públicos y privados
+
+Un template **público** sale en la página web (inviteme.mx, sección Diseños); uno
+**privado** solo lo ve Joel en el panel y lo puede usar en cualquier evento (diseños a la
+medida de un cliente o que todavía no están listos). Eso no se pone en el código: se
+cambia con el botón **Publicar en la web / Hacer privado** del panel → Templates.
+Todo template nuevo llega como privado.
+
 ## Quitar un template
 
 No borres la carpeta: los eventos que ya lo usan se quedarían sin diseño y
@@ -57,7 +65,8 @@ las secciones ya armadas y ordenarlas como quieras:
 | Sección | Qué es |
 |---|---|
 | `s.musica` | Botón flotante de música |
-| `s.portada` | Foto en arco, personajes, nombre y fecha |
+| `s.portada` | Foto en arco, personajes, nombre, saludo al invitado y fecha |
+| `s.saludo` | "¡Hola, Familia Pérez!" + texto *(ya viene dentro de `s.portada`; úsalo solo si escribes tu propia portada)* |
 | `s.mensaje` | Mensaje para los invitados |
 | `s.familias` | Padres, padres de los novios, padrinos *(opcional)* |
 | `s.cuenta` | Cuenta regresiva |
@@ -78,6 +87,12 @@ También puedes escribir tu propio HTML con los datos directamente:
 `d.ev.nombre`, `d.ev.contenido.mensaje`, `d.ev.contenido.padrinos`,
 `d.inv.nombre` (el invitado), etc. Usa `esc()` de `_comun/secciones.ts` para
 cualquier texto que venga del evento.
+
+**Saludo al invitado:** en los links personalizados la portada trae, debajo del
+nombre, `<div class="saludo">` con `<p class="saludo-hola">¡Hola, <b>Invitado</b>!</p>`
+y `<p class="saludo-txt">texto</p>`. Dale estilo a esas tres clases en `estilos.css`
+(los datos de prueba completos lo muestran con "Familia Pérez"; los mínimos no lo traen,
+como el link general).
 
 **Importante:** si escribes tu propio HTML para la cuenta regresiva o la
 confirmación, conserva los `id` de los elementos (`cd-d`, `form`, `howMany`…),
@@ -110,5 +125,5 @@ el sitio se construye; no edites esa copia.
 
 La pestaña **Templates** del administrador (`/admin?tab=plantillas`) lista todos los templates de
 `catalogo.ts`, dice en qué eventos se usa cada uno y muestra una vista previa con datos de ejemplo
-(Wow o Express). También trae los pedidos listos para copiarle a Claude: crear, editar, ocultar o borrar.
-Un template nuevo aparece ahí solo en cuanto se publica en `main`.
+(Wow o Express). Ahí mismo se publica en la web o se hace privado, y trae los pedidos listos para copiarle
+a Claude: crear, editar, ocultar o borrar. Un template nuevo aparece ahí solo en cuanto se publica en `main`, como privado.

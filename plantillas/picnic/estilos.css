@@ -69,6 +69,13 @@ body .name { color: var(--rose); text-shadow: 3px 3px 0 var(--blush); }
 .dateline span.big { font-family: var(--f-display); font-size: 2.6rem; letter-spacing: 0; line-height: 1; color: var(--rose); font-style: normal; }
 .dateline .bar { width: 1px; align-self: stretch; background: var(--leaf); }
 
+/* Saludo al invitado (solo en links personalizados), debajo del nombre */
+.saludo { margin: 16px 0 0; max-width: 34ch; text-wrap: balance; }
+.saludo-hola { margin: 0; font-family: var(--f-display); font-style: var(--head-style); font-weight: var(--head-weight); font-size: 1.5rem; line-height: 1.2; color: var(--ink); }
+.saludo-hola b { font-weight: inherit; color: var(--rose); }
+.saludo-txt { margin: 4px 0 0; font-size: 1rem; line-height: 1.45; color: var(--ink-soft); }
+.saludo-hola { font-size: 1.4rem; }
+
 /* ---------- MENSAJE ---------- */
 .message p.quote {
   margin: 0; font-family: var(--f-display); font-style: var(--head-style); font-size: 1.5rem; line-height: 1.35;

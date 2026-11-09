@@ -226,3 +226,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-
 .tpl-usos li { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: .92rem; }
 .tpl-accion { border-top: 1px solid var(--line); padding-top: 12px; display: flex; flex-direction: column; gap: 4px; }
 .tpl-accion p { margin: 0; }
+
+/* Templates públicos (salen en la web) y privados (solo el panel) */
+.chip.plum { background: var(--plum); color: #F4DDB0; }
+.tpl-web p { margin: 0; }

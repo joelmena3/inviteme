@@ -9,8 +9,8 @@ import completo from "@/scripts/pruebas/evento-completo.json";
 // Ejemplos públicos que se ven en el selector de diseños de la portada (inviteme.mx/#ejemplos).
 //   inviteme.mx/ejemplo/confeti
 //   inviteme.mx/ejemplo/bosque
-// Funciona para cualquier template de plantillas/catalogo.ts que no esté oculto, así que
-// uno nuevo aparece solo en la portada. Usan los datos de prueba
+// Solo funciona para los templates públicos (los privados dan 404, aunque alguien adivine
+// el link). Al publicar uno en el panel, aparece solo en la portada. Usan los datos de prueba
 // (scripts/pruebas/evento-completo.json), no tocan la base de datos y la confirmación
 // de asistencia se simula.
 
@@ -39,7 +39,13 @@ function sabadoProximo(): string {
 
 export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  if (!esPublica(id)) return new Response("Este ejemplo no está disponible.", { status: 404 });
+  let publica = false;
+  try {
+    publica = await esPublica(id);
+  } catch {
+    return new Response("No se pudo cargar el ejemplo. Inténtalo en un momento.", { status: 503, headers: { "Cache-Control": "no-store" } });
+  }
+  if (!publica) return new Response("Este ejemplo no está disponible.", { status: 404, headers: { "Cache-Control": "no-store" } });
   const nombre = CATALOGO.find((p) => p.id === id)!.nombre;
 
   const base = completo as unknown as DatosPlantilla;
@@ -57,7 +63,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
   return new Response(paginaDeEjemplo(id, datos, `Ejemplo · Diseño ${nombre}`), {
     headers: {
       "Content-Type": "text/html; charset=utf-8",
-      "Cache-Control": "public, max-age=0, s-maxage=3600",
+      "Cache-Control": "public, max-age=0, s-maxage=60", // al hacerlo privado deja de verse en ≤ 1 min
       "X-Robots-Tag": "noindex, nofollow",
       "X-Frame-Options": "SAMEORIGIN",
     },
