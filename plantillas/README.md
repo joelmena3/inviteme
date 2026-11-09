@@ -11,8 +11,6 @@ plantillas/
 │   ├── estilos.css    ← colores, letras, tamaños, formas, fondos
 │   ├── dibujos.js     ← los dibujos (personajes, adornos, hojas, ramas)
 │   └── imagenes/      ← fondos, texturas o marcos propios (opcional)
-├── picnic/
-├── botanico/
 ├── navidad/
 ├── _comun/            ← lo que comparten todos (no es visual)
 │   ├── secciones.ts   ← cada sección ya llena con la información del evento
@@ -23,7 +21,7 @@ plantillas/
 
 ## Crear un template nuevo (ejemplo: "dinosaurios")
 
-1. **Copia una carpeta** parecida a lo que quieres (por ejemplo `picnic/`) y
+1. **Copia una carpeta** parecida a lo que quieres (por ejemplo `bosque/`) y
    renómbrala `dinosaurios/`.
 2. En `dinosaurios/info.ts` cambia `id: "dinosaurios"` (igual al nombre de la
    carpeta), el nombre, la descripción y los dos colores de muestra.

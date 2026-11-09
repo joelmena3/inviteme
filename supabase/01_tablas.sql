@@ -7,7 +7,7 @@ create table if not exists eventos (
   nombre     text not null,                    -- "Majo"
   tipo       text not null default 'cumpleanos',
   fecha      timestamptz not null,
-  diseno     text not null default 'bosque',   -- capa de diseño: bosque | picnic | botanico
+  diseno     text not null default 'bosque',   -- id del template (carpeta en plantillas/)
   contenido  jsonb not null,                   -- textos, fotos, música, línea del tiempo
   admin_key  text not null default replace(gen_random_uuid()::text, '-', ''),  -- clave del panel
   creado     timestamptz not null default now()

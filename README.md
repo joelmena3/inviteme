@@ -3,7 +3,7 @@
 Invitaciones digitales personalizadas con confirmación de asistencia.
 
 **Cómo está armado**
-- `public/motor/` — el motor de la invitación (estilos con 3 diseños: bosque, picnic, botánico; y la interacción: cuenta regresiva, fotos, música, confirmación).
+- `public/motor/` — estilos del panel de administrador (los diseños de las invitaciones viven en `plantillas/`).
 - `lib/plantilla.ts` — convierte los datos de un evento en la página.
 - `app/[evento]` y `app/[evento]/[invitado]` — la invitación (`/majo`, `/majo/tia-ale`).
 - `app/[evento]/panel` — panel privado del festejado (`/majo/panel?key=…`).

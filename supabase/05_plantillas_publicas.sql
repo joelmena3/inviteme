@@ -17,7 +17,7 @@ alter table plantillas enable row level security;   -- solo la app (en Vercel) p
 
 -- Los que hoy se ven en la web siguen públicos (si ya existen, no se tocan)
 insert into plantillas (id, publica) values
-  ('bosque', true), ('botanico', true), ('navidad', true), ('confeti', true), ('picnic', false)
+  ('bosque', true), ('navidad', true), ('confeti', true)
 on conflict (id) do nothing;
 
 -- Que la API de Supabase vea la tabla nueva de inmediato
