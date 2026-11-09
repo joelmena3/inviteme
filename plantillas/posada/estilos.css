@@ -321,3 +321,7 @@ footer .sig { color: var(--nieve); -webkit-text-stroke: 5px var(--rojo-hondo); p
 .music .eq i { background: var(--rojo); }
 .lightbox { background: rgba(40, 6, 10, .94); }
 
+/* Espacio para la tira de luces arriba del texto de la portada */
+.hero { padding-top: 84px; }
+/* El cierre bajo la galería ya va dentro de una tarjeta: sin segunda caja */
+.card .finale { background: transparent; box-shadow: none; padding: 0; }
