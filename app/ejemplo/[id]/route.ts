@@ -41,6 +41,29 @@ const AJUSTES: Record<string, Partial<Contenido>> = {
     })),
     pie: "Mi primer añito",
   },
+  superheroes: {
+    eyebrow: "¡Misión: celebrar!",
+    kicker: "Mis 8 años",
+    mensaje: "¡Atención, equipo! Se necesitan superhéroes para una misión muy importante: celebrar mi cumpleaños. Trae tu capa, tu mejor sonrisa y muchas ganas de jugar.",
+    portada: { src: "/ejemplo/fotos/superheroes-portada.webp", w: 614, h: 768, alt: "Niño disfrazado de superhéroe con capa y antifaz" },
+    lugar: { nombre: "Salón Ciudad Héroe", direccion: "Av. Las Torres 200, Toluca, Estado de México", busqueda: "Toluca, Estado de México" },
+    lineaEyebrow: "Galería",
+    lineaTitulo: "Mis aventuras",
+    lineaIntro: "Toca cualquier foto para verla en grande.",
+    vistaFotos: "galeria",
+    linea: [
+      { label: "En el parque", when: "Mis 8 años", cap: "", fotos: [{ src: "/ejemplo/fotos/superheroes-01-parque.webp", w: 1024, h: 768 }] },
+      { label: "Listo para la misión", when: "Mis 8 años", cap: "", fotos: [{ src: "/ejemplo/fotos/superheroes-02-retrato.webp", w: 576, h: 720 }] },
+      { label: "Con mi capa", when: "Mis 8 años", cap: "", fotos: [{ src: "/ejemplo/fotos/superheroes-03-capa.webp", w: 700, h: 568 }] },
+    ],
+    cierre: { label: "8 años", when: "", titulo: "¡Misión cumplida!", texto: "Gracias por ser parte de mi equipo." },
+    dresscode: { titulo: "¡Ven disfrazado!", texto: "Trae el disfraz de tu superhéroe favorito." },
+    ceremonia: undefined,
+    padrinos: undefined,
+    traer: { titulo: "¿Qué te toca llevar?", texto: "Algo para compartir con el equipo", asignaciones: { PEREZ: "Palomitas" } },
+    musica: [], // sin canción de cuna: suena la cajita musical del motor
+    pie: "Mis 8 años",
+  },
   "xv-elegante": {
     eyebrow: "Te invito a celebrar",
     kicker: "Mis XV años",
@@ -74,8 +97,8 @@ const AJUSTES: Record<string, Partial<Contenido>> = {
 };
 
 // Nombre del festejado y hora de la fiesta en el ejemplo, si el template necesita otros.
-const NOMBRES: Record<string, string> = { "xv-elegante": "María Fernanda", "confeti-azul": "Mateo" };
-const HORAS: Record<string, string> = { "xv-elegante": "20:30" };
+const NOMBRES: Record<string, string> = { "xv-elegante": "María Fernanda", "confeti-azul": "Mateo", superheroes: "Santiago" };
+const HORAS: Record<string, string> = { "xv-elegante": "20:30", superheroes: "16:00" };
 
 // La fecha del ejemplo siempre cae en un sábado a unas semanas de hoy,
 // para que la cuenta regresiva nunca llegue a cero.
