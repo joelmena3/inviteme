@@ -25,6 +25,22 @@ const AJUSTES: Record<string, Partial<Contenido>> = {
     mensaje: "Te invitamos a celebrar con nosotros el cumpleaños de Sofi. ¡Habrá pastel, juegos y mucha diversión!",
     portada: { src: "/ejemplo/fotos/confeti-portada.webp", w: 900, h: 1125, alt: "Niña sonriendo frente a su pastel de cumpleaños" },
   },
+  bosque: {
+    portada: { src: "/ejemplo/fotos/confeti-portada.webp", w: 900, h: 1125, alt: "Niña sonriendo frente a su pastel de cumpleaños" },
+  },
+  "confeti-azul": {
+    eyebrow: "¡Vamos a celebrar!",
+    kicker: "Mi primer añito",
+    mensaje: "Te invitamos a compartir con nosotros este momento tan especial en el que Mateo está cumpliendo su primer año. ¡Habrá pastel, juegos y mucha diversión!",
+    portada: { src: "/ejemplo/fotos/confeti-azul-portada.webp", w: 900, h: 1125, alt: "Niño sonriendo sentado entre hojas de otoño" },
+    // Las mismas fotos de prueba, con los textos en masculino
+    linea: completo.ev.contenido.linea.map((m) => ({
+      ...m,
+      label: m.label === "Recién nacida" ? "Recién nacido" : m.label,
+      cap: ({ "Lista para jugar.": "Listo para jugar.", "Princesa de cuento.": "Rey de la casa." } as Record<string, string>)[m.cap] ?? m.cap,
+    })),
+    pie: "Mi primer añito",
+  },
   "xv-elegante": {
     eyebrow: "Te invito a celebrar",
     kicker: "Mis XV años",
@@ -58,7 +74,7 @@ const AJUSTES: Record<string, Partial<Contenido>> = {
 };
 
 // Nombre del festejado y hora de la fiesta en el ejemplo, si el template necesita otros.
-const NOMBRES: Record<string, string> = { "xv-elegante": "María Fernanda" };
+const NOMBRES: Record<string, string> = { "xv-elegante": "María Fernanda", "confeti-azul": "Mateo" };
 const HORAS: Record<string, string> = { "xv-elegante": "20:30" };
 
 // La fecha del ejemplo siempre cae en un sábado a unas semanas de hoy,
