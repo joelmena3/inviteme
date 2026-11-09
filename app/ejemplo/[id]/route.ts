@@ -61,7 +61,6 @@ const AJUSTES: Record<string, Partial<Contenido>> = {
     ceremonia: undefined,
     padrinos: undefined,
     traer: { titulo: "¿Qué te toca llevar?", texto: "Algo para compartir con el equipo", asignaciones: { PEREZ: "Palomitas" } },
-    musica: [], // sin canción de cuna: suena la cajita musical del motor
     pie: "Mis 8 años",
   },
   posada: {
@@ -87,7 +86,6 @@ const AJUSTES: Record<string, Partial<Contenido>> = {
     regalos: undefined,
     clabe: undefined,
     traer: { titulo: "¿Qué te toca llevar?", texto: "Un regalo para el intercambio (de $300 aprox.)", asignaciones: { PEREZ: "Ponche" } },
-    musica: [], // sin canción de cuna: suena la cajita musical del motor
     pie: "¡Feliz Navidad y próspero Año Nuevo!",
   },
   "xv-elegante": {
@@ -108,7 +106,6 @@ const AJUSTES: Record<string, Partial<Contenido>> = {
       { label: "Bugambilias", when: "Mis XV años", cap: "", fotos: [{ src: "/ejemplo/fotos/xv-05-arco.webp", w: 720, h: 900 }] },
     ],
     cierre: { label: "Mis XV", when: "", titulo: "¡Que comience la fiesta!", texto: "Gracias por ser parte de mi historia." },
-    musica: [], // sin canción: suena la cajita musical del motor
     pie: "Mis XV años",
     familiasTitulo: "Con la bendición de Dios",
     padres: { titulo: "Mis papás", nombres: "Laura Martínez y Ricardo Hernández" },
@@ -121,6 +118,9 @@ const AJUSTES: Record<string, Partial<Contenido>> = {
     traer: undefined,
   },
 };
+
+// Canción de todos los ejemplos del catálogo (suena al tocar el botón de Música).
+const MUSICA_EJEMPLOS = ["/ejemplo/musica/feels-so-good.mp3"];
 
 // Nombre del festejado y hora de la fiesta en el ejemplo, si el template necesita otros.
 const NOMBRES: Record<string, string> = { "xv-elegante": "Fernanda", "confeti-azul": "Mateo", superheroes: "Santiago", posada: "Posada Navideña" };
@@ -156,7 +156,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
       ...base.ev,
       nombre: NOMBRES[id] ?? base.ev.nombre,
       fecha: fechaISO(dia, hora),
-      contenido: { ...base.ev.contenido, ...AJUSTES[id], fecha: textosFecha(dia, hora) },
+      contenido: { ...base.ev.contenido, ...AJUSTES[id], musica: MUSICA_EJEMPLOS, fecha: textosFecha(dia, hora) },
     },
   };
 
