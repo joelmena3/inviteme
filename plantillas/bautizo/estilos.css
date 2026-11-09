@@ -109,6 +109,15 @@ section { display: flex; flex-direction: column; gap: 16px; }
 .f-centro small { font-family: var(--f-caps); font-size: .66rem; letter-spacing: .22em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 4px; }
 .f-centro b { font-family: var(--f-display); font-weight: 500; font-size: 3.4rem; color: var(--oro-texto); font-variant-numeric: lining-nums; }
 
+/* Fila de símbolos del bautizo bajo la fecha: copa, concha, Biblia y vela */
+.simbolos { margin: 26px 0 0; display: flex; align-items: flex-end; justify-content: center; gap: 10px; }
+.simbolos [data-art] { filter: drop-shadow(0 2px 3px rgba(142,111,55,.22)); }
+.simbolos [data-art="copa"] { width: 52px; }
+.simbolos [data-art="concha"] { width: 54px; }
+.simbolos [data-art="biblia"] { width: 70px; }
+.simbolos [data-art="vela"] { width: 34px; }
+.simbolos i { width: 4px; height: 4px; margin-bottom: 18px; border-radius: 50%; background: var(--oro); opacity: .7; }
+
 /* Saludo al invitado (solo en links personalizados), debajo del nombre */
 .saludo { margin: 10px 0 0; max-width: 32ch; text-wrap: balance; }
 .saludo-hola { margin: 0; font-family: var(--f-display); font-style: italic; font-weight: 500; font-size: 1.4rem; line-height: 1.25; color: var(--ink); }
@@ -260,7 +269,7 @@ textarea { min-height: 90px; resize: vertical; }
 
 /* ---------- PIE con rosas en las esquinas de abajo ---------- */
 .pie { position: static; text-align: center; display: flex; flex-direction: column; gap: 2px; align-items: center; padding: 0 0 150px; color: var(--ink-soft); }
-.pie .adorno-pie { width: 40px; margin-bottom: 6px; }
+.pie .adorno-pie { width: 64px; margin-bottom: 8px; filter: drop-shadow(0 2px 3px rgba(142,111,55,.22)); }
 .pie .sig { font-family: var(--f-name); font-size: 2.6rem; line-height: 1.15; color: var(--verde-texto); }
 .pie .pie-txt { font-family: var(--f-caps); font-size: .66rem; letter-spacing: .22em; text-transform: uppercase; max-width: 30ch; }
 .pie .rama { position: absolute; z-index: 2; width: min(48%, 230px); bottom: 0; pointer-events: none; }
@@ -318,6 +327,7 @@ textarea { min-height: 90px; resize: vertical; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 @media (max-width: 370px) {
+  .simbolos { gap: 8px; }
   .wrap { padding: 0 20px; }
   .fams.dos .fam-n { font-size: 1.4rem; }
   .f-lado { font-size: .72rem; letter-spacing: .12em; }

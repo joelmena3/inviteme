@@ -1,7 +1,7 @@
 import { esc, secciones, type DatosPlantilla } from "../_comun/secciones";
 
 // Acomodo del template «Bautizo»: una hoja de invitación marfil con marco dorado,
-// rosas en las esquinas, cruz arriba y papás | padrinos en dos columnas con una paloma al centro.
+// rosas en las esquinas, cruz arriba, la fila de símbolos (copa, concha, Biblia y vela) y papás | padrinos en dos columnas con una paloma al centro.
 // `s` trae cada sección ya armada con la información del evento. La portada y el pie
 // están escritos aquí mismo (con los mismos datos, siempre pasados por esc()).
 export default function plantilla(d: DatosPlantilla): string {
@@ -33,6 +33,9 @@ export default function plantilla(d: DatosPlantilla): string {
       <span class="f-centro"><small>${esc(c.fecha.mes)}</small><b>${esc(c.fecha.numero)}</b></span>
       <span class="f-lado">${esc(c.fecha.hora)}</span>
     </div>
+    <div class="simbolos" aria-hidden="true">
+      <span data-art="copa"></span><i></i><span data-art="concha"></span><i></i><span data-art="biblia"></span><i></i><span data-art="vela"></span>
+    </div>
   </section>`;
 
   // ---------- Papás | padrinos ----------
@@ -45,7 +48,7 @@ export default function plantilla(d: DatosPlantilla): string {
   // ---------- Pie con rosas en las esquinas de abajo ----------
   const pie = `
   <footer class="pie">
-    <span class="adorno-pie" data-art="adorno" aria-hidden="true"></span>
+    <span class="adorno-pie" data-art="copa" aria-hidden="true"></span>
     <span class="sig">${esc(ev.nombre)}</span>
     ${c.pie ? `<span class="pie-txt">${esc(c.pie)}</span>` : ""}
     <span class="rama bl" data-art="rama" aria-hidden="true"></span>

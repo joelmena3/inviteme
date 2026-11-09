@@ -6,6 +6,8 @@
      centro              → paloma dorada con ramita de olivo (entre papás y padrinos, cierre y "¡Gracias!")
      adorno              → cruz dorada con laureles (arriba de la portada, separadores, pie)
      hoja                → ramita dorada de línea fina (a los lados de los separadores)
+   Y cuatro símbolos del bautizo propios de este template (fila bajo la fecha y pie):
+     copa (cáliz con hostia), concha (con gotas de agua), biblia (abierta) y vela (bautismal)
    Todo toma el color de las variables de estilos.css (--petalo, --rosa-centro, --verde, --oro…). */
 (function () {
 let k = 0;
@@ -139,7 +141,75 @@ const ramito = (u) => `
   ${florecita(102, 34, 9, 40)}
   ${brillos([[36, 20, 1.2], [58, 64, 1], [80, 18, 1.4], [26, 70, 1], [140, 28, 1.1]])}`;
 
+
+// ---------- Símbolos del bautizo (dorados) ----------
+const oro = (u, ancho = .8) => `style="fill:url(#${u}o);stroke:var(--oro-hondo);stroke-width:${ancho};stroke-linejoin:round"`;
+const claro = (u, ancho = .9) => `style="fill:url(#${u}d);stroke:var(--oro);stroke-width:${ancho};stroke-linejoin:round"`;
+const rayos = (cx, cy, r1, r2, cuantos, desde = 0, hasta = 360) => {
+  let d = "";
+  for (let i = 0; i < cuantos; i++) {
+    const a = ((desde + ((hasta - desde) * i) / Math.max(cuantos - 1, 1)) * Math.PI) / 180, l = i % 2 ? r2 * .85 : r2;
+    d += `M${n(cx + r1 * Math.cos(a))} ${n(cy + r1 * Math.sin(a))} L ${n(cx + l * Math.cos(a))} ${n(cy + l * Math.sin(a))} `;
+  }
+  return `<path ${linea("--oro", .7)} d="${d}"/>`;
+};
+const cruzLinea = (x, y, t) => `<path ${linea("--oro-hondo", .9)} d="M${x} ${n(y - t)} L ${x} ${n(y + t)} M${n(x - t * .6)} ${n(y - t * .35)} L ${n(x + t * .6)} ${n(y - t * .35)}"/>`;
+const gotaOro = (u, x, y, s = 1) => `<path ${claro(u, .8)} d="M${x} ${n(y - 5 * s)} C ${n(x + 3 * s)} ${n(y - 1 * s)}, ${n(x + 3.6 * s)} ${n(y + 2 * s)}, ${x} ${n(y + 3.6 * s)} C ${n(x - 3.6 * s)} ${n(y + 2 * s)}, ${n(x - 3 * s)} ${n(y - 1 * s)}, ${x} ${n(y - 5 * s)}Z"/>`;
+
+const SIMBOLOS = {
+  // Cáliz con la hostia y sus destellos
+  copa: () => S("0 0 60 72", (u) => `
+    ${rayos(30, 12, 11, 16, 13, 200, 340)}
+    <circle cx="30" cy="12" r="9" ${claro(u, 1)}/>${cruzLinea(30, 12, 4.6)}
+    <path ${oro(u)} d="M13 23 L 47 23 C 47 37, 39 44, 30 44 C 21 44, 13 37, 13 23Z"/>
+    <ellipse cx="30" cy="23" rx="17" ry="2.6" ${oro(u)}/>
+    <path ${linea("--oro-hondo", .7)} d="M16 29 C 24 31.5, 36 31.5, 44 29"/>
+    ${cruzLinea(30, 36.5, 3.4)}
+    <path ${oro(u)} d="M27 43.5 L 33 43.5 L 32 56 L 28 56Z"/>
+    <ellipse cx="30" cy="50" rx="5.5" ry="2.6" ${oro(u)}/>
+    <path ${oro(u)} d="M17 67 C 19 60.5, 25 57, 30 57 C 35 57, 41 60.5, 43 67Z"/>
+    <ellipse cx="30" cy="67" rx="13.5" ry="2.4" ${oro(u)}/>`),
+  // Concha bautismal con tres gotas de agua
+  concha: () => S("0 0 64 72", (u) => {
+    const cx = 32, cy = 64, r = 26, pasos = 8, a0 = 200, a1 = 340;
+    const pt = (a, rr) => [cx + rr * Math.cos((a * Math.PI) / 180), cy + rr * Math.sin((a * Math.PI) / 180)];
+    let borde = `M${cx - 5} ${cy} L ${pt(a0, r).map(n).join(" ")}`, costillas = "";
+    for (let i = 0; i < pasos; i++) {
+      const a = a0 + ((a1 - a0) * i) / pasos, b = a0 + ((a1 - a0) * (i + 1)) / pasos, c = pt((a + b) / 2, r + 5.5), f = pt(b, r);
+      borde += ` Q ${n(c[0])} ${n(c[1])}, ${n(f[0])} ${n(f[1])}`;
+      if (i > 0) { const q = pt(a, r); costillas += `M${cx} ${cy - 2} L ${n(q[0])} ${n(q[1])} `; }
+    }
+    borde += ` L ${cx + 5} ${cy}Z`;
+    return `${gotaOro(u, 24, 13, .85)}${gotaOro(u, 32, 8, 1.05)}${gotaOro(u, 40, 13, .85)}
+      <path ${oro(u, .9)} d="${borde}"/><path ${linea("--oro-hondo", .7)} d="${costillas}"/>
+      <path ${oro(u)} d="M${cx - 8} ${cy + 6} L ${cx + 8} ${cy + 6} L ${cx + 4.5} ${cy - 1} L ${cx - 4.5} ${cy - 1}Z"/>`;
+  }),
+  // Biblia abierta con listón verde y luz arriba
+  biblia: () => S("0 0 78 64", (u) => `
+    ${rayos(39, 15, 7, 12, 9, 215, 325)}
+    <path ${oro(u, .9)} d="M2 20 L 2 55 C 16 51, 30 52, 39 57 C 48 52, 62 51, 76 55 L 76 20 L 72 20 L 72 50 L 39 52 L 6 50 L 6 20Z"/>
+    <path ${claro(u, 1)} d="M39 20 C 31 15, 18 14, 6 18 L 6 51 C 18 47, 31 48, 39 53Z"/>
+    <path ${claro(u, 1)} d="M39 20 C 47 15, 60 14, 72 18 L 72 51 C 60 47, 47 48, 39 53Z"/>
+    <path ${linea("--oro-hondo", .8)} d="M39 20 L 39 53"/>
+    <path ${linea("--oro", .6)} d="M11 25 C 19 23, 27 23, 34 26 M11 30 C 19 28, 27 28, 34 31 M11 35 C 19 33, 27 33, 34 36 M11 40 C 19 38, 27 38, 34 41 M44 37 C 51 34, 59 34, 67 36 M44 42 C 51 39, 59 39, 67 41"/>
+    ${cruzLinea(56, 27, 5)}
+    <path style="fill:var(--verde);stroke:var(--verde-hondo);stroke-width:.5" d="M37.5 52 L 36 63 L 39 60 L 42 63 L 40.5 52Z"/>`),
+  // Vela bautismal encendida con moño verde
+  vela: () => S("0 0 44 80", (u) => `
+    <circle cx="22" cy="13" r="10" style="fill:var(--oro-luz);opacity:.55" filter="url(#${u}b)"/>
+    <path ${oro(u, .7)} d="M22 2 C 27.5 10, 28.5 15.5, 22 21 C 15.5 15.5, 16.5 10, 22 2Z"/>
+    <path style="fill:var(--paper)" d="M22 10 C 24.2 13.5, 24.5 16, 22 18.5 C 19.5 16, 19.8 13.5, 22 10Z"/>
+    <path ${linea("--ink", 1)} d="M22 21 L 22 25"/>
+    <path ${claro(u, 1)} d="M14 26 C 14 24.5, 30 24.5, 30 26 L 30 71 L 14 71Z"/>
+    <path style="fill:var(--paper);stroke:var(--oro);stroke-width:.8" d="M14 26 C 17 25, 27 25, 30 26 C 30 29, 28 30, 27 29 C 26 33, 24 33, 24 29 C 21 30, 17 30, 14 28Z"/>
+    ${cruzLinea(22, 40, 5)}
+    <path style="fill:var(--verde);stroke:var(--verde-hondo);stroke-width:.6;stroke-linejoin:round" d="M22 53 C 17 48, 9 49, 10 54 C 11 58, 18 56, 22 53Z M22 53 C 27 48, 35 49, 34 54 C 33 58, 26 56, 22 53Z M22 53 L 17 64 L 19.5 62.5 L 20.5 65 L 22 55 L 23.5 65 L 24.5 62.5 L 27 64Z"/>
+    <circle cx="22" cy="53" r="2.2" style="fill:var(--verde-hondo)"/>
+    <ellipse cx="22" cy="72" rx="13" ry="3.2" ${oro(u)}/><path ${oro(u)} d="M9 72 L 11 76 L 33 76 L 35 72Z"/>`),
+};
+
 window.__DIBUJOS__ = {
+  ...SIMBOLOS,
   rama: () => S("0 0 220 200", (u) => `
     ${ramitaOro([140, 6, 168, 14, 196, 30, 214, 62], 6, 12)}
     ${ramitaOro([8, 140, 16, 160, 22, 180, 34, 198], 5, 11)}
