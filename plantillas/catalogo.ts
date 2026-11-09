@@ -9,7 +9,8 @@ import { info as confeti } from "./confeti/info";
 import { info as xvElegante } from "./xv-elegante/info";
 import { info as confetiAzul } from "./confeti-azul/info";
 import { info as superheroes } from "./superheroes/info";
+import { info as posada } from "./posada/info";
 
 // Orden en que aparecen en el panel. Picnic y Botánico están ocultos (oculto: true en su info.ts).
-export const CATALOGO = [xvElegante, confeti, confetiAzul, superheroes, bosque, navidad, picnic, botanico];
+export const CATALOGO = [xvElegante, confeti, confetiAzul, superheroes, bosque, posada, navidad, picnic, botanico];
 export const PLANTILLA_DEFAULT = "xv-elegante";
