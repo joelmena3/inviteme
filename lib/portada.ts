@@ -8,7 +8,7 @@ import { leerVisibilidad } from "./visibilidad";
 // el tipo de evento lo dice el cliente.
 
 // El que aparece primero (y abierto) en la portada, si es público.
-export const PRIMERO_EN_PORTADA = "confeti";
+export const PRIMERO_EN_PORTADA = "xv-elegante";
 
 export type PlantillaPublica = { id: string; nombre: string; muestra: [string, string] };
 
