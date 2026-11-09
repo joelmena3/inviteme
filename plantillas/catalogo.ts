@@ -6,6 +6,8 @@ import { info as picnic } from "./picnic/info";
 import { info as botanico } from "./botanico/info";
 import { info as navidad } from "./navidad/info";
 import { info as confeti } from "./confeti/info";
+import { info as xvElegante } from "./xv-elegante/info";
 
-export const CATALOGO = [bosque, picnic, botanico, navidad, confeti];
-export const PLANTILLA_DEFAULT = "bosque";
+// Orden en que aparecen en el panel. Picnic y Botánico están ocultos (oculto: true en su info.ts).
+export const CATALOGO = [xvElegante, confeti, bosque, navidad, picnic, botanico];
+export const PLANTILLA_DEFAULT = "xv-elegante";

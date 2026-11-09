@@ -6,9 +6,10 @@ import picnic from "./picnic/plantilla";
 import botanico from "./botanico/plantilla";
 import navidad from "./navidad/plantilla";
 import confeti from "./confeti/plantilla";
+import xvElegante from "./xv-elegante/plantilla";
 
 // Qué función arma cada template. Al agregar un template nuevo, súmalo aquí.
-const ACOMODOS: Record<string, (d: DatosPlantilla) => string> = { bosque, picnic, botanico, navidad, confeti };
+const ACOMODOS: Record<string, (d: DatosPlantilla) => string> = { bosque, picnic, botanico, navidad, confeti, "xv-elegante": xvElegante };
 
 export function plantillaDe(id: string) {
   const clave = ACOMODOS[id] ? id : PLANTILLA_DEFAULT;
