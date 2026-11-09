@@ -1,6 +1,6 @@
 import { secciones, type DatosPlantilla } from "../_comun/secciones";
 
-// Acomodo del template «XV Elegante».
+// Acomodo del template «XV años dorado».
 // `s` trae cada sección ya armada con la información del evento; aquí decides
 // el orden, cuáles van y cuáles no. También puedes escribir tu propio HTML
 // usando los datos directamente: d.ev (evento), d.ev.contenido (textos, fotos,
