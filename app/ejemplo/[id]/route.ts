@@ -64,12 +64,38 @@ const AJUSTES: Record<string, Partial<Contenido>> = {
     musica: [], // sin canción de cuna: suena la cajita musical del motor
     pie: "Mis 8 años",
   },
+  posada: {
+    eyebrow: "¡Ya llegó diciembre!",
+    kicker: "Te invitamos a nuestra",
+    mensaje: "Este año queremos cerrar con broche de oro y celebrarlo contigo. Habrá ponche, piñata, villancicos, intercambio de regalos y mucha alegría. ¡No faltes!",
+    portada: { src: "/ejemplo/fotos/posada-portada.webp", w: 900, h: 1125, alt: "Amigos celebrando con lentes de corazón" },
+    lugar: { nombre: "Terraza La Estrella", direccion: "Calle Morelos 120, Centro, Toluca, Estado de México", busqueda: "Toluca, Estado de México" },
+    lineaEyebrow: "Galería",
+    lineaTitulo: "La posada del año pasado",
+    lineaIntro: "Toca cualquier foto para verla en grande.",
+    vistaFotos: "galeria",
+    linea: [
+      { label: "Todos juntos", when: "Posada", cap: "", fotos: [{ src: "/ejemplo/fotos/posada-01-grupo.webp", w: 1200, h: 900 }] },
+      { label: "Las amigas", when: "Posada", cap: "", fotos: [{ src: "/ejemplo/fotos/posada-02-amigas.webp", w: 720, h: 900 }] },
+      { label: "¡Salud!", when: "Posada", cap: "", fotos: [{ src: "/ejemplo/fotos/posada-03-brindis.webp", w: 720, h: 900 }] },
+    ],
+    cierre: { label: "Posada", when: "", titulo: "¡Feliz Navidad!", texto: "Gracias por celebrar con nosotros." },
+    padres: undefined,
+    padrinos: undefined,
+    ceremonia: undefined,
+    dresscode: { titulo: "Suéter navideño", texto: "Ven con tu suéter más navideño. ¡Habrá premio al más original!" },
+    regalos: undefined,
+    clabe: undefined,
+    traer: { titulo: "¿Qué te toca llevar?", texto: "Un regalo para el intercambio (de $300 aprox.)", asignaciones: { PEREZ: "Ponche" } },
+    musica: [], // sin canción de cuna: suena la cajita musical del motor
+    pie: "¡Feliz Navidad y próspero Año Nuevo!",
+  },
   "xv-elegante": {
     eyebrow: "Te invito a celebrar",
     kicker: "Mis XV años",
     mensaje: "Hay momentos que se guardan para siempre en el corazón. Hoy cierro una etapa llena de sueños y comienzo otra con ilusión. Me haría muy feliz que me acompañes a celebrar mis quince años.",
     saludo: { activo: true, texto: "Será un honor compartir esta noche tan especial contigo." },
-    portada: { src: "/ejemplo/fotos/xv-portada.webp", w: 900, h: 1125, alt: "María Fernanda con su vestido de XV años" },
+    portada: { src: "/ejemplo/fotos/xv-portada.webp", w: 900, h: 1125, alt: "Fernanda con su vestido de XV años" },
     lineaEyebrow: "Galería",
     lineaTitulo: "Mis XV en fotos",
     lineaIntro: "Algunos momentos que quiero compartir contigo. Toca cualquier foto para verla en grande.",
@@ -97,8 +123,8 @@ const AJUSTES: Record<string, Partial<Contenido>> = {
 };
 
 // Nombre del festejado y hora de la fiesta en el ejemplo, si el template necesita otros.
-const NOMBRES: Record<string, string> = { "xv-elegante": "María Fernanda", "confeti-azul": "Mateo", superheroes: "Santiago" };
-const HORAS: Record<string, string> = { "xv-elegante": "20:30", superheroes: "16:00" };
+const NOMBRES: Record<string, string> = { "xv-elegante": "Fernanda", "confeti-azul": "Mateo", superheroes: "Santiago", posada: "Posada Navideña" };
+const HORAS: Record<string, string> = { "xv-elegante": "20:30", superheroes: "16:00", posada: "20:00" };
 
 // La fecha del ejemplo siempre cae en un sábado a unas semanas de hoy,
 // para que la cuenta regresiva nunca llegue a cero.
